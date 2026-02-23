@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropical Travel - Panel Admin</title>
+    <link rel="stylesheet" href="../Css/AdminStyle.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar-admin">
+            <div class="logo-admin">
+                <div class="logo-icon">🏝️</div>
+                <span class="logo-text">Tropical Travel</span>
+                <p class="logo-subtitle">ADMIN EDITION</p>
+            </div>
+
+            <nav class="admin-nav">
+                <ul>
+                    <li class="nav-item active">
+                        <a href="#dashboard" class="nav-link">
+                            <span class="icon">📊</span>
+                            <span class="text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#inventario" class="nav-link">
+                            <span class="icon">📦</span>
+                            <span class="text">Inventario</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#usuarios" class="nav-link">
+                            <span class="icon">👥</span>
+                            <span class="text">Usuarios</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#operaciones" class="nav-link">
+                            <span class="icon">⚙️</span>
+                            <span class="text">Operaciones</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#finanzas" class="nav-link">
+                            <span class="icon">💰</span>
+                            <span class="text">Finanzas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#experiencia" class="nav-link">
+                            <span class="icon">⭐</span>
+                            <span class="text">Experiencia</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#configuracion" class="nav-link">
+                            <span class="icon">⚡</span>
+                            <span class="text">Configuración</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="admin-profile">
+                    <span class="admin-avatar">🔐</span>
+                    <p class="admin-name">Admin Colombia</p>
+                    <p class="admin-role">Administrador</p>
+                </div>
+                <button id="logoutAdminBtn" class="logout-btn">🚪 Cerrar Sesión</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HEADER -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1>Panel de Control Regional</h1>
+                    <p>Gestionando el paraíso colombiano.</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-colombia-hub">🇨🇴 COLOMBIA HUB</button>
+                    <button class="btn-notification">💬</button>
+                </div>
+            </header>
+
+            <!-- METRICS CARDS -->
+            <section class="metrics-section">
+                <div class="metric-card">
+                    <div class="metric-icon">💵</div>
+                    <div class="metric-content">
+                        <p class="metric-label">VENTAS HOY</p>
+                        <h3 class="metric-value">$4.2M</h3>
+                        <span class="metric-change positive">+12%</span>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">📅</div>
+                    <div class="metric-content">
+                        <p class="metric-label">RESERVAS ACTIVAS</p>
+                        <h3 class="metric-value">1,284</h3>
+                        <span class="metric-change positive">+5%</span>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">👥</div>
+                    <div class="metric-content">
+                        <p class="metric-label">NUEVOS TURISTAS</p>
+                        <h3 class="metric-value">458</h3>
+                        <span class="metric-change positive">+28%</span>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">⭐</div>
+                    <div class="metric-content">
+                        <p class="metric-label">RATING GLOBAL</p>
+                        <h3 class="metric-value">4.92</h3>
+                        <span class="metric-change positive">+8.1</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CHARTS AND ALERTS -->
+            <div class="content-grid">
+                <!-- SALES TREND CHART -->
+                <section class="chart-section">
+                    <h2>Tendencia de Ventas (30d)</h2>
+                    <canvas id="salesChart"></canvas>
+                </section>
+
+                <!-- CRITICAL ALERTS -->
+                <section class="alerts-section">
+                    <h2>Alertas Críticas</h2>
+                    <div class="alerts-list">
+                        <div class="alert-item">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <p class="alert-title">Aviso de Clima</p>
+                                <p class="alert-description">Tormenta detectada en Costa Atlántica</p>
+                            </div>
+                            <a href="#" class="alert-link">Ver</a>
+                        </div>
+                        <div class="alert-item">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <p class="alert-title">Aviso de Clima</p>
+                                <p class="alert-description">Tormenta detectada en Costa Atlántica</p>
+                            </div>
+                            <a href="#" class="alert-link">Ver</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Validar sesión admin
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+            
+            if (!loggedUser || !loggedUser.isAdmin) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Crear gráfico de ventas
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Ventas',
+                        data: [4000, 3200, 2400, 2800, 3500, 3800],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#667eea'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 4000,
+                            ticks: {
+                                color: '#999'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#999'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Manejar cierre de sesión admin
+            document.getElementById('logoutAdminBtn').addEventListener('click', () => {
+                if (confirm('¿Deseas cerrar sesión?')) {
+                    localStorage.removeItem('loggedUser');
+                    window.location.href = '../index.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

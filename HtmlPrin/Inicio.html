@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropical Travel - Destinos Turísticos</title>
+    <link rel="stylesheet" href="../Css/ClienteStyle.css">
+</head>
+<body>
+    <!-- HEADER SUPERIOR -->
+    <header class="top-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-icon">🏝️</div>
+                <span class="logo-text">Tropical Travel</span>
+            </div>
+
+            <nav class="top-nav">
+                <button class="nav-btn active" onclick="location.href='Inicio.html'">✓ Explorar</button>
+                <button class="nav-btn" onclick="location.href='itinerario.html'">📅 Itinerario</button>
+                <button class="nav-btn" onclick="location.href='IAChat.html'">🤖 IA Chat</button>
+                <button class="nav-btn" onclick="location.href='Perfil.html'">👤 Perfil</button>
+            </nav>
+
+            <div class="header-actions">
+                <button class="notification-btn">🔔</button>
+                <div class="user-avatar" id="userInitials">JA</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECCIÓN DE BÚSQUEDA Y EXPLORACIÓN -->
+    <section class="explorer-section">
+        <div class="explorer-content">
+            <div class="location-tag">🏆 COLOMBIA: TIERRA DE SABROSURA</div>
+            
+            <h1 class="explorer-title">
+                Descubre el
+                <span class="title-highlight">Orgullo Nacional</span>
+            </h1>
+
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="¿Qué parte de Colombia quieres vivir hoy?"
+                    id="searchInput"
+                >
+                <button class="advanced-filters">🔽 Filtros Avanzados</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- GRID DE DESTINOS -->
+    <section class="destinations-section">
+        <div class="section-container">
+            <div class="destinations-grid">
+                <!-- Destino 1: Cartagena -->
+                <div class="destination-card">
+                    <div class="card-image card-image-cartagena">
+                        <div class="card-rating">⭐ 4.9</div>
+                        <div class="difficulty-badge easy">FÁCIL</div>
+                        <div class="duration-badge">3-4 DÍAS</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Cartagena de Indias</h3>
+                        <p class="card-location">📍 Bolívar, Colombia</p>
+                        <div class="card-footer">
+                            <div class="card-price">$450.000 <span class="currency">COP</span></div>
+                            <button class="card-btn">›</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destino 2: Parque Tayrona -->
+                <div class="destination-card">
+                    <div class="card-image card-image-tayrona">
+                        <div class="card-rating">⭐ 4.5</div>
+                        <div class="difficulty-badge moderate">MODERADO</div>
+                        <div class="duration-badge">2-3 DÍAS</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Parque Tayrona</h3>
+                        <p class="card-location">📍 Magdalena, Colombia</p>
+                        <div class="card-footer">
+                            <div class="card-price">$320.000 <span class="currency">COP</span></div>
+                            <button class="card-btn">›</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destino 3: Valle de Cocora -->
+                <div class="destination-card">
+                    <div class="card-image card-image-cocora">
+                        <div class="card-rating">⭐ 4.8</div>
+                        <div class="difficulty-badge hard">DIFÍCIL</div>
+                        <div class="duration-badge">1 DÍA</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Valle de Cocora</h3>
+                        <p class="card-location">📍 Quindío, Colombia</p>
+                        <div class="card-footer">
+                            <div class="card-price">$280.000 <span class="currency">COP</span></div>
+                            <button class="card-btn">›</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destino 4: Santander -->
+                <div class="destination-card">
+                    <div class="card-image card-image-santander">
+                        <div class="card-rating">⭐ 4.7</div>
+                        <div class="difficulty-badge moderate">MODERADO</div>
+                        <div class="duration-badge">2 DÍAS</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Cañón del Chicamocha</h3>
+                        <p class="card-location">📍 Santander, Colombia</p>
+                        <div class="card-footer">
+                            <div class="card-price">$390.000 <span class="currency">COP</span></div>
+                            <button class="card-btn">›</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destino 5: Eje Cafetero -->
+                <div class="destination-card">
+                    <div class="card-image card-image-cafetero">
+                        <div class="card-rating">⭐ 4.6</div>
+                        <div class="difficulty-badge easy">FÁCIL</div>
+                        <div class="duration-badge">2-3 DÍAS</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Eje Cafetero</h3>
+                        <p class="card-location">📍 Risaralda, Colombia</p>
+                        <div class="card-footer">
+                            <div class="card-price">$360.000 <span class="currency">COP</span></div>
+                            <button class="card-btn">›</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destino 6: San Andrés -->
+                <div class="destination-card">
+                    <div class="card-image card-image-sandres">
+                        <div class="card-rating">⭐ 4.9</div>
+                        <div class="difficulty-badge easy">FÁCIL</div>
+                        <div class="duration-badge">3-5 DÍAS</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">San Andrés Islas</h3>
+                        <p class="card-location">📍 San Andrés, Colombia</p>
+                        <div class="card-footer">
+                            <div class="card-price">$520.000 <span class="currency">COP</span></div>
+                            <button class="card-btn">›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Botón flotante de ayuda -->
+    <button class="floating-help">?</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+            
+            if (!loggedUser) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Actualizar avatar con iniciales del usuario
+            const username = loggedUser.username || 'Usuario';
+            const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('userInitials').textContent = initials;
+        });
+    </script>
+</body>
+</html>

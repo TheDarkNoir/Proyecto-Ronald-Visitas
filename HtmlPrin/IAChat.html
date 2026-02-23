@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropical Travel - IA Chat</title>
+    <link rel="stylesheet" href="../Css/ClienteStyle.css">
+    <link rel="stylesheet" href="../Css/IAChat.css">
+</head>
+<body>
+    <!-- HEADER SUPERIOR -->
+    <header class="top-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-icon">🏝️</div>
+                <span class="logo-text">Tropical Travel</span>
+            </div>
+
+            <nav class="top-nav">
+                <button class="nav-btn" onclick="location.href='Inicio.html'">✓ Explorar</button>
+                <button class="nav-btn" onclick="location.href='itinerario.html'">📅 Itinerario</button>
+                <button class="nav-btn active">🤖 IA Chat</button>
+                <button class="nav-btn" onclick="location.href='Perfil.html'">👤 Perfil</button>
+            </nav>
+
+            <div class="header-actions">
+                <button class="notification-btn" id="notificationBtn">🔔</button>
+                <div class="notification-badge" id="notificationBadge">3</div>
+                <div class="user-avatar" id="userInitials">JA</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NOTIFICATION POPUP -->
+    <div class="notification-popup" id="notificationPopup">
+        <div class="popup-header">
+            <h3>Notificaciones</h3>
+            <button class="close-popup" id="closeNotifications">✕</button>
+        </div>
+        <div class="notifications-list" id="notificationsList">
+            <div class="notification-item unread">
+                <div class="notification-icon">✈️</div>
+                <div class="notification-content">
+                    <p class="notification-title">Reserva Confirmada</p>
+                    <p class="notification-text">Tu viaje a Cartagena ha sido confirmado para el 25 de febrero</p>
+                    <span class="notification-time">Hace 2 horas</span>
+                </div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-icon">⭐</div>
+                <div class="notification-content">
+                    <p class="notification-title">Califica tu experiencia</p>
+                    <p class="notification-text">¿Cómo fue tu viaje a Valle de Cocora?</p>
+                    <span class="notification-time">Hace 1 día</span>
+                </div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-icon">💰</div>
+                <div class="notification-content">
+                    <p class="notification-title">Oferta Especial</p>
+                    <p class="notification-text">Descuento del 20% en Parque Tayrona esta semana</p>
+                    <span class="notification-time">Hace 3 días</span>
+                </div>
+            </div>
+        </div>
+        <button class="btn-mark-read">Marcar todas como leídas</button>
+    </div>
+
+    <!-- IA CHAT SECTION -->
+    <section class="chat-section">
+        <div class="chat-container">
+            <!-- CHAT SIDEBAR -->
+            <aside class="chat-sidebar">
+                <button class="btn-new-chat">+ Nuevo Chat</button>
+                <div class="chat-history">
+                    <h4>Conversaciones Recientes</h4>
+                    <div class="chat-item active">
+                        <span>Recomendaciones para viaje</span>
+                        <button class="delete-chat">✕</button>
+                    </div>
+                    <div class="chat-item">
+                        <span>Mejores destinos en agosto</span>
+                        <button class="delete-chat">✕</button>
+                    </div>
+                    <div class="chat-item">
+                        <span>Presupuesto y actividades</span>
+                        <button class="delete-chat">✕</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN CHAT -->
+            <div class="chat-main">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai-message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>¡Hola! Soy tu asistente de viajes de Tropical Travel. ¿A dónde te gustaría viajar? Puedo ayudarte con recomendaciones, presupuestos, itinerarios y mucho más.</p>
+                        </div>
+                    </div>
+
+                    <div class="message user-message">
+                        <div class="message-avatar" id="msgUserInitials">JA</div>
+                        <div class="message-content">
+                            <p>¿Qué me recomiendan para un viaje de 3 días con presupuesto de $500.000?</p>
+                        </div>
+                    </div>
+
+                    <div class="message ai-message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>Excelente pregunta. Con tu presupuesto te recomiendo estas opciones:</p>
+                            <ul class="recommendations">
+                                <li><strong>Cartagena de Indias</strong> - $450.000 (Histórica y playas)</li>
+                                <li><strong>Valle de Cocora</strong> - $280.000 (Naturaleza pura)</li>
+                                <li><strong>Parque Tayrona</strong> - $320.000 (Selva y mar)</li>
+                            </ul>
+                            <p>¿Te interesa alguno de estos destinos?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK SUGGESTIONS -->
+                <div class="quick-suggestions">
+                    <p>Sugerencias rápidas:</p>
+                    <button class="suggestion-btn">🏖️ Playas y Relajación</button>
+                    <button class="suggestion-btn">⛰️ Aventura y Naturaleza</button>
+                    <button class="suggestion-btn">🏛️ Cultura e Historia</button>
+                    <button class="suggestion-btn">🎯 Según mi presupuesto</button>
+                </div>
+
+                <!-- CHAT INPUT -->
+                <div class="chat-input-area">
+                    <input 
+                        type="text" 
+                        class="chat-input" 
+                        id="chatInput"
+                        placeholder="Pregunta sobre destinos, presupuestos, itinerarios..."
+                    >
+                    <button class="btn-send" id="sendBtn">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+            
+            if (!loggedUser) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            const username = loggedUser.username || 'Usuario';
+            const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('userInitials').textContent = initials;
+            document.getElementById('msgUserInitials').textContent = initials;
+
+            // Notification functionality
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationPopup = document.getElementById('notificationPopup');
+            const closeNotifications = document.getElementById('closeNotifications');
+            const markReadBtn = document.querySelector('.btn-mark-read');
+
+            notificationBtn.addEventListener('click', () => {
+                notificationPopup.classList.toggle('active');
+            });
+
+            closeNotifications.addEventListener('click', () => {
+                notificationPopup.classList.remove('active');
+            });
+
+            markReadBtn.addEventListener('click', () => {
+                document.querySelectorAll('.notification-item.unread').forEach(item => {
+                    item.classList.remove('unread');
+                });
+                document.getElementById('notificationBadge').style.display = 'none';
+                alert('Todas las notificaciones marcadas como leídas');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.notification-btn') && !e.target.closest('.notification-popup')) {
+                    notificationPopup.classList.remove('active');
+                }
+            });
+
+            // Chat functionality
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const chatMessages = document.getElementById('chatMessages');
+
+            const aiResponses = [
+                'Excelente opción. ¿Cuándo planeas viajar?',
+                'Ese destino es maravilloso. ¿Irás solo o con familia?',
+                'Perfecto para ti. ¿Prefieres actividades de aventura o relajación?',
+                'Buena elección. ¿Necesitas ayuda con reservas o transporte?',
+                'Te encantará. ¿Requieres recomendaciones de hoteles?'
+            ];
+
+            sendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (!message) return;
+
+                // User message
+                const userMsg = document.createElement('div');
+                userMsg.classList.add('message', 'user-message');
+                userMsg.innerHTML = `
+                    <div class="message-avatar">${initials}</div>
+                    <div class="message-content">
+                        <p>${message}</p>
+                    </div>
+                `;
+                chatMessages.appendChild(userMsg);
+
+                chatInput.value = '';
+
+                // AI response
+                setTimeout(() => {
+                    const aiMsg = document.createElement('div');
+                    aiMsg.classList.add('message', 'ai-message');
+                    aiMsg.innerHTML = `
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>${aiResponses[Math.floor(Math.random() * aiResponses.length)]}</p>
+                        </div>
+                    `;
+                    chatMessages.appendChild(aiMsg);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 500);
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Suggestion buttons
+            document.querySelectorAll('.suggestion-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    chatInput.value = btn.textContent;
+                    sendMessage();
+                });
+            });
+
+            // Chat history
+            document.querySelectorAll('.chat-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+
+            // Delete chat
+            document.querySelectorAll('.delete-chat').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    btn.parentElement.remove();
+                });
+            });
+
+            // New chat
+            document.querySelector('.btn-new-chat').addEventListener('click', () => {
+                chatMessages.innerHTML = `
+                    <div class="message ai-message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>¡Nuevo chat iniciado! ¿En qué puedo ayudarte hoy?</p>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>

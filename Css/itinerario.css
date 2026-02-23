@@ -1,0 +1,371 @@
+/* ===== ITINERARY STYLES ===== */
+
+.itinerary-section {
+    padding: 40px;
+    background: #f5f5f5;
+    min-height: calc(100vh - 70px);
+}
+
+.itinerary-header {
+    margin-bottom: 40px;
+}
+
+.itinerary-header h1 {
+    font-size: 2.2em;
+    color: #0052cc;
+    margin-bottom: 8px;
+}
+
+.itinerary-header p {
+    color: #666;
+    font-size: 0.95em;
+}
+
+/* TABS */
+.itinerary-tabs {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #666;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: #0052cc;
+    border-bottom-color: #ffc400;
+}
+
+.tab-btn.active {
+    color: #0052cc;
+    border-bottom-color: #ffc400;
+}
+
+/* TAB CONTENT */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* TRIP CARD */
+.trip-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border-left: 5px solid #0052cc;
+}
+
+.trip-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.trip-card.completed {
+    border-left-color: #48bb78;
+    opacity: 0.9;
+}
+
+.trip-card.saved {
+    border-left-color: #ffc400;
+}
+
+.trip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.trip-header h3 {
+    font-size: 1.3em;
+    color: #0052cc;
+    margin: 0;
+}
+
+.trip-status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: 700;
+    background: #e8f5e9;
+    color: #48bb78;
+}
+
+.trip-status.pending {
+    background: #fff3e0;
+    color: #ff9800;
+}
+
+.trip-status.completed {
+    background: #e8f5e9;
+    color: #48bb78;
+}
+
+.trip-status.info {
+    background: #fff9c4;
+    color: #f57f17;
+}
+
+.trip-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.detail-icon {
+    font-size: 1.2em;
+}
+
+.rating {
+    color: #48bb78;
+    font-weight: 600;
+}
+
+.trip-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-trip {
+    padding: 10px 20px;
+    background: #0052cc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-trip:hover {
+    background: #003d99;
+    transform: translateY(-2px);
+}
+
+.btn-trip.secondary {
+    background: white;
+    color: #0052cc;
+    border: 1px solid #0052cc;
+}
+
+.btn-trip.secondary:hover {
+    background: #f0f6ff;
+}
+
+/* EMPTY STATES */
+.empty-state-message,
+.empty-fill {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.empty-state-message a {
+    color: #0052cc;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.empty-state-message a:hover {
+    text-decoration: underline;
+}
+
+/* NOTIFICATION POPUP */
+.notification-popup {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    width: 380px;
+    max-height: 500px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transform: translateY(-30px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.notification-popup.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.popup-header h3 {
+    margin: 0;
+    color: #0052cc;
+    font-size: 1.1em;
+}
+
+.close-popup {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #666;
+}
+
+.notifications-list {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.notification-item.unread {
+    background: #f0f6ff;
+    border-left: 3px solid #0052cc;
+}
+
+.notification-item:hover {
+    background: #f5f5f5;
+}
+
+.notification-icon {
+    font-size: 1.5em;
+    min-width: 30px;
+    text-align: center;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    margin: 0 0 4px 0;
+    color: #0052cc;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.notification-text {
+    margin: 0 0 4px 0;
+    color: #666;
+    font-size: 0.85em;
+    line-height: 1.4;
+}
+
+.notification-time {
+    display: block;
+    color: #999;
+    font-size: 0.75em;
+}
+
+.btn-mark-read {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    color: #0052cc;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-mark-read:hover {
+    background: #f0f6ff;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff6b35;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75em;
+    font-weight: 700;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .itinerary-section {
+        padding: 20px;
+    }
+
+    .itinerary-header h1 {
+        font-size: 1.8em;
+    }
+
+    .itinerary-tabs {
+        overflow-x: auto;
+        gap: 8px;
+    }
+
+    .tab-btn {
+        padding: 10px 16px;
+        font-size: 0.85em;
+        white-space: nowrap;
+    }
+
+    .trip-details {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .trip-actions {
+        flex-direction: column;
+    }
+
+    .btn-trip {
+        width: 100%;
+    }
+
+    .notification-popup {
+        width: calc(100vw - 40px);
+        right: 20px;
+        left: 20px;
+    }
+}

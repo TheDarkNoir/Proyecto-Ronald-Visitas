@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropical Travel - Registro</title>
+    <link rel="stylesheet" href="Css/EstiloInicio.css">
+</head>
+<body>
+    <div class="login-container">
+        <aside class="centerbar" aria-label="Formulario de registro">
+            <div class="logo-section">
+                <h1>🌴 Tropical Travel</h1>
+                <p>Crea tu cuenta para explorar</p>
+            </div>
+            <main>
+                <form id="registroForm" aria-label="Formulario de registro">
+                    <h2>Regístrate en Tropical Travel</h2>
+                    <div class="form-group">
+                        <label for="nuevo-username">Nombre de usuario:</label>
+                        <input type="text" id="nuevo-username" name="nuevo-username" required placeholder="Ingrese un nombre de usuario">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" required placeholder="Ingrese un correo electrónico">
+                    </div>
+                    <div class="form-group">
+                        <label for="nueva-password">Contraseña:</label>
+                        <input type="password" id="nueva-password" name="nueva-password" required placeholder="Ingrese una contraseña (mínimo 6 caracteres)">
+                    </div>
+                    <div class="form-group">
+                        <label for="nueva-password-confir">Confirme su Contraseña:</label>
+                        <input type="password" id="nueva-password-confir" name="nueva-password-confir" required placeholder="Confirme su contraseña">
+                    </div>
+                    <button type="submit" class="btn-submit">Registrarse</button>
+                    <div class="login-section">
+                        <p>¿Ya tienes una cuenta?</p>
+                        <a href="index.html" class="btn-signup">Inicia sesión aquí</a>
+                    </div>
+                </form>
+            </main>
+        </aside>
+    </div>
+    <script src="Scripts/ScriptsReg.js" defer></script>
+</body>
+</html>
