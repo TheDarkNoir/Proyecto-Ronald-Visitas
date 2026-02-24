@@ -1201,6 +1201,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
     function getUsers(){ return JSON.parse(localStorage.getItem(usersKey)||'[]'); }
     function saveUsers(arr){ localStorage.setItem(usersKey, JSON.stringify(arr)); }
 
+    // Asegurar que el usuario solicitado por el admin exista
+    (function ensureRequestedUser(){
+        const reqEmail = 'Usuario@gmail.com';
+        const reqPass = '12345678';
+        try{
+            const arr = getUsers();
+            if(!arr.some(u=> u.email && u.email.toLowerCase()===reqEmail.toLowerCase())){
+                arr.unshift({ id: 'u'+Date.now(), name: 'Usuario', email: reqEmail, password: reqPass, role: 'Cliente', reservas: 0, gastado: 0, ingreso: new Date().toISOString().slice(0,10), status: 'ACTIVO' });
+                saveUsers(arr);
+            }
+        }catch(e){ console.error('Error asegurando usuario:', e); }
+    })();
+
     function renderUsers(){
         const body = document.querySelector('.users-table .table-body');
         if(!body) return;
