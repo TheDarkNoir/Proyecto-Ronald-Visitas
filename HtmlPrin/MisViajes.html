@@ -19,13 +19,16 @@
             <nav class="top-nav">
                 <button class="nav-btn" onclick="location.href='Inicio.html'">🧭 Explorar</button>
                 <button class="nav-btn active" onclick="location.href='MisViajes.html'">📅 Mis Viajes</button>
-                <button class="nav-btn" onclick="location.href='comunidad.html'">👥 Comunidad</button>
+                <button class="nav-btn" onclick="location.href='Comunidad.html'">👥 Comunidad</button>
                 <button class="btn-iachat" onclick="location.href='IAChat.html'">💬 IA Chat</button>
             </nav>
 
             <div class="header-actions">
-                <button class="notification-btn">🔔</button>
-                <div class="user-avatar" id="userInitials">JA</div>
+                <div class="notification-wrapper">
+                    <button class="notification-btn">🔔</button>
+                    <div class="notification-badge" style="display:none;">0</div>
+                </div>
+                <div class="user-avatar" id="userInitials" onclick="location.href='Perfil.html'" title="Mi perfil">JA</div>
             </div>
         </div>
     </header>

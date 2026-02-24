@@ -17,16 +17,19 @@
             </div>
 
             <nav class="top-nav">
-                <button class="nav-btn" onclick="location.href='Inicio.html'">✓ Explorar</button>
-                <button class="nav-btn" onclick="location.href='itinerario.html'">📅 Itinerario</button>
-                <button class="nav-btn" onclick="location.href='IAChat.html'">🤖 IA Chat</button>
+                <button class="nav-btn" onclick="location.href='Inicio.html'">🧭 Explorar</button>
+                <button class="nav-btn" onclick="location.href='MisViajes.html'">📅 Mis Viajes</button>
+                <button class="nav-btn" onclick="location.href='Comunidad.html'">👥 Comunidad</button>
+                <button class="btn-iachat" onclick="location.href='IAChat.html'">💬 IA Chat</button>
                 <button class="nav-btn active">👤 Perfil</button>
             </nav>
 
             <div class="header-actions">
-                <button class="notification-btn" id="notificationBtn">🔔</button>
-                <div class="notification-badge" id="notificationBadge">3</div>
-                <div class="user-avatar" id="userInitials">JA</div>
+                <div class="notification-wrapper">
+                    <button class="notification-btn" id="notificationBtn">🔔</button>
+                    <div class="notification-badge" id="notificationBadge">3</div>
+                </div>
+                <div class="user-avatar" id="userInitials" onclick="location.href='Perfil.html'" title="Mi perfil">JA</div>
             </div>
         </div>
     </header>
@@ -72,7 +75,7 @@
             <!-- PROFILE CARD -->
             <div class="profile-card">
                 <div class="profile-header">
-                    <div class="profile-avatar-large" id="profileAvatar">JA</div>
+                    <div class="profile-avatar-large small" id="profileAvatar">JA</div>
                     <div class="profile-info-main">
                         <h1 id="profileName">Juan Acosta</h1>
                         <p id="profileEmail">juan.acosta@email.com</p>
