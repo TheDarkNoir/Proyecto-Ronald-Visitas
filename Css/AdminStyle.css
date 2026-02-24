@@ -288,6 +288,139 @@ body {
     .table-head, .table-row{ grid-template-columns: 2fr 1fr 1fr 1fr 1fr 0.6fr }
 }
 
+/* ===============================
+   USUARIOS
+================================*/
+.users-header{ display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:12px }
+.users-header h2{ margin:0 }
+.users-header .subtitle{ color:var(--text-light); margin-top:6px }
+
+.users-table .table-head{ display:grid; grid-template-columns: 3fr 0.9fr 0.8fr 1fr 1fr 0.9fr 0.8fr; gap:12px; color:var(--text-light); padding:14px 18px }
+.users-table .table-row{ background:white; border-radius:12px; padding:14px 18px; display:grid; grid-template-columns: 3fr 0.9fr 0.8fr 1fr 1fr 0.9fr 0.8fr; align-items:center; gap:12px }
+.user-avatar{ display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:#e8f0ff; color:#2b6cb0; font-weight:700; margin-right:12px }
+.table-row .usuario{ display:flex; align-items:center }
+.table-row .dest-text small{ display:block; color:var(--text-light); font-size:12px }
+.users-table .pill{ background:#eef6ff; color:#2b6cb0; padding:6px 8px; border-radius:8px; font-size:12px }
+.users-table .pill.admin{ background:#ffeef0; color:#c53030 }
+.status-badge.inactive{ background:#fff2f2; color:#e53e3e }
+
+@media(max-width:1024px){
+    .users-table .table-head, .users-table .table-row{ grid-template-columns: 2fr 0.9fr 0.8fr 0.9fr 0.9fr 0.9fr 0.6fr }
+}
+
+/* ===============================
+   OPERACIONES
+================================*/
+.operations-header{ display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:12px }
+.operations-header h2{ margin:0 }
+.operations-header .subtitle{ color:var(--text-light); margin-top:6px }
+
+.ops-table .table-head{ display:grid; grid-template-columns: 0.9fr 2fr 2fr 1fr 0.7fr 0.9fr 1fr 0.6fr; gap:12px; color:var(--text-light); padding:14px 18px }
+.ops-table .table-row{ background:white; border-radius:12px; padding:14px 18px; display:grid; grid-template-columns: 0.9fr 2fr 2fr 1fr 0.7fr 0.9fr 1fr 0.6fr; align-items:center; gap:12px }
+.ops-table .col{ font-size:14px }
+.status-badge.confirmed{ background:#e6f8ee; color:#0b8a45; padding:6px 10px; border-radius:12px; font-weight:700; }
+.status-badge.pending{ background:#fff7e6; color:#b36a00; padding:6px 10px; border-radius:12px; font-weight:700; }
+.status-badge.cancelled{ background:#fff2f2; color:#e53e3e; padding:6px 10px; border-radius:12px; font-weight:700; }
+.ops-table .icon{ background:transparent; border:none; cursor:pointer; font-size:16px }
+
+@media(max-width:1024px){
+    .ops-table .table-head, .ops-table .table-row{ grid-template-columns: 0.8fr 2fr 1.6fr 0.9fr 0.6fr 0.8fr 0.8fr 0.5fr }
+}
+
+/* ===============================
+   FINANZAS
+================================*/
+.finance-header{ display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:12px }
+.finance-header h2{ margin:0 }
+.finance-header .subtitle{ color:var(--text-light); margin-top:6px }
+.finance-actions .btn-new-dest{ background:var(--primary-blue); color:white; border:none; padding:10px 16px; border-radius:10px; cursor:pointer }
+
+.finance-metrics{ margin-bottom:18px }
+.finance-grid{ display:grid; grid-template-columns: 1fr 420px; gap:20px; margin-bottom:20px }
+.cashflow-card, .expenses-card{ background:white; padding:22px; border-radius:12px }
+.cashflow-card h3, .expenses-card h3{ margin:0 0 12px 0 }
+.progress-row{ display:flex; align-items:center; gap:12px; margin-bottom:14px }
+.progress-row .label{ flex:1; color:var(--text-dark); font-weight:600 }
+.bar-wrap{ flex:2; background:#f3f4f6; height:10px; border-radius:999px; overflow:hidden }
+.bar{ height:10px; border-radius:999px }
+.progress-row .value{ width:120px; text-align:right; color:var(--text-dark); font-weight:700 }
+
+.transactions-section{ margin-top:18px }
+.transactions-section h3{ margin-bottom:12px }
+.transactions-list{ display:flex; flex-direction:column; gap:12px }
+.transaction{ background:white; padding:16px 18px; border-radius:12px; display:flex; justify-content:space-between; align-items:center }
+.transaction .left small{ display:block; color:var(--text-light); margin-top:6px }
+.tx-amount.positive{ color:#10b981; font-weight:700 }
+.tx-amount.negative{ color:#f56565; font-weight:700 }
+.tx-status{ display:block; font-size:12px; color:var(--text-light); margin-top:6px }
+
+@media(max-width:1024px){
+    .finance-grid{ grid-template-columns: 1fr }
+}
+
+/* ===============================
+   EXPERIENCIA / RESEÑAS
+================================*/
+.experience-header{ display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:12px }
+.experience-actions{ display:flex; gap:12px; align-items:center }
+.filter-select{ padding:8px 10px; border-radius:8px; border:1px solid var(--border-color); background:white }
+
+.rating-distribution-panel{ margin:18px 0 }
+.rating-distribution{ background:white; padding:18px; border-radius:12px }
+.dist-row{ display:flex; align-items:center; gap:12px; margin:10px 0 }
+.dist-label{ width:40px; color:var(--text-dark); font-weight:600 }
+.dist-bar{ flex:1; background:#f3f4f6; height:12px; border-radius:999px; overflow:hidden }
+.dist-fill{ height:12px; border-radius:999px; background:#f59e0b }
+.dist-percent{ width:48px; text-align:right; color:var(--text-light) }
+
+.reviews-list h3{ margin-bottom:12px }
+.review-card{ background:white; border-radius:12px; padding:18px; margin-bottom:12px; display:flex; justify-content:space-between; gap:12px }
+.review-left{ display:flex; gap:12px }
+.review-avatar{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#e8f0ff; color:#2b6cb0; font-weight:700 }
+.review-body{ max-width:calc(100% - 200px) }
+.review-body strong{ display:block }
+.review-body small{ color:var(--text-light) }
+.review-text{ margin-top:10px; color:var(--text-dark) }
+.review-actions{ text-align:right }
+.star-inline{ color:#f59e0b; margin-left:6px }
+.respond-btn{ background:transparent; border:none; color:#ed8936; cursor:pointer; font-weight:600 }
+.publish-badge{ display:inline-block; background:#e6f8ee; color:#0b8a45; padding:6px 10px; border-radius:10px; font-weight:700; font-size:12px }
+
+@media(max-width:768px){
+    .review-body{ max-width:100% }
+    .experience-header{ flex-direction:column; align-items:flex-start }
+}
+
+/* ===============================
+   CONFIGURACIÓN
+================================*/
+.config-header{ display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:12px }
+.config-actions{ display:flex; gap:12px }
+.config-grid{ display:grid; grid-template-columns:1fr 420px; gap:20px; margin-bottom:18px }
+.config-card{ background:white; padding:18px; border-radius:12px }
+.config-card h3{ margin-top:0 }
+.config-card label{ display:block; margin-top:12px; font-size:13px; color:var(--text-light) }
+.config-card input, .config-card select{ width:100%; padding:10px 12px; margin-top:6px; border-radius:10px; border:1px solid var(--border-color); background:#fbfdff }
+.system-functions.large{ padding:18px }
+.func-row{ display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #f1f5f9 }
+.func-row:last-child{ border-bottom:none }
+.muted{ color:var(--text-light); font-size:13px; margin-top:6px }
+.toggle-wrap{ display:flex; align-items:center }
+
+/* toggle switch */
+.switch{ position:relative; display:inline-block; width:48px; height:26px }
+.switch input{ opacity:0; width:0; height:0 }
+.slider{ position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#e6eaf0; transition:.2s; border-radius:999px }
+.slider:before{ position:absolute; content:""; height:20px; width:20px; left:4px; top:3px; background:white; transition:.2s; border-radius:50%; box-shadow:0 2px 6px rgba(2,6,23,0.08) }
+.switch input:checked + .slider{ background:#10b981 }
+.switch input:checked + .slider:before{ transform:translateX(22px) }
+
+.btn-new-dest{ background:var(--primary-blue); color:white; border:none; padding:10px 16px; border-radius:10px; cursor:pointer }
+
+@media(max-width:1024px){
+    .config-grid{ grid-template-columns:1fr }
+}
+
 .empty-panel{
     background:white;
     border-radius:14px;

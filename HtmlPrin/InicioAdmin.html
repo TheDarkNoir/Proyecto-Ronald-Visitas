@@ -314,46 +314,519 @@
 
             <!-- ================= USUARIOS ================= -->
             <section id="usuarios" class="admin-view">
-                <h2>Gestión de Usuarios</h2>
-                <div class="empty-panel">
-                    <p class="empty-title">No hay usuarios registrados</p>
-                    <p class="empty-desc">Los usuarios aparecerán en esta sección cuando se registren.</p>
+                <div class="users-header">
+                    <div>
+                        <h2>Gestión de Usuarios</h2>
+                        <p class="subtitle">Administra clientes y roles del sistema</p>
+                    </div>
+
+                    <div class="inventory-actions">
+                        <button class="btn-new-dest">+ Nuevo Usuario</button>
+                    </div>
+                </div>
+
+                <section class="users-metrics metrics-section">
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">👤</div>
+                            <div class="metric-text">
+                                <p>TOTAL USUARIOS</p>
+                                <h3>4</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">🧑‍🤝‍🧑</div>
+                            <div class="metric-text">
+                                <p>CLIENTES</p>
+                                <h3>3</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">🛡️</div>
+                            <div class="metric-text">
+                                <p>ADMINS</p>
+                                <h3>1</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-text">
+                                <p>ACTIVOS</p>
+                                <h3>3</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="users-table">
+                    <div class="table-head">
+                        <div class="col usuario">USUARIO</div>
+                        <div class="col rol">ROL</div>
+                        <div class="col reservas">RESERVAS</div>
+                        <div class="col gastado">GASTADO</div>
+                        <div class="col ingreso">INGRESO</div>
+                        <div class="col estado">ESTADO</div>
+                        <div class="col acciones">ACCIONES</div>
+                    </div>
+
+                    <div class="table-body">
+                        <div class="table-row">
+                            <div class="col usuario">
+                                <span class="user-avatar">MR</span>
+                                <div class="dest-text">
+                                    <strong>María Rodríguez</strong>
+                                    <small>maria@email.com</small>
+                                </div>
+                            </div>
+                            <div class="col rol"><span class="pill">Cliente</span></div>
+                            <div class="col reservas">12</div>
+                            <div class="col gastado">$5.400.000</div>
+                            <div class="col ingreso">2024-01-15</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col usuario">
+                                <span class="user-avatar">CM</span>
+                                <div class="dest-text">
+                                    <strong>Carlos Méndez</strong>
+                                    <small>carlos@email.com</small>
+                                </div>
+                            </div>
+                            <div class="col rol"><span class="pill">Cliente</span></div>
+                            <div class="col reservas">8</div>
+                            <div class="col gastado">$3.200.000</div>
+                            <div class="col ingreso">2024-02-20</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col usuario">
+                                <span class="user-avatar">AT</span>
+                                <div class="dest-text">
+                                    <strong>Ana Torres</strong>
+                                    <small>ana@email.com</small>
+                                </div>
+                            </div>
+                            <div class="col rol"><span class="pill admin">Administrador</span></div>
+                            <div class="col reservas">0</div>
+                            <div class="col gastado">$0</div>
+                            <div class="col ingreso">2023-11-10</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col usuario">
+                                <span class="user-avatar">LG</span>
+                                <div class="dest-text">
+                                    <strong>Luis Gómez</strong>
+                                    <small>luis@email.com</small>
+                                </div>
+                            </div>
+                            <div class="col rol"><span class="pill">Cliente</span></div>
+                            <div class="col reservas">3</div>
+                            <div class="col gastado">$980.000</div>
+                            <div class="col ingreso">2025-01-05</div>
+                            <div class="col estado"><span class="status-badge inactive">INACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- ================= OPERACIONES ================= -->
             <section id="operaciones" class="admin-view">
-                <h2>Operaciones</h2>
-                <div class="empty-panel">
-                    <p class="empty-title">Sin operaciones recientes</p>
-                    <p class="empty-desc">Aquí verás las reservas y movimientos en tiempo real.</p>
+                <div class="operations-header">
+                    <div>
+                        <h2>Gestión de Operaciones</h2>
+                        <p class="subtitle">Monitoreo en tiempo real de reservas y tours</p>
+                    </div>
+
+                    <div class="inventory-actions">
+                        <button class="btn-new-dest">Ver Calendario</button>
+                    </div>
+                </div>
+
+                <section class="operations-metrics metrics-section">
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-text">
+                                <p>CONFIRMADAS</p>
+                                <h3>2</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">⏳</div>
+                            <div class="metric-text">
+                                <p>PENDIENTES</p>
+                                <h3>1</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">❌</div>
+                            <div class="metric-text">
+                                <p>CANCELADAS</p>
+                                <h3>1</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">👥</div>
+                            <div class="metric-text">
+                                <p>TOTAL VIAJEROS</p>
+                                <h3>10</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="ops-table">
+                    <div class="table-head">
+                        <div class="col id">ID RESERVA</div>
+                        <div class="col cliente">CLIENTE</div>
+                        <div class="col destino">DESTINO</div>
+                        <div class="col fecha">FECHA</div>
+                        <div class="col viajeros">VIAJEROS</div>
+                        <div class="col total">TOTAL</div>
+                        <div class="col estado">ESTADO</div>
+                        <div class="col acciones">ACCIONES</div>
+                    </div>
+
+                    <div class="table-body">
+                        <div class="table-row">
+                            <div class="col id">B001</div>
+                            <div class="col cliente">María Rodríguez</div>
+                            <div class="col destino">Cartagena de Indias</div>
+                            <div class="col fecha">2025-03-15</div>
+                            <div class="col viajeros">2</div>
+                            <div class="col total">$900.000</div>
+                            <div class="col estado"><span class="status-badge confirmed">CONFIRMADA</span></div>
+                            <div class="col acciones"><button class="icon">📄</button></div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col id">B002</div>
+                            <div class="col cliente">Carlos Méndez</div>
+                            <div class="col destino">Parque Tayrona</div>
+                            <div class="col fecha">2025-03-20</div>
+                            <div class="col viajeros">2</div>
+                            <div class="col total">$900.000</div>
+                            <div class="col estado"><span class="status-badge pending">PENDIENTE</span></div>
+                            <div class="col acciones"><button class="icon">📄</button></div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col id">B003</div>
+                            <div class="col cliente">Ana Torres</div>
+                            <div class="col destino">Valle de Cocora</div>
+                            <div class="col fecha">2025-03-18</div>
+                            <div class="col viajeros">2</div>
+                            <div class="col total">$900.000</div>
+                            <div class="col estado"><span class="status-badge confirmed">CONFIRMADA</span></div>
+                            <div class="col acciones"><button class="icon">📄</button></div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col id">B004</div>
+                            <div class="col cliente">Luis Gómez</div>
+                            <div class="col destino">Cartagena de Indias</div>
+                            <div class="col fecha">2025-03-25</div>
+                            <div class="col viajeros">2</div>
+                            <div class="col total">$900.000</div>
+                            <div class="col estado"><span class="status-badge cancelled">CANCELADA</span></div>
+                            <div class="col acciones"><button class="icon">📄</button></div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- ================= FINANZAS ================= -->
             <section id="finanzas" class="admin-view">
-                <h2>Finanzas</h2>
-                <div class="empty-panel">
-                    <p class="empty-title">Sin datos financieros</p>
-                    <p class="empty-desc">Genera un reporte para ver ingresos y gastos.</p>
+                <div class="finance-header">
+                    <div>
+                        <h2>Gestión Financiera</h2>
+                        <p class="subtitle">Control de ingresos, gastos y reportes</p>
+                    </div>
+
+                    <div class="finance-actions">
+                        <button class="btn-new-dest">Generar Reporte</button>
+                    </div>
                 </div>
+
+                <section class="finance-metrics metrics-section">
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">💸</div>
+                            <div class="metric-text">
+                                <p>INGRESOS</p>
+                                <h3>$12.500.000</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">📉</div>
+                            <div class="metric-text">
+                                <p>GASTOS</p>
+                                <h3>$6.200.000</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">📊</div>
+                            <div class="metric-text">
+                                <p>BENEFICIO</p>
+                                <h3>$6.300.000</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">🧾</div>
+                            <div class="metric-text">
+                                <p>REPORTES</p>
+                                <h3>4</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="finance-grid">
+                    <section class="cashflow-card">
+                        <h3>Flujo de Caja Mensual</h3>
+                        <canvas id="cashChart"></canvas>
+                    </section>
+
+                    <section class="expenses-card">
+                        <h3>Desglose de Gastos</h3>
+                        <div class="progress-row">
+                            <div class="label">Marketing Digital</div>
+                            <div class="bar-wrap"><div class="bar" style="width:55%; background:#3b82f6"></div></div>
+                            <div class="value">$2.500.000</div>
+                        </div>
+
+                        <div class="progress-row">
+                            <div class="label">Nómina Guías</div>
+                            <div class="bar-wrap"><div class="bar" style="width:70%; background:#10b981"></div></div>
+                            <div class="value">$3.200.000</div>
+                        </div>
+
+                        <div class="progress-row">
+                            <div class="label">Mantenimiento Equipos</div>
+                            <div class="bar-wrap"><div class="bar" style="width:40%; background:#f59e0b"></div></div>
+                            <div class="value">$1.500.000</div>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="transactions-section">
+                    <h3>Últimas Transacciones</h3>
+                    <div class="transactions-list">
+                        <div class="transaction">
+                            <div class="left">Reserva B001 - María Rodríguez<br><small>CARTAGENA DE INDIAS • 2025-03-15</small></div>
+                            <div class="right"><span class="tx-amount positive">+ $450.000</span><span class="tx-status">CONFIRMADA</span></div>
+                        </div>
+
+                        <div class="transaction">
+                            <div class="left">Reserva B002 - Carlos Méndez<br><small>PARQUE TAYRONA • 2025-03-20</small></div>
+                            <div class="right"><span class="tx-amount positive">+ $450.000</span><span class="tx-status">CONFIRMADA</span></div>
+                        </div>
+
+                        <div class="transaction">
+                            <div class="left">Gasto Mantenimiento<br><small>Equipo guía • 2025-02-28</small></div>
+                            <div class="right"><span class="tx-amount negative">- $200.000</span><span class="tx-status">PAGO</span></div>
+                        </div>
+                    </div>
+                </section>
             </section>
 
             <!-- ================= EXPERIENCIA ================= -->
             <section id="experiencia" class="admin-view">
-                <h2>Experiencia del Cliente</h2>
-                <div class="empty-panel">
-                    <p class="empty-title">Sin reseñas por ahora</p>
-                    <p class="empty-desc">Las reseñas de los clientes aparecerán aquí cuando estén disponibles.</p>
+                <div class="experience-header">
+                    <div>
+                        <h2>Gestión de Experiencia</h2>
+                        <p class="subtitle">Reseñas, feedback y satisfacción del cliente</p>
+                    </div>
+
+                    <div class="experience-actions">
+                        <select id="filterDest" class="filter-select">
+                            <option value="all">Todos los Destinos</option>
+                        </select>
+                        <button id="analyzeBtn" class="btn-new-dest">Ver Análisis</button>
+                    </div>
                 </div>
+
+                <section class="experience-metrics metrics-section">
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">⭐</div>
+                            <div class="metric-text">
+                                <p>RATING PROMEDIO</p>
+                                <h3 id="avgRating">4.0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">💬</div>
+                            <div class="metric-text">
+                                <p>TOTAL RESEÑAS</p>
+                                <h3 id="totalReviews">0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-text">
+                                <p>PUBLICADAS</p>
+                                <h3 id="publishedCount">0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">⏳</div>
+                            <div class="metric-text">
+                                <p>PENDIENTES</p>
+                                <h3 id="pendingCount">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="rating-distribution-panel">
+                    <h3>Distribución de Calificaciones</h3>
+                    <div id="ratingDist" class="rating-distribution">
+                        <!-- se llenará por JS -->
+                    </div>
+                </div>
+
+                <section class="reviews-list" id="reviewsList">
+                    <h3>Reseñas Recientes</h3>
+                    <!-- reseñas renderizadas con JS -->
+                </section>
             </section>
 
             <!-- ================= CONFIG ================= -->
             <section id="configuracion" class="admin-view">
-                <h2>Configuración del Sistema</h2>
-                <div class="empty-panel">
-                    <p class="empty-title">Preferencias sin cambios</p>
-                    <p class="empty-desc">Ajusta la configuración general desde este panel.</p>
+                <div class="config-header">
+                    <div>
+                        <h2>Configuración del Sistema</h2>
+                        <p class="subtitle">Ajustes generales y preferencias de la plataforma</p>
+                    </div>
+
+                    <div class="config-actions">
+                        <button id="saveSettings" class="btn-new-dest">Guardar Cambios</button>
+                    </div>
+                </div>
+
+                <div class="config-grid">
+                    <div class="config-card">
+                        <h3>Información General</h3>
+                        <label>Nombre del Sitio</label>
+                        <input id="siteName" type="text" placeholder="TropicalTravel Colombia">
+
+                        <label>Email de Contacto</label>
+                        <input id="contactEmail" type="email" placeholder="admin@tropicaltravel.co">
+
+                        <label>Teléfono</label>
+                        <input id="phone" type="text" placeholder="+57 300 123 4567">
+                    </div>
+
+                    <div class="config-card">
+                        <h3>Configuración Regional</h3>
+                        <label>Moneda</label>
+                        <select id="currency">
+                            <option value="COP">COP - Peso Colombiano</option>
+                            <option value="USD">USD - Dólar</option>
+                        </select>
+
+                        <label>Idioma</label>
+                        <select id="language">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                        </select>
+
+                        <label>Zona Horaria</label>
+                        <select id="timezone">
+                            <option value="America/Bogota">Bogotá (GMT-5)</option>
+                            <option value="UTC">UTC</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="system-functions config-card large">
+                    <h3>Funcionalidades del Sistema</h3>
+                    <div class="func-row">
+                        <div>
+                            <strong>Notificaciones Push</strong>
+                            <div class="muted">Enviar alertas en tiempo real a usuarios</div>
+                        </div>
+                        <div class="toggle-wrap">
+                            <label class="switch"><input id="togglePush" type="checkbox"><span class="slider"></span></label>
+                        </div>
+                    </div>
+
+                    <div class="func-row">
+                        <div>
+                            <strong>Backup Automático</strong>
+                            <div class="muted">Respaldo diario de la base de datos</div>
+                        </div>
+                        <div class="toggle-wrap">
+                            <label class="switch"><input id="toggleBackup" type="checkbox"><span class="slider"></span></label>
+                        </div>
+                    </div>
+
+                    <div class="func-row">
+                        <div>
+                            <strong>Modo Mantenimiento</strong>
+                            <div class="muted">Deshabilitar acceso público temporalmente</div>
+                        </div>
+                        <div class="toggle-wrap">
+                            <label class="switch"><input id="toggleMaintenance" type="checkbox"><span class="slider"></span></label>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -406,6 +879,64 @@ link.parentElement.classList.add("active");
 
 });
 
+/* CONFIGURACION - guardar/cargar ajustes en localStorage */
+document.addEventListener('DOMContentLoaded', ()=>{
+    const key = 'admin_settings_v1';
+    const defaults = {
+        siteName: 'TropicalTravel Colombia',
+        contactEmail: 'admin@tropicaltravel.co',
+        phone: '+57 300 123 4567',
+        currency: 'COP',
+        language: 'es',
+        timezone: 'America/Bogota',
+        push: true,
+        backup: true,
+        maintenance: false
+    };
+
+    function load(){
+        const raw = localStorage.getItem(key);
+        return raw? JSON.parse(raw): defaults;
+    }
+
+    function save(settings){ localStorage.setItem(key, JSON.stringify(settings)); }
+
+    function applyToForm(s){
+        document.getElementById('siteName').value = s.siteName || '';
+        document.getElementById('contactEmail').value = s.contactEmail || '';
+        document.getElementById('phone').value = s.phone || '';
+        document.getElementById('currency').value = s.currency || 'COP';
+        document.getElementById('language').value = s.language || 'es';
+        document.getElementById('timezone').value = s.timezone || 'America/Bogota';
+        document.getElementById('togglePush').checked = !!s.push;
+        document.getElementById('toggleBackup').checked = !!s.backup;
+        document.getElementById('toggleMaintenance').checked = !!s.maintenance;
+    }
+
+    function readForm(){
+        return {
+            siteName: document.getElementById('siteName').value.trim(),
+            contactEmail: document.getElementById('contactEmail').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            currency: document.getElementById('currency').value,
+            language: document.getElementById('language').value,
+            timezone: document.getElementById('timezone').value,
+            push: document.getElementById('togglePush').checked,
+            backup: document.getElementById('toggleBackup').checked,
+            maintenance: document.getElementById('toggleMaintenance').checked
+        };
+    }
+
+    // inicializar
+    const current = load();
+    applyToForm(current);
+
+    document.getElementById('saveSettings').addEventListener('click', ()=>{
+        const s = readForm();
+        save(s);
+        alert('Configuración guardada.');
+    });
+});
 });
 
 
@@ -450,6 +981,133 @@ responsive:true
 
 }
 
+/* CASHFLOW CHART */
+const cashCtx = document.getElementById("cashChart");
+
+if(cashCtx){
+    new Chart(cashCtx,{
+        type:'line',
+        data:{
+            labels:["Ene","Feb","Mar","Abr","May","Jun","Jul"],
+            datasets:[{
+                data:[4000,3200,2000,2600,2200,3000,3400],
+                borderColor:'#10b981',
+                backgroundColor:'rgba(16,185,129,0.08)',
+                fill:true,
+                tension:.4
+            }]
+        },
+        options:{
+            plugins:{legend:{display:false}},
+            responsive:true,
+            scales:{y:{grid:{display:false}}}
+        }
+    });
+}
+
+});
+
+/* =======================
+   Experiencia - lógica
+   Renderiza reseñas, métricas y distribución
+======================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+    const sampleReviews = [
+        {id:'r1', name:'María Rodríguez', initials:'MR', place:'Cartagena de Indias', date:'2025-02-20', rating:5, text:'Experiencia inolvidable, todo fue perfecto desde el inicio hasta el final. Los guías muy profesionales.', published:true},
+        {id:'r2', name:'Carlos Méndez', initials:'CM', place:'Parque Tayrona', date:'2025-02-05', rating:4, text:'Increíble lugar, aunque un poco lleno en estas fechas. La organización fue buena.', published:true},
+        {id:'r3', name:'Luis Gómez', initials:'LG', place:'Valle de Cocora', date:'2025-01-30', rating:3, text:'Buena experiencia pero con oportunidades de mejora en la logística.', published:false}
+    ];
+
+    const reviewsKey = 'admin_reviews_sample';
+    // persistir muestra para pruebas
+    if(!localStorage.getItem(reviewsKey)) localStorage.setItem(reviewsKey, JSON.stringify(sampleReviews));
+
+    function getReviews(){
+        return JSON.parse(localStorage.getItem(reviewsKey)||'[]');
+    }
+
+    function saveReviews(arr){ localStorage.setItem(reviewsKey, JSON.stringify(arr)); }
+
+    function calcMetrics(reviews){
+        const total = reviews.length;
+        const published = reviews.filter(r=>r.published).length;
+        const pending = total - published;
+        const avg = total? (reviews.reduce((s,r)=>s+r.rating,0)/total) : 0;
+        return {total,published,pending,avg};
+    }
+
+    function renderMetrics(){
+        const reviews = getReviews();
+        const m = calcMetrics(reviews);
+        document.getElementById('totalReviews').textContent = m.total;
+        document.getElementById('publishedCount').textContent = m.published;
+        document.getElementById('pendingCount').textContent = m.pending;
+        document.getElementById('avgRating').textContent = m.avg.toFixed(1);
+    }
+
+    function renderDistribution(){
+        const reviews = getReviews();
+        const counts = [0,0,0,0,0]; // index 0 = 1*, index 4 =5*
+        reviews.forEach(r=>{ counts[r.rating-1]++ });
+        const total = reviews.length || 1;
+        const container = document.getElementById('ratingDist');
+        container.innerHTML = '';
+        for(let i=5;i>=1;i--){
+            const cnt = counts[i-1];
+            const pct = Math.round((cnt/total)*100);
+            const row = document.createElement('div'); row.className='dist-row';
+            row.innerHTML = `<div class="dist-label">${i} <span class="star-inline">★</span></div>
+                <div class="dist-bar"><div class="dist-fill" style="width:${pct}%"></div></div>
+                <div class="dist-percent">${pct}%</div>`;
+            container.appendChild(row);
+        }
+    }
+
+    function renderReviews(){
+        const reviews = getReviews().sort((a,b)=> new Date(b.date)-new Date(a.date));
+        const list = document.getElementById('reviewsList');
+        // limpiar mientras preservamos el h3
+        list.querySelectorAll('.review-card').forEach(n=>n.remove());
+        reviews.forEach(r=>{
+            const card = document.createElement('div'); card.className='review-card';
+            const left = document.createElement('div'); left.className='review-left';
+            left.innerHTML = `<div class="review-avatar">${r.initials}</div>
+                <div class="review-body"><strong>${r.name}</strong><small>${r.place}</small><div class="review-text">${r.text}</div></div>`;
+            const actions = document.createElement('div'); actions.className='review-actions';
+            const stars = '★'.repeat(r.rating)+ '☆'.repeat(5-r.rating);
+            actions.innerHTML = `<div class="publish-area"><span class="publish-badge">${r.published? 'PUBLICADA':'NO PUBLICADA'}</span></div>
+                <div style="margin-top:8px">${stars}</div>
+                <div style="margin-top:10px"><button class="respond-btn" data-id="${r.id}">${r.published? 'Responder':'Revisar'}</button> <button class="respond-btn" data-action="toggle" data-id="${r.id}">Toggle publicar</button></div>`;
+            card.appendChild(left); card.appendChild(actions);
+            list.appendChild(card);
+        });
+
+        // attach handlers
+        list.querySelectorAll('.respond-btn').forEach(btn=>{
+            btn.addEventListener('click', e=>{
+                const id = btn.getAttribute('data-id');
+                const action = btn.getAttribute('data-action');
+                if(action==='toggle'){
+                    const arr = getReviews();
+                    const idx = arr.findIndex(x=>x.id===id);
+                    if(idx>=0){ arr[idx].published = !arr[idx].published; saveReviews(arr); renderAll(); }
+                } else {
+                    const name = getReviews().find(x=>x.id===id).name;
+                    const reply = prompt('Respuesta pública para ' + name + ':');
+                    if(reply){ alert('Respuesta guardada (simulada).'); }
+                }
+            });
+        });
+    }
+
+    function renderAll(){ renderMetrics(); renderDistribution(); renderReviews(); }
+
+    // iniciar render
+    renderAll();
+
+    // filtro simple de demo (no funcional todavía)
+    document.getElementById('filterDest').addEventListener('change', ()=>{ /* placeholder */ });
+    document.getElementById('analyzeBtn').addEventListener('click', ()=>{ alert('Abrir análisis (simulado)'); });
 });
 
 </script>
