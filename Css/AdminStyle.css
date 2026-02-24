@@ -421,6 +421,36 @@ body {
     .config-grid{ grid-template-columns:1fr }
 }
 
+/* MODAL (general) */
+.modal-overlay{ position:fixed; inset:0; background:rgba(2,6,23,0.45); display:none; align-items:center; justify-content:center; z-index:9999 }
+.modal{ background:white; border-radius:12px; width:760px; max-width:95%; padding:18px; box-shadow:0 20px 50px rgba(2,6,23,0.3) }
+.modal h3{ margin-top:0 }
+.modal .form-row{ display:flex; gap:12px; margin-top:10px }
+.modal label{ display:block; font-size:13px; color:var(--text-light); margin-bottom:6px }
+.modal input[type="text"], .modal input[type="number"], .modal textarea, .modal select{ width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color) }
+.modal textarea{ min-height:100px; resize:vertical }
+.modal .actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:14px }
+.modal .btn{ padding:10px 14px; border-radius:8px; border:none; cursor:pointer }
+.btn-cancel{ background:#f1f5f9 }
+.btn-save{ background:var(--primary-blue); color:white }
+.img-preview{ width:120px; height:80px; object-fit:cover; border-radius:8px; border:1px solid #e6eef8 }
+
+/* TOAST */
+.toast-wrap{ position:fixed; right:20px; bottom:20px; display:flex; flex-direction:column; gap:10px; z-index:10000 }
+.toast{ background:#111827; color:white; padding:10px 14px; border-radius:10px; box-shadow:0 8px 24px rgba(2,6,23,0.3); opacity:0; transform:translateY(10px); transition:all .25s }
+.toast.show{ opacity:1; transform:translateY(0) }
+.toast.success{ background:#10b981 }
+.toast.info{ background:#3b82f6 }
+.toast.warn{ background:#f59e0b }
+
+/* CALENDAR */
+.calendar-grid{ display:grid; grid-template-columns: repeat(7, 1fr); gap:6px }
+.calendar-cell{ background:#fff; padding:10px; border-radius:8px; min-height:70px; box-shadow:0 2px 6px rgba(2,6,23,0.03) }
+.calendar-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px }
+.calendar-nav button{ border:none; background:#eef2ff; padding:6px 8px; border-radius:8px; cursor:pointer }
+.date-badge{ display:block; font-weight:700; margin-bottom:6px }
+.booking-dot{ width:8px; height:8px; background:#10b981; border-radius:50%; display:inline-block; margin-right:6px }
+
 .empty-panel{
     background:white;
     border-radius:14px;

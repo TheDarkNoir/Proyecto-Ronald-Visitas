@@ -208,7 +208,7 @@
                     </div>
 
                     <div class="inventory-actions">
-                        <button class="btn-new-dest">+ Nuevo Destino</button>
+                        <button id="newDestinationBtn" class="btn-new-dest">+ Nuevo Destino</button>
                     </div>
                 </div>
 
@@ -321,7 +321,7 @@
                     </div>
 
                     <div class="inventory-actions">
-                        <button class="btn-new-dest">+ Nuevo Usuario</button>
+                        <button id="newUserBtn" class="btn-new-dest">+ Nuevo Usuario</button>
                     </div>
                 </div>
 
@@ -467,7 +467,7 @@
                     </div>
 
                     <div class="inventory-actions">
-                        <button class="btn-new-dest">Ver Calendario</button>
+                        <button id="viewCalendarBtn" class="btn-new-dest">Ver Calendario</button>
                     </div>
                 </div>
 
@@ -582,7 +582,7 @@
                     </div>
 
                     <div class="finance-actions">
-                        <button class="btn-new-dest">Generar Reporte</button>
+                        <button id="genReportBtn" class="btn-new-dest">Generar Reporte</button>
                     </div>
                 </div>
 
@@ -838,7 +838,7 @@
 
 
 
-<!-- ================= SCRIPTS ================= -->
+<!-- ================= SCRIPTS ================= Parte Horrible :)-->
 
 <script>
 
@@ -934,7 +934,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
     document.getElementById('saveSettings').addEventListener('click', ()=>{
         const s = readForm();
         save(s);
-        alert('Configuración guardada.');
+        // toast simple inline (no dependencia externa)
+        const wrap = document.getElementById('toastWrap');
+        const t = document.createElement('div'); t.className='toast success show'; t.textContent = 'Configuración guardada.';
+        wrap.appendChild(t);
+        setTimeout(()=>{ t.classList.remove('show'); t.style.opacity='0'; setTimeout(()=>t.remove(),300); },3000);
     });
 });
 });
@@ -1020,6 +1024,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     const reviewsKey = 'admin_reviews_sample';
     // persistir muestra para pruebas
+    
     if(!localStorage.getItem(reviewsKey)) localStorage.setItem(reviewsKey, JSON.stringify(sampleReviews));
 
     function getReviews(){
@@ -1066,6 +1071,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     function renderReviews(){
         const reviews = getReviews().sort((a,b)=> new Date(b.date)-new Date(a.date));
         const list = document.getElementById('reviewsList');
+
         // limpiar mientras preservamos el h3
         list.querySelectorAll('.review-card').forEach(n=>n.remove());
         reviews.forEach(r=>{
@@ -1082,7 +1088,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
             list.appendChild(card);
         });
 
-        // attach handlers
+        // agregar eventos a botones de cada reseña
         list.querySelectorAll('.respond-btn').forEach(btn=>{
             btn.addEventListener('click', e=>{
                 const id = btn.getAttribute('data-id');
@@ -1094,7 +1100,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 } else {
                     const name = getReviews().find(x=>x.id===id).name;
                     const reply = prompt('Respuesta pública para ' + name + ':');
-                    if(reply){ alert('Respuesta guardada (simulada).'); }
+                    if(reply){
+                        const wrap = document.getElementById('toastWrap');
+                        const t = document.createElement('div'); t.className='toast info show'; t.textContent = 'Respuesta guardada (simulada).';
+                        wrap.appendChild(t);
+                        setTimeout(()=>{ t.classList.remove('show'); t.style.opacity='0'; setTimeout(()=>t.remove(),300); },3000);
+                    }
                 }
             });
         });
@@ -1107,10 +1118,296 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     // filtro simple de demo (no funcional todavía)
     document.getElementById('filterDest').addEventListener('change', ()=>{ /* placeholder */ });
-    document.getElementById('analyzeBtn').addEventListener('click', ()=>{ alert('Abrir análisis (simulado)'); });
+    document.getElementById('analyzeBtn').addEventListener('click', ()=>{
+        // abrir modal con gráfico de distribución 
+        const reviews = JSON.parse(localStorage.getItem('admin_reviews_sample')||'[]');
+        const counts = [0,0,0,0,0];
+        reviews.forEach(r=> counts[r.rating-1]++ );
+        const labels = ['1★','2★','3★','4★','5★'];
+        const data = counts;
+        const html = `<h3>Análisis de Experiencia</h3><canvas id="analysisChart" style="width:100%;height:260px"></canvas><div class="actions"><button class="btn btn-cancel modal-close">Cerrar</button></div>`;
+        openModal(html);
+        const ctxA = document.getElementById('analysisChart');
+        if(ctxA){
+            new Chart(ctxA,{ type:'bar', data:{ labels:labels, datasets:[{ data:data, backgroundColor:['#f59e0b','#f59e0b','#f59e0b','#f59e0b','#f59e0b'] }] }, options:{ plugins:{legend:{display:false}} } });
+        }
+    });
+});
+
+/* =======================
+   Nuevo Destino / Nuevo Usuario - lógica
+======================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modal = document.getElementById('modal');
+
+    function openModal(html){
+        modal.innerHTML = html;
+        modalOverlay.style.display = 'flex';
+        modal.setAttribute('aria-hidden','false');
+        // brinda cierre a botones dentro del modal
+        modal.querySelectorAll('.btn-cancel,.modal-close').forEach(b=>b.addEventListener('click', closeModal));
+    }
+
+    function closeModal(){ modalOverlay.style.display='none'; modal.setAttribute('aria-hidden','true'); }
+
+    // DESTINATIONS
+    const destKey = 'admin_destinations_v1';
+    const sampleDests = [
+        {id:'d1',name:'Cartagena de Indias',location:'Bolívar, Colombia',category:'City',price:450000,image:'../Imagenes/cartagenaimg.jpg',rating:4.9,status:'ACTIVO',desc:'Hermosa ciudad amurallada.'},
+        {id:'d2',name:'Parque Tayrona',location:'Magdalena, Colombia',category:'Beach',price:320000,image:'../Imagenes/tayrona.jpg',rating:5,status:'LLENO',desc:'Parque natural con playas espectaculares.'}
+    ];
+
+    if(!localStorage.getItem(destKey)) localStorage.setItem(destKey, JSON.stringify(sampleDests));
+
+    function getDests(){ return JSON.parse(localStorage.getItem(destKey)||'[]'); }
+    function saveDests(arr){ localStorage.setItem(destKey, JSON.stringify(arr)); }
+
+    function renderDests(){
+        const body = document.querySelector('.inventory-table .table-body');
+        if(!body) return;
+        const arr = getDests();
+        body.innerHTML = '';
+        arr.forEach(d=>{
+            const row = document.createElement('div'); row.className='table-row';
+            row.innerHTML = `
+                <div class="col destino">
+                    <img src="${d.image}" alt="${d.name}" class="thumb">
+                    <div class="dest-text"><strong>${d.name}</strong><small>${d.location}</small></div>
+                </div>
+                <div class="col categoria"><span class="pill">${d.category}</span></div>
+                <div class="col precio">$${d.price.toLocaleString('es-CO')}</div>
+                <div class="col rating">⭐ ${d.rating}</div>
+                <div class="col estado"><span class="status-badge ${d.status==='LLENO'? 'full':'active'}">${d.status}</span></div>
+                <div class="col acciones"><button class="icon edit" data-id="${d.id}">✏️</button><button class="icon del" data-id="${d.id}">🗑️</button></div>
+            `;
+            body.appendChild(row);
+        });
+
+        // borrar destino
+        body.querySelectorAll('.del').forEach(b=>b.addEventListener('click', e=>{
+            const id = e.currentTarget.getAttribute('data-id');
+            if(confirm('Eliminar destino?')){ const arr = getDests().filter(x=>x.id!==id); saveDests(arr); renderDests(); }
+        }));
+    }
+
+    // Usuarios
+    const usersKey = 'admin_users_v1';
+    const sampleUsers = [
+        {id:'u1',name:'María Rodríguez',email:'maria@email.com',role:'Cliente',reservas:12,gastado:5400000,ingreso:'2024-01-15',status:'ACTIVO'},
+        {id:'u2',name:'Carlos Méndez',email:'carlos@email.com',role:'Cliente',reservas:8,gastado:3200000,ingreso:'2024-02-20',status:'ACTIVO'}
+    ];
+    if(!localStorage.getItem(usersKey)) localStorage.setItem(usersKey, JSON.stringify(sampleUsers));
+    function getUsers(){ return JSON.parse(localStorage.getItem(usersKey)||'[]'); }
+    function saveUsers(arr){ localStorage.setItem(usersKey, JSON.stringify(arr)); }
+
+    function renderUsers(){
+        const body = document.querySelector('.users-table .table-body');
+        if(!body) return;
+        const arr = getUsers();
+        body.innerHTML = '';
+        arr.forEach(u=>{
+            const row = document.createElement('div'); row.className='table-row';
+            row.innerHTML = `
+                <div class="col usuario"><span class="user-avatar">${u.name.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase()}</span><div class="dest-text"><strong>${u.name}</strong><small>${u.email}</small></div></div>
+                <div class="col rol"><span class="pill ${u.role==='Administrador'?'admin':''}">${u.role}</span></div>
+                <div class="col reservas">${u.reservas}</div>
+                <div class="col gastado">$${u.gastado.toLocaleString('es-CO')}</div>
+                <div class="col ingreso">${u.ingreso}</div>
+                <div class="col estado"><span class="status-badge ${u.status==='INACTIVO'?'inactive':'active'}">${u.status}</span></div>
+                <div class="col acciones"><button class="icon edit" data-id="${u.id}">✏️</button><button class="icon del" data-id="${u.id}">🗑️</button></div>
+            `;
+            body.appendChild(row);
+        });
+
+        body.querySelectorAll('.del').forEach(b=>b.addEventListener('click', e=>{
+            const id = e.currentTarget.getAttribute('data-id');
+            if(confirm('Eliminar usuario?')){ const arr = getUsers().filter(x=>x.id!==id); saveUsers(arr); renderUsers(); }
+        }));
+    }
+
+    // abrir modal nuevo usuario
+    document.getElementById('newDestinationBtn').addEventListener('click', ()=>{
+        const html = `
+            <h3>Nuevo Destino</h3>
+            <div class="form-row">
+                <div style="flex:1">
+                    <label>Nombre</label>
+                    <input id="destName" type="text">
+                </div>
+                <div style="width:140px">
+                    <label>Precio</label>
+                    <input id="destPrice" type="number">
+                </div>
+            </div>
+            <div style="margin-top:10px">
+                <label>Ubicación</label>
+                <input id="destLocation" type="text">
+            </div>
+            <div style="margin-top:10px">
+                <label>Categoría</label>
+                <select id="destCategory"><option>City</option><option>Beach</option><option>Mountain</option></select>
+            </div>
+            <div style="margin-top:10px">
+                <label>Descripción</label>
+                <textarea id="destDesc"></textarea>
+            </div>
+            <div style="margin-top:10px; display:flex; gap:12px; align-items:center">
+                <div>
+                    <label>Imagen</label>
+                    <input id="destImage" type="file" accept="image/*">
+                </div>
+                <img id="destPreview" class="img-preview" src="../Imagenes/viaje.jpg" alt="preview">
+            </div>
+            <div class="actions"><button class="btn btn-cancel">Cancelar</button><button id="saveDest" class="btn btn-save">Guardar</button></div>
+        `;
+        openModal(html);
+
+        // preview
+        const fileInput = modal.querySelector('#destImage');
+        const preview = modal.querySelector('#destPreview');
+        fileInput.addEventListener('change', ()=>{
+            const f = fileInput.files[0];
+            if(!f) return;
+            const reader = new FileReader();
+            reader.onload = e=> preview.src = e.target.result;
+            reader.readAsDataURL(f);
+        });
+
+        modal.querySelector('#saveDest').addEventListener('click', ()=>{
+            const d = {
+                id: 'd'+Date.now(),
+                name: modal.querySelector('#destName').value.trim()||'Nuevo destino',
+                price: Number(modal.querySelector('#destPrice').value)||0,
+                location: modal.querySelector('#destLocation').value.trim()||'',
+                category: modal.querySelector('#destCategory').value,
+                desc: modal.querySelector('#destDesc').value.trim()||'',
+                image: modal.querySelector('#destPreview').src,
+                rating: 0,
+                status: 'ACTIVO'
+            };
+            const arr = getDests(); arr.unshift(d); saveDests(arr); renderDests(); closeModal();
+        });
+    });
+
+    // abrir nuevo usuario modal
+    document.getElementById('newUserBtn').addEventListener('click', ()=>{
+        const html = `
+            <h3>Nuevo Usuario</h3>
+            <div class="form-row">
+                <div style="flex:1"><label>Nombre</label><input id="userName" type="text"></div>
+                <div style="width:220px"><label>Email</label><input id="userEmail" type="text"></div>
+            </div>
+            <div class="form-row" style="margin-top:10px">
+                <div style="flex:1"><label>Rol</label><select id="userRole"><option>Cliente</option><option>Administrador</option></select></div>
+                <div style="width:140px"><label>Reservas</label><input id="userReservas" type="number" value="0"></div>
+                <div style="width:160px"><label>Gastado</label><input id="userGastado" type="number" value="0"></div>
+            </div>
+            <div style="margin-top:10px">
+                <label>Ingreso (YYYY-MM-DD)</label>
+                <input id="userIngreso" type="text" placeholder="2025-03-01">
+            </div>
+            <div style="margin-top:10px; display:flex; justify-content:flex-end; gap:10px">
+                <button class="btn btn-cancel">Cancelar</button>
+                <button id="saveUser" class="btn btn-save">Agregar Usuario</button>
+            </div>
+        `;
+        openModal(html);
+
+        modal.querySelector('#saveUser').addEventListener('click', ()=>{
+            const u = {
+                id: 'u'+Date.now(),
+                name: modal.querySelector('#userName').value.trim()||'Nuevo Usuario',
+                email: modal.querySelector('#userEmail').value.trim()||'',
+                role: modal.querySelector('#userRole').value,
+                reservas: Number(modal.querySelector('#userReservas').value)||0,
+                gastado: Number(modal.querySelector('#userGastado').value)||0,
+                ingreso: modal.querySelector('#userIngreso').value||new Date().toISOString().slice(0,10),
+                status: 'ACTIVO'
+            };
+            const arr = getUsers(); arr.unshift(u); saveUsers(arr); renderUsers(); closeModal();
+        });
+    });
+
+    // initial render
+    renderDests(); renderUsers();
 });
 
 </script>
 
 </body>
 </html>
+
+<!-- MODALES: Nuevo Destino + Nuevo Usuario -->
+<div id="modalOverlay" class="modal-overlay">
+    <div id="modal" class="modal" role="dialog" aria-hidden="true">
+        <!-- dynamic content -->
+    </div>
+</div>
+
+<!-- TOASTS -->
+<div id="toastWrap" class="toast-wrap" aria-live="polite"></div>
+
+<script>
+// Helpers: showToast
+function showToast(message, type='info', timeout=3000){
+    const wrap = document.getElementById('toastWrap');
+    if(!wrap) return; const t = document.createElement('div'); t.className = `toast ${type} show`; t.textContent = message; wrap.appendChild(t);
+    setTimeout(()=>{ t.classList.remove('show'); t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, timeout);
+}
+
+// Generar reporte CSV desde la lista de transacciones
+document.getElementById('genReportBtn')?.addEventListener('click', ()=>{
+    const rows = Array.from(document.querySelectorAll('.transactions-list .transaction'));
+    if(!rows.length){ showToast('No hay transacciones para exportar','warn'); return; }
+    const csv = ['Concepto,Detalle,Monto,Estado'];
+    rows.forEach(r=>{
+        const left = r.querySelector('.left').innerText.replace(/\n/g,' - ').replace(/,/g,'');
+        const amount = r.querySelector('.tx-amount')?.innerText || '';
+        const status = r.querySelector('.tx-status')?.innerText || '';
+        csv.push(`"${left}","","${amount}","${status}"`);
+    });
+    const blob = new Blob([csv.join('\n')], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'reporte_finanzas.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    showToast('Reporte generado y descargado','success');
+});
+
+// Calendario de operaciones (modal)
+document.getElementById('viewCalendarBtn')?.addEventListener('click', ()=>{
+    // Extraer operaciones desde la tabla
+    const opRows = Array.from(document.querySelectorAll('.ops-table .table-body .table-row'));
+    const ops = opRows.map(r=>({ id: r.querySelector('.col.id')?.innerText.trim(), date: r.querySelector('.col.fecha')?.innerText.trim(), cliente: r.querySelector('.col.cliente')?.innerText.trim(), destino: r.querySelector('.col.destino')?.innerText.trim(), estado: r.querySelector('.col.estado')?.innerText.trim() }));
+
+    // Construir calendario simple (sin librerías) para el mes actual, marcando días con operaciones
+    const now = new Date(); let year = now.getFullYear(); let month = now.getMonth();
+    function buildCalendar(y,m){
+        const first = new Date(y,m,1); const daysInMonth = new Date(y,m+1,0).getDate();
+        const startDay = first.getDay();
+        let html = `<div class="calendar-header"><div><strong>${first.toLocaleString('es',{month:'long',year:'numeric'})}</strong></div><div class="calendar-nav"><button id="prevMonth">◀</button><button id="nextMonth">▶</button></div></div><div class="calendar-grid">`;
+        // celdas vacias
+        for(let i=0;i<startDay;i++) html += `<div class="calendar-cell empty"></div>`;
+        for(let d=1; d<=daysInMonth; d++){
+            const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const dayOps = ops.filter(o=> o.date === dateStr || o.date === `${String(d).padStart(2,'0')}` || o.date.includes(String(d)) );
+            html += `<div class="calendar-cell"><div class="date-badge">${d}</div>`;
+            dayOps.slice(0,3).forEach(o=> html += `<div><span class="booking-dot"></span>${o.cliente} - ${o.destino}</div>`);
+            if(dayOps.length>3) html += `<div>+${dayOps.length-3} más</div>`;
+            html += `</div>`;
+        }
+        html += '</div>';
+        return html;
+    }
+
+    const html = `<h3>Calendario de Operaciones</h3>` + buildCalendar(year,month) + `<div class="actions"><button class="btn btn-cancel modal-close">Cerrar</button></div>`;
+    
+    //utilizar openModal existente desde el ámbito global
+    if(typeof openModal === 'function'){ openModal(html);
+        // attach nav
+        document.getElementById('prevMonth')?.addEventListener('click', ()=>{ month--; if(month<0){ month=11; year--; } const body = document.getElementById('analysisChart')?null:null; const newhtml = `<h3>Calendario de Operaciones</h3>` + buildCalendar(year,month) + `<div class="actions"><button class="btn btn-cancel modal-close">Cerrar</button></div>`; document.getElementById('modal').innerHTML = newhtml; document.getElementById('modal').querySelectorAll('.modal-close').forEach(b=>b.addEventListener('click', ()=>document.getElementById('modalOverlay').style.display='none')) });
+        document.getElementById('nextMonth')?.addEventListener('click', ()=>{ month++; if(month>11){ month=0; year++; } const newhtml = `<h3>Calendario de Operaciones</h3>` + buildCalendar(year,month) + `<div class="actions"><button class="btn btn-cancel modal-close">Cerrar</button></div>`; document.getElementById('modal').innerHTML = newhtml; document.getElementById('modal').querySelectorAll('.modal-close').forEach(b=>b.addEventListener('click', ()=>document.getElementById('modalOverlay').style.display='none')) });
+    } else { showToast('Función de modal no disponible','warn'); }
+});
+
+</script>
+
