@@ -1,233 +1,458 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tropical Travel - Panel Admin</title>
-    <link rel="stylesheet" href="../Css/AdminStyle.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tropical Travel - Panel Admin</title>
+
+<link rel="stylesheet" href="../Css/AdminStyle.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
-    <div class="admin-container">
-        <!-- SIDEBAR -->
-        <aside class="sidebar-admin">
-            <div class="logo-admin">
-                <div class="logo-icon">🏝️</div>
-                <span class="logo-text">Tropical Travel</span>
-                <p class="logo-subtitle">ADMIN EDITION</p>
+
+<div class="admin-container">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar-admin">
+
+        <div class="logo-admin">
+            <div class="logo-icon">🏝️</div>
+            <span class="logo-text">Tropical Travel</span>
+            <p class="logo-subtitle">ADMIN EDITION</p>
+        </div>
+
+        <nav class="admin-nav">
+            <ul>
+
+                <li class="nav-item active">
+                    <a href="#dashboard" class="nav-link">
+                        <span>📊</span>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#inventario" class="nav-link">
+                        <span>📦</span>
+                        Inventario
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#usuarios" class="nav-link">
+                        <span>👥</span>
+                        Usuarios
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#operaciones" class="nav-link">
+                        <span>⚙️</span>
+                        Operaciones
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#finanzas" class="nav-link">
+                        <span>💰</span>
+                        Finanzas
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#experiencia" class="nav-link">
+                        <span>⭐</span>
+                        Experiencia
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#configuracion" class="nav-link">
+                        <span>⚡</span>
+                        Configuración
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <span class="admin-avatar">🔐</span>
+                <p class="admin-name">Admin Colombia</p>
+                <p class="admin-role">Administrador</p>
             </div>
 
-            <nav class="admin-nav">
-                <ul>
-                    <li class="nav-item active">
-                        <a href="#dashboard" class="nav-link">
-                            <span class="icon">📊</span>
-                            <span class="text">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#inventario" class="nav-link">
-                            <span class="icon">📦</span>
-                            <span class="text">Inventario</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#usuarios" class="nav-link">
-                            <span class="icon">👥</span>
-                            <span class="text">Usuarios</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#operaciones" class="nav-link">
-                            <span class="icon">⚙️</span>
-                            <span class="text">Operaciones</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#finanzas" class="nav-link">
-                            <span class="icon">💰</span>
-                            <span class="text">Finanzas</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#experiencia" class="nav-link">
-                            <span class="icon">⭐</span>
-                            <span class="text">Experiencia</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#configuracion" class="nav-link">
-                            <span class="icon">⚡</span>
-                            <span class="text">Configuración</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            <button id="logoutAdminBtn" class="logout-btn">
+                🚪 Cerrar Sesión
+            </button>
+        </div>
 
-            <div class="sidebar-footer">
-                <div class="admin-profile">
-                    <span class="admin-avatar">🔐</span>
-                    <p class="admin-name">Admin Colombia</p>
-                    <p class="admin-role">Administrador</p>
-                </div>
-                <button id="logoutAdminBtn" class="logout-btn">🚪 Cerrar Sesión</button>
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="admin-header">
+            <div>
+                <h1>Panel de Control Regional</h1>
+                <p>Gestionando el paraíso colombiano.</p>
             </div>
-        </aside>
 
-        <!-- MAIN CONTENT -->
-        <main class="main-content">
-            <!-- HEADER -->
-            <header class="admin-header">
-                <div class="header-left">
-                    <h1>Panel de Control Regional</h1>
-                    <p>Gestionando el paraíso colombiano.</p>
-                </div>
-                <div class="header-right">
-                    <button class="btn-colombia-hub">🇨🇴 COLOMBIA HUB</button>
-                    <button class="btn-notification">💬</button>
-                </div>
-            </header>
+            <div class="header-right">
+                <button class="btn-colombia-hub">
+                    🇨🇴 COLOMBIA HUB
+                </button>
 
-            <!-- METRICS CARDS -->
-            <section class="metrics-section">
-                <div class="metric-card">
-                    <div class="metric-icon">💵</div>
-                    <div class="metric-content">
-                        <p class="metric-label">VENTAS HOY</p>
-                        <h3 class="metric-value">$4.2M</h3>
-                        <span class="metric-change positive">+12%</span>
+                <button class="btn-notification">
+                    💬
+                </button>
+            </div>
+        </header>
+
+
+        <!-- ================= VISTAS SPA ================= -->
+        <div class="admin-views">
+
+            <!-- (Las métricas ahora solo estarán dentro del dashboard) -->
+
+            <!-- ================= DASHBOARD ================= -->
+            <section id="dashboard" class="admin-view active">
+
+                <section class="metrics-section">
+
+                    <div class="metric-card">
+                        <div class="metric-icon">💵</div>
+                        <div>
+                            <p>VENTAS HOY</p>
+                            <h3>$4.2M</h3>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">📅</div>
+                        <div>
+                            <p>RESERVAS ACTIVAS</p>
+                            <h3>1,284</h3>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">👥</div>
+                        <div>
+                            <p>NUEVOS TURISTAS</p>
+                            <h3>458</h3>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">⭐</div>
+                        <div>
+                            <p>RATING GLOBAL</p>
+                            <h3>4.92</h3>
+                        </div>
+                    </div>
+
+                </section>
+
+
+                <div class="content-grid">
+
+                    <section class="chart-section">
+                        <h2>Tendencia de Ventas (30d)</h2>
+                        <canvas id="salesChart"></canvas>
+                    </section>
+
+                    <section class="alerts-section">
+
+                        <h2>Alertas Críticas</h2>
+
+                        <div class="alert-item">
+                            <span>⚠️</span>
+                            <div>
+                                <p>Aviso de Clima</p>
+                                <small>
+                                Tormenta detectada en Costa Atlántica
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="alert-item">
+                            <span>⚠️</span>
+                            <div>
+                                <p>Aviso de Clima</p>
+                                <small>
+                                Tormenta detectada en Costa Atlántica
+                                </small>
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= INVENTARIO ================= -->
+            <section id="inventario" class="admin-view">
+                <div class="inventory-header">
+                    <div>
+                        <h2>Gestión de Inventario</h2>
+                        <p class="subtitle">Control total de destinos y disponibilidad</p>
+                    </div>
+
+                    <div class="inventory-actions">
+                        <button class="btn-new-dest">+ Nuevo Destino</button>
                     </div>
                 </div>
 
-                <div class="metric-card">
-                    <div class="metric-icon">📅</div>
-                    <div class="metric-content">
-                        <p class="metric-label">RESERVAS ACTIVAS</p>
-                        <h3 class="metric-value">1,284</h3>
-                        <span class="metric-change positive">+5%</span>
+                <section class="inventory-metrics metrics-section">
+                    <div class="metric-card metric-active">
+                        <div class="metric-left">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-text">
+                                <p>ACTIVOS</p>
+                                <h3>2</h3>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="metric-card">
-                    <div class="metric-icon">👥</div>
-                    <div class="metric-content">
-                        <p class="metric-label">NUEVOS TURISTAS</p>
-                        <h3 class="metric-value">458</h3>
-                        <span class="metric-change positive">+28%</span>
+                    <div class="metric-card metric-drafts">
+                        <div class="metric-left">
+                            <div class="metric-icon">⏳</div>
+                            <div class="metric-text">
+                                <p>BORRADORES</p>
+                                <h3>0</h3>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="metric-card">
-                    <div class="metric-icon">⭐</div>
-                    <div class="metric-content">
-                        <p class="metric-label">RATING GLOBAL</p>
-                        <h3 class="metric-value">4.92</h3>
-                        <span class="metric-change positive">+8.1</span>
+                    <div class="metric-card metric-full">
+                        <div class="metric-left">
+                            <div class="metric-icon">⚠️</div>
+                            <div class="metric-text">
+                                <p>LLENOS</p>
+                                <h3>1</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="inventory-table">
+                    <div class="table-head">
+                        <div class="col destino">DESTINO</div>
+                        <div class="col categoria">CATEGORÍA</div>
+                        <div class="col precio">PRECIO</div>
+                        <div class="col rating">RATING</div>
+                        <div class="col estado">ESTADO</div>
+                        <div class="col acciones">ACCIONES</div>
+                    </div>
+
+                    <div class="table-body">
+                        <div class="table-row">
+                            <div class="col destino">
+                                <img src="../Imagenes/cartagenaimg.jpg" alt="Cartagena" class="thumb">
+                                <div class="dest-text">
+                                    <strong>Cartagena de Indias</strong>
+                                    <small>Bolívar, Colombia</small>
+                                </div>
+                            </div>
+                            <div class="col categoria"><span class="pill">City</span></div>
+                            <div class="col precio">$450.000</div>
+                            <div class="col rating">⭐ 4.9</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col destino">
+                                <img src="../Imagenes/tayrona.jpg" alt="Tayrona" class="thumb">
+                                <div class="dest-text">
+                                    <strong>Parque Tayrona</strong>
+                                    <small>Magdalena, Colombia</small>
+                                </div>
+                            </div>
+                            <div class="col categoria"><span class="pill">Beach</span></div>
+                            <div class="col precio">$320.000</div>
+                            <div class="col rating">⭐ 5</div>
+                            <div class="col estado"><span class="status-badge full">LLENO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col destino">
+                                <img src="../Imagenes/valle.jpg" alt="Valle" class="thumb">
+                                <div class="dest-text">
+                                    <strong>Valle de Cocora</strong>
+                                    <small>Quindío, Colombia</small>
+                                </div>
+                            </div>
+                            <div class="col categoria"><span class="pill">Mountain</span></div>
+                            <div class="col precio">$280.000</div>
+                            <div class="col rating">⭐ 4.8</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- CHARTS AND ALERTS -->
-            <div class="content-grid">
-                <!-- SALES TREND CHART -->
-                <section class="chart-section">
-                    <h2>Tendencia de Ventas (30d)</h2>
-                    <canvas id="salesChart"></canvas>
-                </section>
+            <!-- ================= USUARIOS ================= -->
+            <section id="usuarios" class="admin-view">
+                <h2>Gestión de Usuarios</h2>
+                <div class="empty-panel">
+                    <p class="empty-title">No hay usuarios registrados</p>
+                    <p class="empty-desc">Los usuarios aparecerán en esta sección cuando se registren.</p>
+                </div>
+            </section>
 
-                <!-- CRITICAL ALERTS -->
-                <section class="alerts-section">
-                    <h2>Alertas Críticas</h2>
-                    <div class="alerts-list">
-                        <div class="alert-item">
-                            <div class="alert-icon">⚠️</div>
-                            <div class="alert-content">
-                                <p class="alert-title">Aviso de Clima</p>
-                                <p class="alert-description">Tormenta detectada en Costa Atlántica</p>
-                            </div>
-                            <a href="#" class="alert-link">Ver</a>
-                        </div>
-                        <div class="alert-item">
-                            <div class="alert-icon">⚠️</div>
-                            <div class="alert-content">
-                                <p class="alert-title">Aviso de Clima</p>
-                                <p class="alert-description">Tormenta detectada en Costa Atlántica</p>
-                            </div>
-                            <a href="#" class="alert-link">Ver</a>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
+            <!-- ================= OPERACIONES ================= -->
+            <section id="operaciones" class="admin-view">
+                <h2>Operaciones</h2>
+                <div class="empty-panel">
+                    <p class="empty-title">Sin operaciones recientes</p>
+                    <p class="empty-desc">Aquí verás las reservas y movimientos en tiempo real.</p>
+                </div>
+            </section>
 
-    <script>
-        // Validar sesión admin
-        document.addEventListener('DOMContentLoaded', () => {
-            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
-            
-            if (!loggedUser || !loggedUser.isAdmin) {
-                window.location.href = '../index.html';
-                return;
-            }
+            <!-- ================= FINANZAS ================= -->
+            <section id="finanzas" class="admin-view">
+                <h2>Finanzas</h2>
+                <div class="empty-panel">
+                    <p class="empty-title">Sin datos financieros</p>
+                    <p class="empty-desc">Genera un reporte para ver ingresos y gastos.</p>
+                </div>
+            </section>
 
-            // Crear gráfico de ventas
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-                    datasets: [{
-                        label: 'Ventas',
-                        data: [4000, 3200, 2400, 2800, 3500, 3800],
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        pointHoverRadius: 8,
-                        pointBackgroundColor: '#667eea'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 4000,
-                            ticks: {
-                                color: '#999'
-                            },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: '#999'
-                            },
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
+            <!-- ================= EXPERIENCIA ================= -->
+            <section id="experiencia" class="admin-view">
+                <h2>Experiencia del Cliente</h2>
+                <div class="empty-panel">
+                    <p class="empty-title">Sin reseñas por ahora</p>
+                    <p class="empty-desc">Las reseñas de los clientes aparecerán aquí cuando estén disponibles.</p>
+                </div>
+            </section>
 
-            // Manejar cierre de sesión admin
-            document.getElementById('logoutAdminBtn').addEventListener('click', () => {
-                if (confirm('¿Deseas cerrar sesión?')) {
-                    localStorage.removeItem('loggedUser');
-                    window.location.href = '../index.html';
-                }
-            });
-        });
-    </script>
+            <!-- ================= CONFIG ================= -->
+            <section id="configuracion" class="admin-view">
+                <h2>Configuración del Sistema</h2>
+                <div class="empty-panel">
+                    <p class="empty-title">Preferencias sin cambios</p>
+                    <p class="empty-desc">Ajusta la configuración general desde este panel.</p>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<!-- ================= SCRIPTS ================= -->
+
+<script>
+
+/* VALIDAR ADMIN */
+document.addEventListener("DOMContentLoaded",()=>{
+
+const loggedUser =
+JSON.parse(localStorage.getItem("loggedUser")||"null");
+
+if(!loggedUser || !loggedUser.isAdmin){
+    window.location.href="../index.html";
+}
+
+
+/* CAMBIO DE VISTAS SPA */
+
+document.querySelectorAll(".nav-link")
+.forEach(link=>{
+
+link.addEventListener("click",e=>{
+
+e.preventDefault();
+
+const target =
+link.getAttribute("href").replace("#","");
+
+document.querySelectorAll(".admin-view")
+.forEach(v=>v.classList.remove("active"));
+
+document
+.getElementById(target)
+.classList.add("active");
+
+document.querySelectorAll(".nav-item")
+.forEach(i=>i.classList.remove("active"));
+
+link.parentElement.classList.add("active");
+
+});
+
+});
+
+
+/* LOGOUT */
+
+document
+.getElementById("logoutAdminBtn")
+.addEventListener("click",()=>{
+
+if(confirm("¿Deseas cerrar sesión?")){
+localStorage.removeItem("loggedUser");
+window.location.href="../index.html";
+}
+
+});
+
+
+/* CHART */
+
+const ctx =
+document.getElementById("salesChart");
+
+if(ctx){
+
+new Chart(ctx,{
+type:"line",
+data:{
+labels:["Ene","Feb","Mar","Abr","May","Jun"],
+datasets:[{
+data:[4000,3200,2400,2800,3500,3800],
+borderColor:"#667eea",
+backgroundColor:"rgba(102,126,234,0.1)",
+fill:true,
+tension:.4
+}]
+},
+options:{
+plugins:{legend:{display:false}},
+responsive:true
+}
+});
+
+}
+
+});
+
+</script>
+
 </body>
 </html>
