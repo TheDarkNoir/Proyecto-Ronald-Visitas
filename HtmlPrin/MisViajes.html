@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropical Travel - Mis Viajes</title>
+    <link rel="stylesheet" href="../Css/ClienteStyle.css">
+    <link rel="stylesheet" href="../Css/MisViajes.css">
+</head>
+<body>
+    <!-- HEADER SUPERIOR (misma estructura que Inicio.html) -->
+    <header class="top-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-icon">🏝️</div>
+                <span class="logo-text">Tropical Travel</span>
+            </div>
+
+            <nav class="top-nav">
+                <button class="nav-btn" onclick="location.href='Inicio.html'">🧭 Explorar</button>
+                <button class="nav-btn active" onclick="location.href='MisViajes.html'">📅 Mis Viajes</button>
+                <button class="nav-btn" onclick="location.href='comunidad.html'">👥 Comunidad</button>
+                <button class="btn-iachat" onclick="location.href='IAChat.html'">💬 IA Chat</button>
+            </nav>
+
+            <div class="header-actions">
+                <button class="notification-btn">🔔</button>
+                <div class="user-avatar" id="userInitials">JA</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECCIÓN PRINCIPAL DE VIAJES -->
+    <main class="my-trips">
+        <section class="trips-header">
+            <h1>Mis Viajes</h1>
+            <p class="subtitle">Gestiona tus aventuras y reservas activas</p>
+        </section>
+
+        <section class="trip-filters">
+            <button class="filter-btn active" data-status="all">Todos</button>
+            <button class="filter-btn" data-status="confirmed">Confirmados</button>
+            <button class="filter-btn" data-status="pending">Pendientes</button>
+            <button class="filter-btn" data-status="cancelled">Cancelados</button>
+        </section>
+
+        <section class="trips-grid" id="tripsGrid">
+            <!-- tarjetas generadas por JS -->
+        </section>
+    </main>
+
+    <!-- modal detalle viaje -->
+    <div class="modal" id="tripModal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">×</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <button class="floating-help">?</button>
+
+    <script src="../Scripts/ScriptsFichasViaje.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+            if (!loggedUser) {
+                window.location.href = '../index.html';
+                return;
+            }
+            const username = loggedUser.username || 'Usuario';
+            const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('userInitials').textContent = initials;
+        });
+    </script>
+</body>
+</html>
