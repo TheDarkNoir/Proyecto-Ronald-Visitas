@@ -120,7 +120,7 @@
                     </div>
                 </div>
 
-                <!-- QUICK SUGGESTIONS -->
+                <!-- sugerencias rapida -->
                 <div class="quick-suggestions">
                     <p>Sugerencias rápidas:</p>
                     <button class="suggestion-btn">🏖️ Playas y Relajación</button>
@@ -157,7 +157,7 @@
             document.getElementById('userInitials').textContent = initials;
             document.getElementById('msgUserInitials').textContent = initials;
 
-            // Notification functionality
+            // Notificacion funcionalidad
             const notificationBtn = document.getElementById('notificationBtn');
             const notificationPopup = document.getElementById('notificationPopup');
             const closeNotifications = document.getElementById('closeNotifications');
@@ -185,7 +185,7 @@
                 }
             });
 
-            // Chat functionality
+            // Chat funcionalidad
             const chatInput = document.getElementById('chatInput');
             const sendBtn = document.getElementById('sendBtn');
             const chatMessages = document.getElementById('chatMessages');
@@ -207,7 +207,7 @@
                 const message = chatInput.value.trim();
                 if (!message) return;
 
-                // User message
+                // usuario mensaje
                 const userMsg = document.createElement('div');
                 userMsg.classList.add('message', 'user-message');
                 userMsg.innerHTML = `
@@ -237,7 +237,7 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
-            // Suggestion buttons
+            // sugerencias buttons
             document.querySelectorAll('.suggestion-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     chatInput.value = btn.textContent;
@@ -253,7 +253,7 @@
                 });
             });
 
-            // Delete chat
+            // borrar chat
             document.querySelectorAll('.delete-chat').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -261,7 +261,7 @@
                 });
             });
 
-            // New chat
+            // nuevo chat
             document.querySelector('.btn-new-chat').addEventListener('click', () => {
                 chatMessages.innerHTML = `
                     <div class="message ai-message">
