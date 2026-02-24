@@ -1,233 +1,1413 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tropical Travel - Panel Admin</title>
-    <link rel="stylesheet" href="../Css/AdminStyle.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tropical Travel - Panel Admin</title>
+
+<link rel="stylesheet" href="../Css/AdminStyle.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
-    <div class="admin-container">
-        <!-- SIDEBAR -->
-        <aside class="sidebar-admin">
-            <div class="logo-admin">
-                <div class="logo-icon">🏝️</div>
-                <span class="logo-text">Tropical Travel</span>
-                <p class="logo-subtitle">ADMIN EDITION</p>
+
+<div class="admin-container">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar-admin">
+
+        <div class="logo-admin">
+            <div class="logo-icon">🏝️</div>
+            <span class="logo-text">Tropical Travel</span>
+            <p class="logo-subtitle">ADMIN EDITION</p>
+        </div>
+
+        <nav class="admin-nav">
+            <ul>
+
+                <li class="nav-item active">
+                    <a href="#dashboard" class="nav-link">
+                        <span>📊</span>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#inventario" class="nav-link">
+                        <span>📦</span>
+                        Inventario
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#usuarios" class="nav-link">
+                        <span>👥</span>
+                        Usuarios
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#operaciones" class="nav-link">
+                        <span>⚙️</span>
+                        Operaciones
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#finanzas" class="nav-link">
+                        <span>💰</span>
+                        Finanzas
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#experiencia" class="nav-link">
+                        <span>⭐</span>
+                        Experiencia
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#configuracion" class="nav-link">
+                        <span>⚡</span>
+                        Configuración
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <span class="admin-avatar">🔐</span>
+                <p class="admin-name">Admin Colombia</p>
+                <p class="admin-role">Administrador</p>
             </div>
 
-            <nav class="admin-nav">
-                <ul>
-                    <li class="nav-item active">
-                        <a href="#dashboard" class="nav-link">
-                            <span class="icon">📊</span>
-                            <span class="text">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#inventario" class="nav-link">
-                            <span class="icon">📦</span>
-                            <span class="text">Inventario</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#usuarios" class="nav-link">
-                            <span class="icon">👥</span>
-                            <span class="text">Usuarios</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#operaciones" class="nav-link">
-                            <span class="icon">⚙️</span>
-                            <span class="text">Operaciones</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#finanzas" class="nav-link">
-                            <span class="icon">💰</span>
-                            <span class="text">Finanzas</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#experiencia" class="nav-link">
-                            <span class="icon">⭐</span>
-                            <span class="text">Experiencia</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#configuracion" class="nav-link">
-                            <span class="icon">⚡</span>
-                            <span class="text">Configuración</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            <button id="logoutAdminBtn" class="logout-btn">
+                🚪 Cerrar Sesión
+            </button>
+        </div>
 
-            <div class="sidebar-footer">
-                <div class="admin-profile">
-                    <span class="admin-avatar">🔐</span>
-                    <p class="admin-name">Admin Colombia</p>
-                    <p class="admin-role">Administrador</p>
-                </div>
-                <button id="logoutAdminBtn" class="logout-btn">🚪 Cerrar Sesión</button>
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="admin-header">
+            <div>
+                <h1>Panel de Control Regional</h1>
+                <p>Gestionando el paraíso colombiano.</p>
             </div>
-        </aside>
 
-        <!-- MAIN CONTENT -->
-        <main class="main-content">
-            <!-- HEADER -->
-            <header class="admin-header">
-                <div class="header-left">
-                    <h1>Panel de Control Regional</h1>
-                    <p>Gestionando el paraíso colombiano.</p>
-                </div>
-                <div class="header-right">
-                    <button class="btn-colombia-hub">🇨🇴 COLOMBIA HUB</button>
-                    <button class="btn-notification">💬</button>
-                </div>
-            </header>
+            <div class="header-right">
+                <button class="btn-colombia-hub">
+                    🇨🇴 COLOMBIA HUB
+                </button>
 
-            <!-- METRICS CARDS -->
-            <section class="metrics-section">
-                <div class="metric-card">
-                    <div class="metric-icon">💵</div>
-                    <div class="metric-content">
-                        <p class="metric-label">VENTAS HOY</p>
-                        <h3 class="metric-value">$4.2M</h3>
-                        <span class="metric-change positive">+12%</span>
+                <button class="btn-notification">
+                    💬
+                </button>
+            </div>
+        </header>
+
+
+        <!-- ================= VISTAS SPA ================= -->
+        <div class="admin-views">
+
+            <!-- (Las métricas ahora solo estarán dentro del dashboard) -->
+
+            <!-- ================= DASHBOARD ================= -->
+            <section id="dashboard" class="admin-view active">
+
+                <section class="metrics-section">
+
+                    <div class="metric-card">
+                        <div class="metric-icon">💵</div>
+                        <div>
+                            <p>VENTAS HOY</p>
+                            <h3>$4.2M</h3>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">📅</div>
+                        <div>
+                            <p>RESERVAS ACTIVAS</p>
+                            <h3>1,284</h3>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">👥</div>
+                        <div>
+                            <p>NUEVOS TURISTAS</p>
+                            <h3>458</h3>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">⭐</div>
+                        <div>
+                            <p>RATING GLOBAL</p>
+                            <h3>4.92</h3>
+                        </div>
+                    </div>
+
+                </section>
+
+
+                <div class="content-grid">
+
+                    <section class="chart-section">
+                        <h2>Tendencia de Ventas (30d)</h2>
+                        <canvas id="salesChart"></canvas>
+                    </section>
+
+                    <section class="alerts-section">
+
+                        <h2>Alertas Críticas</h2>
+
+                        <div class="alert-item">
+                            <span>⚠️</span>
+                            <div>
+                                <p>Aviso de Clima</p>
+                                <small>
+                                Tormenta detectada en Costa Atlántica
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="alert-item">
+                            <span>⚠️</span>
+                            <div>
+                                <p>Aviso de Clima</p>
+                                <small>
+                                Tormenta detectada en Costa Atlántica
+                                </small>
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= INVENTARIO ================= -->
+            <section id="inventario" class="admin-view">
+                <div class="inventory-header">
+                    <div>
+                        <h2>Gestión de Inventario</h2>
+                        <p class="subtitle">Control total de destinos y disponibilidad</p>
+                    </div>
+
+                    <div class="inventory-actions">
+                        <button id="newDestinationBtn" class="btn-new-dest">+ Nuevo Destino</button>
                     </div>
                 </div>
 
-                <div class="metric-card">
-                    <div class="metric-icon">📅</div>
-                    <div class="metric-content">
-                        <p class="metric-label">RESERVAS ACTIVAS</p>
-                        <h3 class="metric-value">1,284</h3>
-                        <span class="metric-change positive">+5%</span>
+                <section class="inventory-metrics metrics-section">
+                    <div class="metric-card metric-active">
+                        <div class="metric-left">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-text">
+                                <p>ACTIVOS</p>
+                                <h3>2</h3>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="metric-card">
-                    <div class="metric-icon">👥</div>
-                    <div class="metric-content">
-                        <p class="metric-label">NUEVOS TURISTAS</p>
-                        <h3 class="metric-value">458</h3>
-                        <span class="metric-change positive">+28%</span>
+                    <div class="metric-card metric-drafts">
+                        <div class="metric-left">
+                            <div class="metric-icon">⏳</div>
+                            <div class="metric-text">
+                                <p>BORRADORES</p>
+                                <h3>0</h3>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="metric-card">
-                    <div class="metric-icon">⭐</div>
-                    <div class="metric-content">
-                        <p class="metric-label">RATING GLOBAL</p>
-                        <h3 class="metric-value">4.92</h3>
-                        <span class="metric-change positive">+8.1</span>
+                    <div class="metric-card metric-full">
+                        <div class="metric-left">
+                            <div class="metric-icon">⚠️</div>
+                            <div class="metric-text">
+                                <p>LLENOS</p>
+                                <h3>1</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="inventory-table">
+                    <div class="table-head">
+                        <div class="col destino">DESTINO</div>
+                        <div class="col categoria">CATEGORÍA</div>
+                        <div class="col precio">PRECIO</div>
+                        <div class="col rating">RATING</div>
+                        <div class="col estado">ESTADO</div>
+                        <div class="col acciones">ACCIONES</div>
+                    </div>
+
+                    <div class="table-body">
+                        <div class="table-row">
+                            <div class="col destino">
+                                <img src="../Imagenes/cartagenaimg.jpg" alt="Cartagena" class="thumb">
+                                <div class="dest-text">
+                                    <strong>Cartagena de Indias</strong>
+                                    <small>Bolívar, Colombia</small>
+                                </div>
+                            </div>
+                            <div class="col categoria"><span class="pill">City</span></div>
+                            <div class="col precio">$450.000</div>
+                            <div class="col rating">⭐ 4.9</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col destino">
+                                <img src="../Imagenes/tayrona.jpg" alt="Tayrona" class="thumb">
+                                <div class="dest-text">
+                                    <strong>Parque Tayrona</strong>
+                                    <small>Magdalena, Colombia</small>
+                                </div>
+                            </div>
+                            <div class="col categoria"><span class="pill">Beach</span></div>
+                            <div class="col precio">$320.000</div>
+                            <div class="col rating">⭐ 5</div>
+                            <div class="col estado"><span class="status-badge full">LLENO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col destino">
+                                <img src="../Imagenes/valle.jpg" alt="Valle" class="thumb">
+                                <div class="dest-text">
+                                    <strong>Valle de Cocora</strong>
+                                    <small>Quindío, Colombia</small>
+                                </div>
+                            </div>
+                            <div class="col categoria"><span class="pill">Mountain</span></div>
+                            <div class="col precio">$280.000</div>
+                            <div class="col rating">⭐ 4.8</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- CHARTS AND ALERTS -->
-            <div class="content-grid">
-                <!-- SALES TREND CHART -->
-                <section class="chart-section">
-                    <h2>Tendencia de Ventas (30d)</h2>
-                    <canvas id="salesChart"></canvas>
-                </section>
+            <!-- ================= USUARIOS ================= -->
+            <section id="usuarios" class="admin-view">
+                <div class="users-header">
+                    <div>
+                        <h2>Gestión de Usuarios</h2>
+                        <p class="subtitle">Administra clientes y roles del sistema</p>
+                    </div>
 
-                <!-- CRITICAL ALERTS -->
-                <section class="alerts-section">
-                    <h2>Alertas Críticas</h2>
-                    <div class="alerts-list">
-                        <div class="alert-item">
-                            <div class="alert-icon">⚠️</div>
-                            <div class="alert-content">
-                                <p class="alert-title">Aviso de Clima</p>
-                                <p class="alert-description">Tormenta detectada en Costa Atlántica</p>
+                    <div class="inventory-actions">
+                        <button id="newUserBtn" class="btn-new-dest">+ Nuevo Usuario</button>
+                    </div>
+                </div>
+
+                <section class="users-metrics metrics-section">
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">👤</div>
+                            <div class="metric-text">
+                                <p>TOTAL USUARIOS</p>
+                                <h3>4</h3>
                             </div>
-                            <a href="#" class="alert-link">Ver</a>
                         </div>
-                        <div class="alert-item">
-                            <div class="alert-icon">⚠️</div>
-                            <div class="alert-content">
-                                <p class="alert-title">Aviso de Clima</p>
-                                <p class="alert-description">Tormenta detectada en Costa Atlántica</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">🧑‍🤝‍🧑</div>
+                            <div class="metric-text">
+                                <p>CLIENTES</p>
+                                <h3>3</h3>
                             </div>
-                            <a href="#" class="alert-link">Ver</a>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">🛡️</div>
+                            <div class="metric-text">
+                                <p>ADMINS</p>
+                                <h3>1</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-text">
+                                <p>ACTIVOS</p>
+                                <h3>3</h3>
+                            </div>
                         </div>
                     </div>
                 </section>
-            </div>
-        </main>
-    </div>
 
-    <script>
-        // Validar sesión admin
-        document.addEventListener('DOMContentLoaded', () => {
-            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
-            
-            if (!loggedUser || !loggedUser.isAdmin) {
-                window.location.href = '../index.html';
-                return;
-            }
+                <div class="users-table">
+                    <div class="table-head">
+                        <div class="col usuario">USUARIO</div>
+                        <div class="col rol">ROL</div>
+                        <div class="col reservas">RESERVAS</div>
+                        <div class="col gastado">GASTADO</div>
+                        <div class="col ingreso">INGRESO</div>
+                        <div class="col estado">ESTADO</div>
+                        <div class="col acciones">ACCIONES</div>
+                    </div>
 
-            // Crear gráfico de ventas
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-                    datasets: [{
-                        label: 'Ventas',
-                        data: [4000, 3200, 2400, 2800, 3500, 3800],
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        pointHoverRadius: 8,
-                        pointBackgroundColor: '#667eea'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 4000,
-                            ticks: {
-                                color: '#999'
-                            },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: '#999'
-                            },
-                            grid: {
-                                display: false
-                            }
-                        }
+                    <div class="table-body">
+                        <div class="table-row">
+                            <div class="col usuario">
+                                <span class="user-avatar">MR</span>
+                                <div class="dest-text">
+                                    <strong>María Rodríguez</strong>
+                                    <small>maria@email.com</small>
+                                </div>
+                            </div>
+                            <div class="col rol"><span class="pill">Cliente</span></div>
+                            <div class="col reservas">12</div>
+                            <div class="col gastado">$5.400.000</div>
+                            <div class="col ingreso">2024-01-15</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col usuario">
+                                <span class="user-avatar">CM</span>
+                                <div class="dest-text">
+                                    <strong>Carlos Méndez</strong>
+                                    <small>carlos@email.com</small>
+                                </div>
+                            </div>
+                            <div class="col rol"><span class="pill">Cliente</span></div>
+                            <div class="col reservas">8</div>
+                            <div class="col gastado">$3.200.000</div>
+                            <div class="col ingreso">2024-02-20</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col usuario">
+                                <span class="user-avatar">AT</span>
+                                <div class="dest-text">
+                                    <strong>Ana Torres</strong>
+                                    <small>ana@email.com</small>
+                                </div>
+                            </div>
+                            <div class="col rol"><span class="pill admin">Administrador</span></div>
+                            <div class="col reservas">0</div>
+                            <div class="col gastado">$0</div>
+                            <div class="col ingreso">2023-11-10</div>
+                            <div class="col estado"><span class="status-badge active">ACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col usuario">
+                                <span class="user-avatar">LG</span>
+                                <div class="dest-text">
+                                    <strong>Luis Gómez</strong>
+                                    <small>luis@email.com</small>
+                                </div>
+                            </div>
+                            <div class="col rol"><span class="pill">Cliente</span></div>
+                            <div class="col reservas">3</div>
+                            <div class="col gastado">$980.000</div>
+                            <div class="col ingreso">2025-01-05</div>
+                            <div class="col estado"><span class="status-badge inactive">INACTIVO</span></div>
+                            <div class="col acciones">
+                                <button class="icon edit">✏️</button>
+                                <button class="icon del">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= OPERACIONES ================= -->
+            <section id="operaciones" class="admin-view">
+                <div class="operations-header">
+                    <div>
+                        <h2>Gestión de Operaciones</h2>
+                        <p class="subtitle">Monitoreo en tiempo real de reservas y tours</p>
+                    </div>
+
+                    <div class="inventory-actions">
+                        <button id="viewCalendarBtn" class="btn-new-dest">Ver Calendario</button>
+                    </div>
+                </div>
+
+                <section class="operations-metrics metrics-section">
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-text">
+                                <p>CONFIRMADAS</p>
+                                <h3>2</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">⏳</div>
+                            <div class="metric-text">
+                                <p>PENDIENTES</p>
+                                <h3>1</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">❌</div>
+                            <div class="metric-text">
+                                <p>CANCELADAS</p>
+                                <h3>1</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">👥</div>
+                            <div class="metric-text">
+                                <p>TOTAL VIAJEROS</p>
+                                <h3>10</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="ops-table">
+                    <div class="table-head">
+                        <div class="col id">ID RESERVA</div>
+                        <div class="col cliente">CLIENTE</div>
+                        <div class="col destino">DESTINO</div>
+                        <div class="col fecha">FECHA</div>
+                        <div class="col viajeros">VIAJEROS</div>
+                        <div class="col total">TOTAL</div>
+                        <div class="col estado">ESTADO</div>
+                        <div class="col acciones">ACCIONES</div>
+                    </div>
+
+                    <div class="table-body">
+                        <div class="table-row">
+                            <div class="col id">B001</div>
+                            <div class="col cliente">María Rodríguez</div>
+                            <div class="col destino">Cartagena de Indias</div>
+                            <div class="col fecha">2025-03-15</div>
+                            <div class="col viajeros">2</div>
+                            <div class="col total">$900.000</div>
+                            <div class="col estado"><span class="status-badge confirmed">CONFIRMADA</span></div>
+                            <div class="col acciones"><button class="icon">📄</button></div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col id">B002</div>
+                            <div class="col cliente">Carlos Méndez</div>
+                            <div class="col destino">Parque Tayrona</div>
+                            <div class="col fecha">2025-03-20</div>
+                            <div class="col viajeros">2</div>
+                            <div class="col total">$900.000</div>
+                            <div class="col estado"><span class="status-badge pending">PENDIENTE</span></div>
+                            <div class="col acciones"><button class="icon">📄</button></div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col id">B003</div>
+                            <div class="col cliente">Ana Torres</div>
+                            <div class="col destino">Valle de Cocora</div>
+                            <div class="col fecha">2025-03-18</div>
+                            <div class="col viajeros">2</div>
+                            <div class="col total">$900.000</div>
+                            <div class="col estado"><span class="status-badge confirmed">CONFIRMADA</span></div>
+                            <div class="col acciones"><button class="icon">📄</button></div>
+                        </div>
+
+                        <div class="table-row">
+                            <div class="col id">B004</div>
+                            <div class="col cliente">Luis Gómez</div>
+                            <div class="col destino">Cartagena de Indias</div>
+                            <div class="col fecha">2025-03-25</div>
+                            <div class="col viajeros">2</div>
+                            <div class="col total">$900.000</div>
+                            <div class="col estado"><span class="status-badge cancelled">CANCELADA</span></div>
+                            <div class="col acciones"><button class="icon">📄</button></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= FINANZAS ================= -->
+            <section id="finanzas" class="admin-view">
+                <div class="finance-header">
+                    <div>
+                        <h2>Gestión Financiera</h2>
+                        <p class="subtitle">Control de ingresos, gastos y reportes</p>
+                    </div>
+
+                    <div class="finance-actions">
+                        <button id="genReportBtn" class="btn-new-dest">Generar Reporte</button>
+                    </div>
+                </div>
+
+                <section class="finance-metrics metrics-section">
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">💸</div>
+                            <div class="metric-text">
+                                <p>INGRESOS</p>
+                                <h3>$12.500.000</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">📉</div>
+                            <div class="metric-text">
+                                <p>GASTOS</p>
+                                <h3>$6.200.000</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">📊</div>
+                            <div class="metric-text">
+                                <p>BENEFICIO</p>
+                                <h3>$6.300.000</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">🧾</div>
+                            <div class="metric-text">
+                                <p>REPORTES</p>
+                                <h3>4</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="finance-grid">
+                    <section class="cashflow-card">
+                        <h3>Flujo de Caja Mensual</h3>
+                        <canvas id="cashChart"></canvas>
+                    </section>
+
+                    <section class="expenses-card">
+                        <h3>Desglose de Gastos</h3>
+                        <div class="progress-row">
+                            <div class="label">Marketing Digital</div>
+                            <div class="bar-wrap"><div class="bar" style="width:55%; background:#3b82f6"></div></div>
+                            <div class="value">$2.500.000</div>
+                        </div>
+
+                        <div class="progress-row">
+                            <div class="label">Nómina Guías</div>
+                            <div class="bar-wrap"><div class="bar" style="width:70%; background:#10b981"></div></div>
+                            <div class="value">$3.200.000</div>
+                        </div>
+
+                        <div class="progress-row">
+                            <div class="label">Mantenimiento Equipos</div>
+                            <div class="bar-wrap"><div class="bar" style="width:40%; background:#f59e0b"></div></div>
+                            <div class="value">$1.500.000</div>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="transactions-section">
+                    <h3>Últimas Transacciones</h3>
+                    <div class="transactions-list">
+                        <div class="transaction">
+                            <div class="left">Reserva B001 - María Rodríguez<br><small>CARTAGENA DE INDIAS • 2025-03-15</small></div>
+                            <div class="right"><span class="tx-amount positive">+ $450.000</span><span class="tx-status">CONFIRMADA</span></div>
+                        </div>
+
+                        <div class="transaction">
+                            <div class="left">Reserva B002 - Carlos Méndez<br><small>PARQUE TAYRONA • 2025-03-20</small></div>
+                            <div class="right"><span class="tx-amount positive">+ $450.000</span><span class="tx-status">CONFIRMADA</span></div>
+                        </div>
+
+                        <div class="transaction">
+                            <div class="left">Gasto Mantenimiento<br><small>Equipo guía • 2025-02-28</small></div>
+                            <div class="right"><span class="tx-amount negative">- $200.000</span><span class="tx-status">PAGO</span></div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- ================= EXPERIENCIA ================= -->
+            <section id="experiencia" class="admin-view">
+                <div class="experience-header">
+                    <div>
+                        <h2>Gestión de Experiencia</h2>
+                        <p class="subtitle">Reseñas, feedback y satisfacción del cliente</p>
+                    </div>
+
+                    <div class="experience-actions">
+                        <select id="filterDest" class="filter-select">
+                            <option value="all">Todos los Destinos</option>
+                        </select>
+                        <button id="analyzeBtn" class="btn-new-dest">Ver Análisis</button>
+                    </div>
+                </div>
+
+                <section class="experience-metrics metrics-section">
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">⭐</div>
+                            <div class="metric-text">
+                                <p>RATING PROMEDIO</p>
+                                <h3 id="avgRating">4.0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">💬</div>
+                            <div class="metric-text">
+                                <p>TOTAL RESEÑAS</p>
+                                <h3 id="totalReviews">0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-text">
+                                <p>PUBLICADAS</p>
+                                <h3 id="publishedCount">0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-left">
+                            <div class="metric-icon">⏳</div>
+                            <div class="metric-text">
+                                <p>PENDIENTES</p>
+                                <h3 id="pendingCount">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="rating-distribution-panel">
+                    <h3>Distribución de Calificaciones</h3>
+                    <div id="ratingDist" class="rating-distribution">
+                        <!-- se llenará por JS -->
+                    </div>
+                </div>
+
+                <section class="reviews-list" id="reviewsList">
+                    <h3>Reseñas Recientes</h3>
+                    <!-- reseñas renderizadas con JS -->
+                </section>
+            </section>
+
+            <!-- ================= CONFIG ================= -->
+            <section id="configuracion" class="admin-view">
+                <div class="config-header">
+                    <div>
+                        <h2>Configuración del Sistema</h2>
+                        <p class="subtitle">Ajustes generales y preferencias de la plataforma</p>
+                    </div>
+
+                    <div class="config-actions">
+                        <button id="saveSettings" class="btn-new-dest">Guardar Cambios</button>
+                    </div>
+                </div>
+
+                <div class="config-grid">
+                    <div class="config-card">
+                        <h3>Información General</h3>
+                        <label>Nombre del Sitio</label>
+                        <input id="siteName" type="text" placeholder="TropicalTravel Colombia">
+
+                        <label>Email de Contacto</label>
+                        <input id="contactEmail" type="email" placeholder="admin@tropicaltravel.co">
+
+                        <label>Teléfono</label>
+                        <input id="phone" type="text" placeholder="+57 300 123 4567">
+                    </div>
+
+                    <div class="config-card">
+                        <h3>Configuración Regional</h3>
+                        <label>Moneda</label>
+                        <select id="currency">
+                            <option value="COP">COP - Peso Colombiano</option>
+                            <option value="USD">USD - Dólar</option>
+                        </select>
+
+                        <label>Idioma</label>
+                        <select id="language">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                        </select>
+
+                        <label>Zona Horaria</label>
+                        <select id="timezone">
+                            <option value="America/Bogota">Bogotá (GMT-5)</option>
+                            <option value="UTC">UTC</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="system-functions config-card large">
+                    <h3>Funcionalidades del Sistema</h3>
+                    <div class="func-row">
+                        <div>
+                            <strong>Notificaciones Push</strong>
+                            <div class="muted">Enviar alertas en tiempo real a usuarios</div>
+                        </div>
+                        <div class="toggle-wrap">
+                            <label class="switch"><input id="togglePush" type="checkbox"><span class="slider"></span></label>
+                        </div>
+                    </div>
+
+                    <div class="func-row">
+                        <div>
+                            <strong>Backup Automático</strong>
+                            <div class="muted">Respaldo diario de la base de datos</div>
+                        </div>
+                        <div class="toggle-wrap">
+                            <label class="switch"><input id="toggleBackup" type="checkbox"><span class="slider"></span></label>
+                        </div>
+                    </div>
+
+                    <div class="func-row">
+                        <div>
+                            <strong>Modo Mantenimiento</strong>
+                            <div class="muted">Deshabilitar acceso público temporalmente</div>
+                        </div>
+                        <div class="toggle-wrap">
+                            <label class="switch"><input id="toggleMaintenance" type="checkbox"><span class="slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<!-- ================= SCRIPTS ================= Parte Horrible :)-->
+
+<script>
+
+/* VALIDAR ADMIN */
+document.addEventListener("DOMContentLoaded",()=>{
+
+const loggedUser =
+JSON.parse(localStorage.getItem("loggedUser")||"null");
+
+if(!loggedUser || !loggedUser.isAdmin){
+    window.location.href="../index.html";
+}
+
+
+/* CAMBIO DE VISTAS SPA */
+
+document.querySelectorAll(".nav-link")
+.forEach(link=>{
+
+link.addEventListener("click",e=>{
+
+e.preventDefault();
+
+const target =
+link.getAttribute("href").replace("#","");
+
+document.querySelectorAll(".admin-view")
+.forEach(v=>v.classList.remove("active"));
+
+document
+.getElementById(target)
+.classList.add("active");
+
+document.querySelectorAll(".nav-item")
+.forEach(i=>i.classList.remove("active"));
+
+link.parentElement.classList.add("active");
+
+});
+
+/* CONFIGURACION - guardar/cargar ajustes en localStorage */
+document.addEventListener('DOMContentLoaded', ()=>{
+    const key = 'admin_settings_v1';
+    const defaults = {
+        siteName: 'TropicalTravel Colombia',
+        contactEmail: 'admin@tropicaltravel.co',
+        phone: '+57 300 123 4567',
+        currency: 'COP',
+        language: 'es',
+        timezone: 'America/Bogota',
+        push: true,
+        backup: true,
+        maintenance: false
+    };
+
+    function load(){
+        const raw = localStorage.getItem(key);
+        return raw? JSON.parse(raw): defaults;
+    }
+
+    function save(settings){ localStorage.setItem(key, JSON.stringify(settings)); }
+
+    function applyToForm(s){
+        document.getElementById('siteName').value = s.siteName || '';
+        document.getElementById('contactEmail').value = s.contactEmail || '';
+        document.getElementById('phone').value = s.phone || '';
+        document.getElementById('currency').value = s.currency || 'COP';
+        document.getElementById('language').value = s.language || 'es';
+        document.getElementById('timezone').value = s.timezone || 'America/Bogota';
+        document.getElementById('togglePush').checked = !!s.push;
+        document.getElementById('toggleBackup').checked = !!s.backup;
+        document.getElementById('toggleMaintenance').checked = !!s.maintenance;
+    }
+
+    function readForm(){
+        return {
+            siteName: document.getElementById('siteName').value.trim(),
+            contactEmail: document.getElementById('contactEmail').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            currency: document.getElementById('currency').value,
+            language: document.getElementById('language').value,
+            timezone: document.getElementById('timezone').value,
+            push: document.getElementById('togglePush').checked,
+            backup: document.getElementById('toggleBackup').checked,
+            maintenance: document.getElementById('toggleMaintenance').checked
+        };
+    }
+
+    // inicializar
+    const current = load();
+    applyToForm(current);
+
+    document.getElementById('saveSettings').addEventListener('click', ()=>{
+        const s = readForm();
+        save(s);
+        // toast simple inline (no dependencia externa)
+        const wrap = document.getElementById('toastWrap');
+        const t = document.createElement('div'); t.className='toast success show'; t.textContent = 'Configuración guardada.';
+        wrap.appendChild(t);
+        setTimeout(()=>{ t.classList.remove('show'); t.style.opacity='0'; setTimeout(()=>t.remove(),300); },3000);
+    });
+});
+});
+
+
+/* LOGOUT */
+
+document
+.getElementById("logoutAdminBtn")
+.addEventListener("click",()=>{
+
+if(confirm("¿Deseas cerrar sesión?")){
+localStorage.removeItem("loggedUser");
+window.location.href="../index.html";
+}
+
+});
+
+
+/* CHART */
+
+const ctx =
+document.getElementById("salesChart");
+
+if(ctx){
+
+new Chart(ctx,{
+type:"line",
+data:{
+labels:["Ene","Feb","Mar","Abr","May","Jun"],
+datasets:[{
+data:[4000,3200,2400,2800,3500,3800],
+borderColor:"#667eea",
+backgroundColor:"rgba(102,126,234,0.1)",
+fill:true,
+tension:.4
+}]
+},
+options:{
+plugins:{legend:{display:false}},
+responsive:true
+}
+});
+
+}
+
+/* CASHFLOW CHART */
+const cashCtx = document.getElementById("cashChart");
+
+if(cashCtx){
+    new Chart(cashCtx,{
+        type:'line',
+        data:{
+            labels:["Ene","Feb","Mar","Abr","May","Jun","Jul"],
+            datasets:[{
+                data:[4000,3200,2000,2600,2200,3000,3400],
+                borderColor:'#10b981',
+                backgroundColor:'rgba(16,185,129,0.08)',
+                fill:true,
+                tension:.4
+            }]
+        },
+        options:{
+            plugins:{legend:{display:false}},
+            responsive:true,
+            scales:{y:{grid:{display:false}}}
+        }
+    });
+}
+
+});
+
+/* =======================
+   Experiencia - lógica
+   Renderiza reseñas, métricas y distribución
+======================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+    const sampleReviews = [
+        {id:'r1', name:'María Rodríguez', initials:'MR', place:'Cartagena de Indias', date:'2025-02-20', rating:5, text:'Experiencia inolvidable, todo fue perfecto desde el inicio hasta el final. Los guías muy profesionales.', published:true},
+        {id:'r2', name:'Carlos Méndez', initials:'CM', place:'Parque Tayrona', date:'2025-02-05', rating:4, text:'Increíble lugar, aunque un poco lleno en estas fechas. La organización fue buena.', published:true},
+        {id:'r3', name:'Luis Gómez', initials:'LG', place:'Valle de Cocora', date:'2025-01-30', rating:3, text:'Buena experiencia pero con oportunidades de mejora en la logística.', published:false}
+    ];
+
+    const reviewsKey = 'admin_reviews_sample';
+    // persistir muestra para pruebas
+    
+    if(!localStorage.getItem(reviewsKey)) localStorage.setItem(reviewsKey, JSON.stringify(sampleReviews));
+
+    function getReviews(){
+        return JSON.parse(localStorage.getItem(reviewsKey)||'[]');
+    }
+
+    function saveReviews(arr){ localStorage.setItem(reviewsKey, JSON.stringify(arr)); }
+
+    function calcMetrics(reviews){
+        const total = reviews.length;
+        const published = reviews.filter(r=>r.published).length;
+        const pending = total - published;
+        const avg = total? (reviews.reduce((s,r)=>s+r.rating,0)/total) : 0;
+        return {total,published,pending,avg};
+    }
+
+    function renderMetrics(){
+        const reviews = getReviews();
+        const m = calcMetrics(reviews);
+        document.getElementById('totalReviews').textContent = m.total;
+        document.getElementById('publishedCount').textContent = m.published;
+        document.getElementById('pendingCount').textContent = m.pending;
+        document.getElementById('avgRating').textContent = m.avg.toFixed(1);
+    }
+
+    function renderDistribution(){
+        const reviews = getReviews();
+        const counts = [0,0,0,0,0]; // index 0 = 1*, index 4 =5*
+        reviews.forEach(r=>{ counts[r.rating-1]++ });
+        const total = reviews.length || 1;
+        const container = document.getElementById('ratingDist');
+        container.innerHTML = '';
+        for(let i=5;i>=1;i--){
+            const cnt = counts[i-1];
+            const pct = Math.round((cnt/total)*100);
+            const row = document.createElement('div'); row.className='dist-row';
+            row.innerHTML = `<div class="dist-label">${i} <span class="star-inline">★</span></div>
+                <div class="dist-bar"><div class="dist-fill" style="width:${pct}%"></div></div>
+                <div class="dist-percent">${pct}%</div>`;
+            container.appendChild(row);
+        }
+    }
+
+    function renderReviews(){
+        const reviews = getReviews().sort((a,b)=> new Date(b.date)-new Date(a.date));
+        const list = document.getElementById('reviewsList');
+
+        // limpiar mientras preservamos el h3
+        list.querySelectorAll('.review-card').forEach(n=>n.remove());
+        reviews.forEach(r=>{
+            const card = document.createElement('div'); card.className='review-card';
+            const left = document.createElement('div'); left.className='review-left';
+            left.innerHTML = `<div class="review-avatar">${r.initials}</div>
+                <div class="review-body"><strong>${r.name}</strong><small>${r.place}</small><div class="review-text">${r.text}</div></div>`;
+            const actions = document.createElement('div'); actions.className='review-actions';
+            const stars = '★'.repeat(r.rating)+ '☆'.repeat(5-r.rating);
+            actions.innerHTML = `<div class="publish-area"><span class="publish-badge">${r.published? 'PUBLICADA':'NO PUBLICADA'}</span></div>
+                <div style="margin-top:8px">${stars}</div>
+                <div style="margin-top:10px"><button class="respond-btn" data-id="${r.id}">${r.published? 'Responder':'Revisar'}</button> <button class="respond-btn" data-action="toggle" data-id="${r.id}">Toggle publicar</button></div>`;
+            card.appendChild(left); card.appendChild(actions);
+            list.appendChild(card);
+        });
+
+        // agregar eventos a botones de cada reseña
+        list.querySelectorAll('.respond-btn').forEach(btn=>{
+            btn.addEventListener('click', e=>{
+                const id = btn.getAttribute('data-id');
+                const action = btn.getAttribute('data-action');
+                if(action==='toggle'){
+                    const arr = getReviews();
+                    const idx = arr.findIndex(x=>x.id===id);
+                    if(idx>=0){ arr[idx].published = !arr[idx].published; saveReviews(arr); renderAll(); }
+                } else {
+                    const name = getReviews().find(x=>x.id===id).name;
+                    const reply = prompt('Respuesta pública para ' + name + ':');
+                    if(reply){
+                        const wrap = document.getElementById('toastWrap');
+                        const t = document.createElement('div'); t.className='toast info show'; t.textContent = 'Respuesta guardada (simulada).';
+                        wrap.appendChild(t);
+                        setTimeout(()=>{ t.classList.remove('show'); t.style.opacity='0'; setTimeout(()=>t.remove(),300); },3000);
                     }
                 }
             });
-
-            // Manejar cierre de sesión admin
-            document.getElementById('logoutAdminBtn').addEventListener('click', () => {
-                if (confirm('¿Deseas cerrar sesión?')) {
-                    localStorage.removeItem('loggedUser');
-                    window.location.href = '../index.html';
-                }
-            });
         });
-    </script>
+    }
+
+    function renderAll(){ renderMetrics(); renderDistribution(); renderReviews(); }
+
+    // iniciar render
+    renderAll();
+
+    // filtro simple de demo (no funcional todavía)
+    document.getElementById('filterDest').addEventListener('change', ()=>{ /* placeholder */ });
+    document.getElementById('analyzeBtn').addEventListener('click', ()=>{
+        // abrir modal con gráfico de distribución 
+        const reviews = JSON.parse(localStorage.getItem('admin_reviews_sample')||'[]');
+        const counts = [0,0,0,0,0];
+        reviews.forEach(r=> counts[r.rating-1]++ );
+        const labels = ['1★','2★','3★','4★','5★'];
+        const data = counts;
+        const html = `<h3>Análisis de Experiencia</h3><canvas id="analysisChart" style="width:100%;height:260px"></canvas><div class="actions"><button class="btn btn-cancel modal-close">Cerrar</button></div>`;
+        openModal(html);
+        const ctxA = document.getElementById('analysisChart');
+        if(ctxA){
+            new Chart(ctxA,{ type:'bar', data:{ labels:labels, datasets:[{ data:data, backgroundColor:['#f59e0b','#f59e0b','#f59e0b','#f59e0b','#f59e0b'] }] }, options:{ plugins:{legend:{display:false}} } });
+        }
+    });
+});
+
+/* =======================
+   Nuevo Destino / Nuevo Usuario - lógica
+======================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modal = document.getElementById('modal');
+
+    function openModal(html){
+        modal.innerHTML = html;
+        modalOverlay.style.display = 'flex';
+        modal.setAttribute('aria-hidden','false');
+        // brinda cierre a botones dentro del modal
+        modal.querySelectorAll('.btn-cancel,.modal-close').forEach(b=>b.addEventListener('click', closeModal));
+    }
+
+    function closeModal(){ modalOverlay.style.display='none'; modal.setAttribute('aria-hidden','true'); }
+
+    // DESTINATIONS
+    const destKey = 'admin_destinations_v1';
+    const sampleDests = [
+        {id:'d1',name:'Cartagena de Indias',location:'Bolívar, Colombia',category:'City',price:450000,image:'../Imagenes/cartagenaimg.jpg',rating:4.9,status:'ACTIVO',desc:'Hermosa ciudad amurallada.'},
+        {id:'d2',name:'Parque Tayrona',location:'Magdalena, Colombia',category:'Beach',price:320000,image:'../Imagenes/tayrona.jpg',rating:5,status:'LLENO',desc:'Parque natural con playas espectaculares.'}
+    ];
+
+    if(!localStorage.getItem(destKey)) localStorage.setItem(destKey, JSON.stringify(sampleDests));
+
+    function getDests(){ return JSON.parse(localStorage.getItem(destKey)||'[]'); }
+    function saveDests(arr){ localStorage.setItem(destKey, JSON.stringify(arr)); }
+
+    function renderDests(){
+        const body = document.querySelector('.inventory-table .table-body');
+        if(!body) return;
+        const arr = getDests();
+        body.innerHTML = '';
+        arr.forEach(d=>{
+            const row = document.createElement('div'); row.className='table-row';
+            row.innerHTML = `
+                <div class="col destino">
+                    <img src="${d.image}" alt="${d.name}" class="thumb">
+                    <div class="dest-text"><strong>${d.name}</strong><small>${d.location}</small></div>
+                </div>
+                <div class="col categoria"><span class="pill">${d.category}</span></div>
+                <div class="col precio">$${d.price.toLocaleString('es-CO')}</div>
+                <div class="col rating">⭐ ${d.rating}</div>
+                <div class="col estado"><span class="status-badge ${d.status==='LLENO'? 'full':'active'}">${d.status}</span></div>
+                <div class="col acciones"><button class="icon edit" data-id="${d.id}">✏️</button><button class="icon del" data-id="${d.id}">🗑️</button></div>
+            `;
+            body.appendChild(row);
+        });
+
+        // borrar destino
+        body.querySelectorAll('.del').forEach(b=>b.addEventListener('click', e=>{
+            const id = e.currentTarget.getAttribute('data-id');
+            if(confirm('Eliminar destino?')){ const arr = getDests().filter(x=>x.id!==id); saveDests(arr); renderDests(); }
+        }));
+    }
+
+    // Usuarios
+    const usersKey = 'admin_users_v1';
+    const sampleUsers = [
+        {id:'u1',name:'María Rodríguez',email:'maria@email.com',role:'Cliente',reservas:12,gastado:5400000,ingreso:'2024-01-15',status:'ACTIVO'},
+        {id:'u2',name:'Carlos Méndez',email:'carlos@email.com',role:'Cliente',reservas:8,gastado:3200000,ingreso:'2024-02-20',status:'ACTIVO'}
+    ];
+    if(!localStorage.getItem(usersKey)) localStorage.setItem(usersKey, JSON.stringify(sampleUsers));
+    function getUsers(){ return JSON.parse(localStorage.getItem(usersKey)||'[]'); }
+    function saveUsers(arr){ localStorage.setItem(usersKey, JSON.stringify(arr)); }
+
+    function renderUsers(){
+        const body = document.querySelector('.users-table .table-body');
+        if(!body) return;
+        const arr = getUsers();
+        body.innerHTML = '';
+        arr.forEach(u=>{
+            const row = document.createElement('div'); row.className='table-row';
+            row.innerHTML = `
+                <div class="col usuario"><span class="user-avatar">${u.name.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase()}</span><div class="dest-text"><strong>${u.name}</strong><small>${u.email}</small></div></div>
+                <div class="col rol"><span class="pill ${u.role==='Administrador'?'admin':''}">${u.role}</span></div>
+                <div class="col reservas">${u.reservas}</div>
+                <div class="col gastado">$${u.gastado.toLocaleString('es-CO')}</div>
+                <div class="col ingreso">${u.ingreso}</div>
+                <div class="col estado"><span class="status-badge ${u.status==='INACTIVO'?'inactive':'active'}">${u.status}</span></div>
+                <div class="col acciones"><button class="icon edit" data-id="${u.id}">✏️</button><button class="icon del" data-id="${u.id}">🗑️</button></div>
+            `;
+            body.appendChild(row);
+        });
+
+        body.querySelectorAll('.del').forEach(b=>b.addEventListener('click', e=>{
+            const id = e.currentTarget.getAttribute('data-id');
+            if(confirm('Eliminar usuario?')){ const arr = getUsers().filter(x=>x.id!==id); saveUsers(arr); renderUsers(); }
+        }));
+    }
+
+    // abrir modal nuevo usuario
+    document.getElementById('newDestinationBtn').addEventListener('click', ()=>{
+        const html = `
+            <h3>Nuevo Destino</h3>
+            <div class="form-row">
+                <div style="flex:1">
+                    <label>Nombre</label>
+                    <input id="destName" type="text">
+                </div>
+                <div style="width:140px">
+                    <label>Precio</label>
+                    <input id="destPrice" type="number">
+                </div>
+            </div>
+            <div style="margin-top:10px">
+                <label>Ubicación</label>
+                <input id="destLocation" type="text">
+            </div>
+            <div style="margin-top:10px">
+                <label>Categoría</label>
+                <select id="destCategory"><option>City</option><option>Beach</option><option>Mountain</option></select>
+            </div>
+            <div style="margin-top:10px">
+                <label>Descripción</label>
+                <textarea id="destDesc"></textarea>
+            </div>
+            <div style="margin-top:10px; display:flex; gap:12px; align-items:center">
+                <div>
+                    <label>Imagen</label>
+                    <input id="destImage" type="file" accept="image/*">
+                </div>
+                <img id="destPreview" class="img-preview" src="../Imagenes/viaje.jpg" alt="preview">
+            </div>
+            <div class="actions"><button class="btn btn-cancel">Cancelar</button><button id="saveDest" class="btn btn-save">Guardar</button></div>
+        `;
+        openModal(html);
+
+        // preview
+        const fileInput = modal.querySelector('#destImage');
+        const preview = modal.querySelector('#destPreview');
+        fileInput.addEventListener('change', ()=>{
+            const f = fileInput.files[0];
+            if(!f) return;
+            const reader = new FileReader();
+            reader.onload = e=> preview.src = e.target.result;
+            reader.readAsDataURL(f);
+        });
+
+        modal.querySelector('#saveDest').addEventListener('click', ()=>{
+            const d = {
+                id: 'd'+Date.now(),
+                name: modal.querySelector('#destName').value.trim()||'Nuevo destino',
+                price: Number(modal.querySelector('#destPrice').value)||0,
+                location: modal.querySelector('#destLocation').value.trim()||'',
+                category: modal.querySelector('#destCategory').value,
+                desc: modal.querySelector('#destDesc').value.trim()||'',
+                image: modal.querySelector('#destPreview').src,
+                rating: 0,
+                status: 'ACTIVO'
+            };
+            const arr = getDests(); arr.unshift(d); saveDests(arr); renderDests(); closeModal();
+        });
+    });
+
+    // abrir nuevo usuario modal
+    document.getElementById('newUserBtn').addEventListener('click', ()=>{
+        const html = `
+            <h3>Nuevo Usuario</h3>
+            <div class="form-row">
+                <div style="flex:1"><label>Nombre</label><input id="userName" type="text"></div>
+                <div style="width:220px"><label>Email</label><input id="userEmail" type="text"></div>
+            </div>
+            <div class="form-row" style="margin-top:10px">
+                <div style="flex:1"><label>Rol</label><select id="userRole"><option>Cliente</option><option>Administrador</option></select></div>
+                <div style="width:140px"><label>Reservas</label><input id="userReservas" type="number" value="0"></div>
+                <div style="width:160px"><label>Gastado</label><input id="userGastado" type="number" value="0"></div>
+            </div>
+            <div style="margin-top:10px">
+                <label>Ingreso (YYYY-MM-DD)</label>
+                <input id="userIngreso" type="text" placeholder="2025-03-01">
+            </div>
+            <div style="margin-top:10px; display:flex; justify-content:flex-end; gap:10px">
+                <button class="btn btn-cancel">Cancelar</button>
+                <button id="saveUser" class="btn btn-save">Agregar Usuario</button>
+            </div>
+        `;
+        openModal(html);
+
+        modal.querySelector('#saveUser').addEventListener('click', ()=>{
+            const u = {
+                id: 'u'+Date.now(),
+                name: modal.querySelector('#userName').value.trim()||'Nuevo Usuario',
+                email: modal.querySelector('#userEmail').value.trim()||'',
+                role: modal.querySelector('#userRole').value,
+                reservas: Number(modal.querySelector('#userReservas').value)||0,
+                gastado: Number(modal.querySelector('#userGastado').value)||0,
+                ingreso: modal.querySelector('#userIngreso').value||new Date().toISOString().slice(0,10),
+                status: 'ACTIVO'
+            };
+            const arr = getUsers(); arr.unshift(u); saveUsers(arr); renderUsers(); closeModal();
+        });
+    });
+
+    // initial render
+    renderDests(); renderUsers();
+});
+
+</script>
+
 </body>
 </html>
+
+<!-- MODALES: Nuevo Destino + Nuevo Usuario -->
+<div id="modalOverlay" class="modal-overlay">
+    <div id="modal" class="modal" role="dialog" aria-hidden="true">
+        <!-- dynamic content -->
+    </div>
+</div>
+
+<!-- TOASTS -->
+<div id="toastWrap" class="toast-wrap" aria-live="polite"></div>
+
+<script>
+// Helpers: showToast
+function showToast(message, type='info', timeout=3000){
+    const wrap = document.getElementById('toastWrap');
+    if(!wrap) return; const t = document.createElement('div'); t.className = `toast ${type} show`; t.textContent = message; wrap.appendChild(t);
+    setTimeout(()=>{ t.classList.remove('show'); t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, timeout);
+}
+
+// Generar reporte CSV desde la lista de transacciones
+document.getElementById('genReportBtn')?.addEventListener('click', ()=>{
+    const rows = Array.from(document.querySelectorAll('.transactions-list .transaction'));
+    if(!rows.length){ showToast('No hay transacciones para exportar','warn'); return; }
+    const csv = ['Concepto,Detalle,Monto,Estado'];
+    rows.forEach(r=>{
+        const left = r.querySelector('.left').innerText.replace(/\n/g,' - ').replace(/,/g,'');
+        const amount = r.querySelector('.tx-amount')?.innerText || '';
+        const status = r.querySelector('.tx-status')?.innerText || '';
+        csv.push(`"${left}","","${amount}","${status}"`);
+    });
+    const blob = new Blob([csv.join('\n')], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'reporte_finanzas.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    showToast('Reporte generado y descargado','success');
+});
+
+// Calendario de operaciones (modal)
+document.getElementById('viewCalendarBtn')?.addEventListener('click', ()=>{
+    // Extraer operaciones desde la tabla
+    const opRows = Array.from(document.querySelectorAll('.ops-table .table-body .table-row'));
+    const ops = opRows.map(r=>({ id: r.querySelector('.col.id')?.innerText.trim(), date: r.querySelector('.col.fecha')?.innerText.trim(), cliente: r.querySelector('.col.cliente')?.innerText.trim(), destino: r.querySelector('.col.destino')?.innerText.trim(), estado: r.querySelector('.col.estado')?.innerText.trim() }));
+
+    // Construir calendario simple (sin librerías) para el mes actual, marcando días con operaciones
+    const now = new Date(); let year = now.getFullYear(); let month = now.getMonth();
+    function buildCalendar(y,m){
+        const first = new Date(y,m,1); const daysInMonth = new Date(y,m+1,0).getDate();
+        const startDay = first.getDay();
+        let html = `<div class="calendar-header"><div><strong>${first.toLocaleString('es',{month:'long',year:'numeric'})}</strong></div><div class="calendar-nav"><button id="prevMonth">◀</button><button id="nextMonth">▶</button></div></div><div class="calendar-grid">`;
+        // celdas vacias
+        for(let i=0;i<startDay;i++) html += `<div class="calendar-cell empty"></div>`;
+        for(let d=1; d<=daysInMonth; d++){
+            const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const dayOps = ops.filter(o=> o.date === dateStr || o.date === `${String(d).padStart(2,'0')}` || o.date.includes(String(d)) );
+            html += `<div class="calendar-cell"><div class="date-badge">${d}</div>`;
+            dayOps.slice(0,3).forEach(o=> html += `<div><span class="booking-dot"></span>${o.cliente} - ${o.destino}</div>`);
+            if(dayOps.length>3) html += `<div>+${dayOps.length-3} más</div>`;
+            html += `</div>`;
+        }
+        html += '</div>';
+        return html;
+    }
+
+    const html = `<h3>Calendario de Operaciones</h3>` + buildCalendar(year,month) + `<div class="actions"><button class="btn btn-cancel modal-close">Cerrar</button></div>`;
+    
+    //utilizar openModal existente desde el ámbito global
+    if(typeof openModal === 'function'){ openModal(html);
+        // attach nav
+        document.getElementById('prevMonth')?.addEventListener('click', ()=>{ month--; if(month<0){ month=11; year--; } const body = document.getElementById('analysisChart')?null:null; const newhtml = `<h3>Calendario de Operaciones</h3>` + buildCalendar(year,month) + `<div class="actions"><button class="btn btn-cancel modal-close">Cerrar</button></div>`; document.getElementById('modal').innerHTML = newhtml; document.getElementById('modal').querySelectorAll('.modal-close').forEach(b=>b.addEventListener('click', ()=>document.getElementById('modalOverlay').style.display='none')) });
+        document.getElementById('nextMonth')?.addEventListener('click', ()=>{ month++; if(month>11){ month=0; year++; } const newhtml = `<h3>Calendario de Operaciones</h3>` + buildCalendar(year,month) + `<div class="actions"><button class="btn btn-cancel modal-close">Cerrar</button></div>`; document.getElementById('modal').innerHTML = newhtml; document.getElementById('modal').querySelectorAll('.modal-close').forEach(b=>b.addEventListener('click', ()=>document.getElementById('modalOverlay').style.display='none')) });
+    } else { showToast('Función de modal no disponible','warn'); }
+});
+
+</script>
+

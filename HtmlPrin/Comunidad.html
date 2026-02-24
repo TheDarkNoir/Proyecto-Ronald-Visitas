@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropical Travel - Comunidad</title>
+    <link rel="stylesheet" href="../Css/ClienteStyle.css">
+    <link rel="stylesheet" href="../Css/Comunidad.css">
+</head>
+<body>
+    <!-- HEADER SUPERIOR -->
+    <header class="top-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-icon">🏝️</div>
+                <span class="logo-text">Tropical Travel</span>
+            </div>
+
+            <nav class="top-nav">
+                <button class="nav-btn" onclick="location.href='Inicio.html'">🧭 Explorar</button>
+                <button class="nav-btn" onclick="location.href='MisViajes.html'">📅 Mis Viajes</button>
+                <button class="nav-btn active" onclick="location.href='Comunidad.html'">👥 Comunidad</button>
+                <button class="btn-iachat" onclick="location.href='IAChat.html'">💬 IA Chat</button>
+            </nav>
+
+            <div class="header-actions">
+                <div class="notification-wrapper">
+                    <button class="notification-btn">🔔</button>
+                    <div class="notification-badge" style="display:none;">0</div>
+                </div>
+                <div class="user-avatar" id="userInitials" onclick="location.href='Perfil.html'" title="Mi perfil">JA</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="community-app">
+        <aside class="chat-list">
+            <div class="chat-list-header">
+                <div class="current-user">
+                    <div class="avatar small">JA</div>
+                    <div class="user-actions">
+                        <button title="Nuevo chat">＋</button>
+                        <button title="Grupos">👥</button>
+                        <button title="Opciones">⋯</button>
+                    </div>
+                </div>
+                <div class="chat-search">
+                    <input type="text" id="chatSearch" placeholder="Busca un chat o inicia uno nuevo" />
+                </div>
+            </div>
+            <!-- lista de chats generada por JS -->
+        </aside>
+        <section class="chat-window">
+            <header class="chat-header">
+                <div class="chat-title" id="chatTitle">Selecciona un chat</div>
+                <div class="chat-actions">
+                    <button id="callBtn" title="Llamar">📞</button>
+                    <button id="photoBtn" title="Enviar foto">📷</button>
+                    <button id="searchBtn" title="Buscar">🔍</button>
+                    <button id="menuBtn" title="Menú">⋮</button>
+                </div>
+            </header>
+            <div class="messages" id="messagesContainer">
+                <!-- mensajes -->
+            </div>
+            <footer class="chat-input">
+                <button id="emojiBtn">😊</button>
+                <input type="text" id="messageInput" placeholder="Escribe un mensaje aquí" autocomplete="off" />
+                <button id="sendBtn">➡️</button>
+                <button id="micBtn">🎤</button>
+            </footer>
+        </section>
+    </main>
+
+    <script src="../Scripts/ScriptsComunidad.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+            if (!loggedUser) {
+                window.location.href = '../index.html';
+                return;
+            }
+            const username = loggedUser.username || 'Usuario';
+            const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('userInitials').textContent = initials;
+        });
+    </script>
+</body>
+</html>

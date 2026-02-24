@@ -16,37 +16,39 @@
             </div>
 
             <nav class="top-nav">
-                <button class="nav-btn active" onclick="location.href='Inicio.html'">✓ Explorar</button>
-                <button class="nav-btn" onclick="location.href='itinerario.html'">📅 Itinerario</button>
-                <button class="nav-btn" onclick="location.href='IAChat.html'">🤖 IA Chat</button>
-                <button class="nav-btn" onclick="location.href='Perfil.html'">👤 Perfil</button>
+                <button class="nav-btn active" onclick="location.href='Inicio.html'">🧭 Explorar</button>
+                <button class="nav-btn" onclick="location.href='MisViajes.html'">📅 Mis Viajes</button>
+                <button class="nav-btn" onclick="location.href='Comunidad.html'">👥 Comunidad</button>
+                <button class="btn-iachat" onclick="location.href='IAChat.html'">💬 IA Chat</button>
             </nav>
 
             <div class="header-actions">
-                <button class="notification-btn">🔔</button>
-                <div class="user-avatar" id="userInitials">JA</div>
+                <div class="notification-wrapper">
+                    <button class="notification-btn">🔔</button>
+                    <div class="notification-badge" style="display:none;">0</div>
+                </div>
+                <div class="user-avatar" id="userInitials" onclick="location.href='Perfil.html'" title="Mi perfil">JA</div>
             </div>
         </div>
     </header>
 
-    <!-- SECCIÓN DE BÚSQUEDA Y EXPLORACIÓN -->
+    <!-- SECCIÓN HERO Y BÚSQUEDA -->
     <section class="explorer-section">
         <div class="explorer-content">
-            <div class="location-tag">🏆 COLOMBIA: TIERRA DE SABROSURA</div>
-            
-            <h1 class="explorer-title">
-                Descubre el
-                <span class="title-highlight">Orgullo Nacional</span>
-            </h1>
+            <h1 class="hero-title">Tu Escape Exótico <span>Te Espera</span></h1>
+            <p class="hero-subtitle">Vive experiencias vibrantes, acogedoras y exóticas diseñadas por nuestros expertos locales de IA.</p>
 
             <div class="search-box">
-                <input 
-                    type="text" 
-                    class="search-input" 
-                    placeholder="¿Qué parte de Colombia quieres vivir hoy?"
-                    id="searchInput"
-                >
-                <button class="advanced-filters">🔽 Filtros Avanzados</button>
+                <div style="position:relative;flex:1;">
+                    <span class="search-input-icon">🔍</span>
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        placeholder="¿A dónde quieres ir?"
+                        id="searchInput"
+                    >
+                </div>
+                <button class="btn-explore">Explorar Ahora</button>
             </div>
         </div>
     </section>
@@ -159,6 +161,60 @@
             </div>
         </div>
     </section>
+
+    <!-- SECCIÓN DE ESTADÍSTICAS -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>50+</h3>
+                <p>Paraísos tropicales</p>
+            </div>
+            <div class="stat-item">
+                <h3>12k</h3>
+                <p>Viajeros felices</p>
+            </div>
+            <div class="stat-item">
+                <h3>4.9</h3>
+                <p>Calificación media</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>Soporte IA</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA A UNIRSE A LA COMUNIDAD -->
+    <section class="cta-section">
+        <div class="cta-card">
+            <h2>¿Listo para tu próxima aventura?</h2>
+            <p>Únete a Tropical Travel hoy y empieza a planificar tu itinerario grupal con colaboración en tiempo real.</p>
+            <button class="btn-community" onclick="location.href='Comunidad.html'">Unirse a la Comunidad</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <div class="logo-icon">🏝️</div>
+                <span class="logo-text">Tropical Travel</span>
+            </div>
+            <nav class="footer-nav">
+                <a href="#">Privacidad</a>
+                <a href="#">Términos</a>
+                <a href="#">Soporte</a>
+                <a href="#">Destinos</a>
+            </nav>
+            <div class="footer-contact">
+                <p>Contáctanos:</p>
+                <a href="mailto:contacto@tropicaltravel.app">contacto@tropicaltravel.app</a>
+            </div>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 Tropical Travel. Todos los derechos reservados.
+        </div>
+    </footer>
 
     <!-- Botón flotante de ayuda -->
     <button class="floating-help">?</button>
