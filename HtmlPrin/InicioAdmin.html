@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Tropical Travel - Panel Admin</title>
-
 <link rel="stylesheet" href="../Css/AdminStyle.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="icon" href="../Imagenes/Icon_tropicals_T.png" type="image/png">
+<link rel="apple-touch-icon" href="../Imagenes/Icon_tropicals_T.png">
 
 </head>
 
@@ -19,7 +19,7 @@
     <aside class="sidebar-admin">
 
         <div class="logo-admin">
-            <div class="logo-icon">🏝️</div>
+            <div class="logo-icon" style="background-image:url('../Imagenes/Icon_tropicals_T.png');"></div>
             <span class="logo-text">Tropical Travel</span>
             <p class="logo-subtitle">ADMIN EDITION</p>
         </div>
@@ -1200,6 +1200,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
     if(!localStorage.getItem(usersKey)) localStorage.setItem(usersKey, JSON.stringify(sampleUsers));
     function getUsers(){ return JSON.parse(localStorage.getItem(usersKey)||'[]'); }
     function saveUsers(arr){ localStorage.setItem(usersKey, JSON.stringify(arr)); }
+
+    // Asegurar que el usuario solicitado por el admin exista
+    (function ensureRequestedUser(){
+        const reqEmail = 'Usuario@gmail.com';
+        const reqPass = '12345678';
+        try{
+            const arr = getUsers();
+            if(!arr.some(u=> u.email && u.email.toLowerCase()===reqEmail.toLowerCase())){
+                arr.unshift({ id: 'u'+Date.now(), name: 'Usuario', email: reqEmail, password: reqPass, role: 'Cliente', reservas: 0, gastado: 0, ingreso: new Date().toISOString().slice(0,10), status: 'ACTIVO' });
+                saveUsers(arr);
+            }
+        }catch(e){ console.error('Error asegurando usuario:', e); }
+    })();
 
     function renderUsers(){
         const body = document.querySelector('.users-table .table-body');
