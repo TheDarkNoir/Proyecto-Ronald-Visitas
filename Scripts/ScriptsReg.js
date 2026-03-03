@@ -1,10 +1,12 @@
 // guarda el usuario en localStorage y redirige al login
 
+// guarda el usuario en la tabla Usuario de Supabase a través del servidor Node
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('registroForm') || document.querySelector('form');
     if (!form) return;
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const username = (document.getElementById('nuevo-username')?.value || '').trim();
@@ -31,27 +33,26 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Por favor ingrese un correo válido.');
             return;
         }
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
 
-        if (users.some(u => u.email === email)) {
-            alert('Ya existe un usuario con ese correo.');
-            return;
+        try {
+            // enviar datos al servidor para registrar en supabase
+            const response = await fetch('http://localhost:3000/registrar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, user: email, password: pass })
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Error al registrar usuario');
+            }
+
+            alert('Registro exitoso. ¡Bienvenido a Tropical Travel! Ahora inicia sesión.');
+            window.location.href = 'index.html';
+        } catch (err) {
+            console.error('Registro fallido:', err);
+            alert('Error: ' + err.message);
         }
-
-        // Guardar usuario 
-        users.push({
-            username,
-            email,
-            password: btoa(pass), // codificación simple para no guardar texto plano
-            createdAt: new Date().toISOString()
-        });
-
-        localStorage.setItem('users', JSON.stringify(users));
-
-        // Redirigir al login 
-        alert('Registro exitoso. ¡Bienvenido a Tropical Travel! Ahora inicia sesión.');
-        // Redirige al login (página principal de login)
-        window.location.href = 'index.html';
     });
 
     // compatibilidad si el botón no es type="submit"
