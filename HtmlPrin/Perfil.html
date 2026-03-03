@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" href="../Imagenes/Icon_tropicals_T.png">
         <div class="header-container">
             <div class="logo-section">
-                <div class="logo-icon">🏝️</div>
+                <div class="logo-icon" style="background-image: url('../Imagenes/Icon_tropicals_T.png');"></div>
                 <span class="logo-text">Tropical Travel</span>
             </div>
 
@@ -323,33 +323,7 @@
             document.getElementById('profileName').textContent = username;
             document.getElementById('profileEmail').textContent = email;
 
-            // Notificaciones interactivas
-            const notificationBtn = document.getElementById('notificationBtn');
-            const notificationPopup = document.getElementById('notificationPopup');
-            const closeNotifications = document.getElementById('closeNotifications');
-            const markReadBtn = document.querySelector('.btn-mark-read');
-
-            notificationBtn.addEventListener('click', () => {
-                notificationPopup.classList.toggle('active');
-            });
-
-            closeNotifications.addEventListener('click', () => {
-                notificationPopup.classList.remove('active');
-            });
-
-            markReadBtn.addEventListener('click', () => {
-                document.querySelectorAll('.notification-item.unread').forEach(item => {
-                    item.classList.remove('unread');
-                });
-                document.getElementById('notificationBadge').style.display = 'none';
-                alert('Todas las notificaciones marcadas como leídas');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.notification-btn') && !e.target.closest('.notification-popup')) {
-                    notificationPopup.classList.remove('active');
-                }
-            });
+            // Notificaciones manejadas por ScriptsNotificacion.js
 
             // Tab switching
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -362,14 +336,14 @@
                 });
             });
 
-            // Save buttons
+            //guardar cambios
             document.querySelectorAll('.btn-save').forEach(btn => {
                 btn.addEventListener('click', () => {
                     alert('✅ Cambios guardados correctamente');
                 });
             });
 
-            // Edit profile
+            // EDITAR PEROFIL
             document.querySelector('.btn-edit-profile').addEventListener('click', () => {
                 document.getElementById('general').querySelector('input').disabled = false;
                 alert('Modo edición activado');
@@ -383,7 +357,7 @@
                 }
             });
 
-            // Tags interactivity
+            // Etiqueta interactivita
             document.querySelectorAll('.tag').forEach(tag => {
                 tag.addEventListener('click', () => {
                     tag.classList.toggle('active');
@@ -391,5 +365,6 @@
             });
         });
     </script>
+    <script src="../Scripts/ScriptsNotificacion.js" defer></script>
 </body>
 </html>

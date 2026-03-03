@@ -14,7 +14,7 @@
     <header class="top-header">
         <div class="header-container">
             <div class="logo-section">
-                <div class="logo-icon">🏝️</div>
+                <div class="logo-icon" style="background-image: url('../Imagenes/Icon_tropicals_T.png');"></div>
                 <span class="logo-text">Tropical Travel</span>
             </div>
 
@@ -27,10 +27,44 @@
 
             <div class="header-actions">
                 <div class="notification-wrapper">
-                    <button class="notification-btn">🔔</button>
-                    <div class="notification-badge" style="display:none;">0</div>
+                    <button class="notification-btn" id="notificationBtn">🔔</button>
+                    <div class="notification-badge" id="notificationBadge">3</div>
                 </div>
                 <div class="user-avatar" id="userInitials" onclick="location.href='Perfil.html'" title="Mi perfil">JA</div>
+            </div>
+            <!-- NOTIFICATION POPUP -->
+            <div class="notification-popup" id="notificationPopup">
+                <div class="popup-header">
+                    <h3>Notificaciones</h3>
+                    <button class="close-popup" id="closeNotifications">✕</button>
+                </div>
+                <div class="notifications-list" id="notificationsList">
+                    <div class="notification-item unread">
+                        <div class="notification-icon">✈️</div>
+                        <div class="notification-content">
+                            <p class="notification-title">Reserva Confirmada</p>
+                            <p class="notification-text">Tu viaje a Cartagena ha sido confirmado para el 25 de febrero</p>
+                            <span class="notification-time">Hace 2 horas</span>
+                        </div>
+                    </div>
+                    <div class="notification-item unread">
+                        <div class="notification-icon">⭐</div>
+                        <div class="notification-content">
+                            <p class="notification-title">Califica tu experiencia</p>
+                            <p class="notification-text">¿Cómo fue tu viaje a Valle de Cocora?</p>
+                            <span class="notification-time">Hace 1 día</span>
+                        </div>
+                    </div>
+                    <div class="notification-item unread">
+                        <div class="notification-icon">💰</div>
+                        <div class="notification-content">
+                            <p class="notification-title">Oferta Especial</p>
+                            <p class="notification-text">Descuento del 20% en Parque Tayrona esta semana</p>
+                            <span class="notification-time">Hace 3 días</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-mark-read">Marcar todas como leídas</button>
             </div>
         </div>
     </header>
@@ -52,6 +86,24 @@
             </div>
             <!-- lista de chats generada por JS -->
         </aside>
+        <!-- NOTIFICATION POPUP -->
+        <div class="notification-popup" id="notificationPopup">
+            <div class="popup-header">
+                <h3>Notificaciones</h3>
+                <button class="close-popup" id="closeNotifications">✕</button>
+            </div>
+            <div class="notifications-list" id="notificationsList">
+                <div class="notification-item unread">
+                    <div class="notification-icon">✈️</div>
+                    <div class="notification-content">
+                        <p class="notification-title">Reserva Confirmada</p>
+                        <p class="notification-text">Tu viaje a Cartagena ha sido confirmado para el 25 de febrero</p>
+                        <span class="notification-time">Hace 2 horas</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-mark-read">Marcar todas como leídas</button>
+        </div>
         <section class="chat-window">
             <header class="chat-header">
                 <div class="chat-title" id="chatTitle">Selecciona un chat</div>
@@ -75,6 +127,7 @@
     </main>
 
     <script src="../Scripts/ScriptsComunidad.js" defer></script>
+    <script src="../Scripts/ScriptsNotificacion.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');

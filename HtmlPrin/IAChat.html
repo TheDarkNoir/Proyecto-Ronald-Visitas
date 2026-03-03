@@ -14,7 +14,7 @@
     <header class="top-header">
         <div class="header-container">
             <div class="logo-section">
-                <div class="logo-icon">🏝️</div>
+                <div class="logo-icon" style="background-image: url('../Imagenes/Icon_tropicals_T.png');"></div>
                 <span class="logo-text">Tropical Travel</span>
             </div>
 
@@ -33,7 +33,7 @@
         </div>
     </header>
 
-    <!-- NOTIFICATION POPUP -->
+  <!-- NOTIFICATION POPUP -->
     <div class="notification-popup" id="notificationPopup">
         <div class="popup-header">
             <h3>Notificaciones</h3>
@@ -145,6 +145,7 @@
         </div>
     </section>
 
+    <script src="../Scripts/ScriptsNotificacion.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
@@ -159,33 +160,7 @@
             document.getElementById('userInitials').textContent = initials;
             document.getElementById('msgUserInitials').textContent = initials;
 
-            // Notificacion funcionalidad
-            const notificationBtn = document.getElementById('notificationBtn');
-            const notificationPopup = document.getElementById('notificationPopup');
-            const closeNotifications = document.getElementById('closeNotifications');
-            const markReadBtn = document.querySelector('.btn-mark-read');
-
-            notificationBtn.addEventListener('click', () => {
-                notificationPopup.classList.toggle('active');
-            });
-
-            closeNotifications.addEventListener('click', () => {
-                notificationPopup.classList.remove('active');
-            });
-
-            markReadBtn.addEventListener('click', () => {
-                document.querySelectorAll('.notification-item.unread').forEach(item => {
-                    item.classList.remove('unread');
-                });
-                document.getElementById('notificationBadge').style.display = 'none';
-                alert('Todas las notificaciones marcadas como leídas');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.notification-btn') && !e.target.closest('.notification-popup')) {
-                    notificationPopup.classList.remove('active');
-                }
-            });
+            // Notificaciones manejadas por ScriptsNotificacion.js
 
             // Chat funcionalidad
             const chatInput = document.getElementById('chatInput');

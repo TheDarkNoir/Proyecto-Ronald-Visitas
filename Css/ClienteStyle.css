@@ -23,7 +23,7 @@ body {
 
 /* ===== TOP HEADER ===== */
 .top-header {
-    /* overlay over hero background, blurred for glass effect */
+    /* Superposición sobre el fondo del header, borrosa para lograr un efecto de vidrio. */
     position: fixed;
     inset: 0 0 auto 0; /* top, right, bottom, left */
     background: rgba(255, 255, 255, 0.6);
@@ -34,7 +34,7 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* add spacing to page content so it isn't hidden behind fixed header */
+/* Agregue espaciado al contenido de la página para que no quede oculto detrás de un encabezado fijo. */
 body {
     padding-top: 70px;
 }
@@ -56,7 +56,13 @@ body {
 }
 
 .logo-icon {
-    font-size: 1.8em;
+    width: 44px;
+    height: 44px;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0; /* hide emoji fallback */
 }
 
 .logo-text {
@@ -153,6 +159,38 @@ body {
     font-size: 0.7em;
     font-weight: 700;
 }
+
+/* Notification popup shared styles */
+.notification-popup {
+    position: absolute;
+    top: 56px;
+    right: 0;
+    width: 320px;
+    max-height: 420px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    padding: 12px;
+    display: none;
+    z-index: 1200;
+    overflow: auto;
+}
+.notification-popup.active { display: block; }
+
+.notification-popup .popup-header{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px }
+.notification-popup .popup-header h3{ font-size:1.05em; margin:0 }
+.notification-popup .close-popup{ background:none; border:none; font-size:1.1em; cursor:pointer }
+.notifications-list{ display:flex; flex-direction:column; gap:10px }
+.notification-item{ display:flex; gap:10px; padding:8px; border-radius:8px; align-items:flex-start }
+.notification-item.unread{ background: #f7fbff }
+.notification-icon{ width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; background:#f3f4f6; font-size:1.1em }
+.notification-content .notification-title{ font-weight:700; margin-bottom:4px }
+.notification-content .notification-text{ font-size:0.95em; color:var(--text-light) }
+.notification-time{ font-size:0.8em; color:#94a3b8; margin-top:6px; display:block }
+.btn-mark-read{ margin-top:8px; width:100%; padding:8px; border-radius:8px; background:#efefef; border:none; cursor:pointer }
+
+/* small screens adjust */
+@media (max-width:600px){ .notification-popup{ right:8px; left:8px; width:auto; top:60px; } }
 
 .notification-btn:hover {
     background: #e0e0e0;
