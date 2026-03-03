@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="../Css/ClienteStyle.css">
     <link rel="icon" href="../Imagenes/Icon_tropicals_T.png" type="image/png">
     <link rel="apple-touch-icon" href="../Imagenes/Icon_tropicals_T.png">
+    <!-- include modal styles used by viajes pages -->
+    <link rel="stylesheet" href="../Css/MisViajes.css">
 </head>
 <body>
     <!-- HEADER SUPERIOR -->
@@ -255,6 +257,15 @@
     <!-- Botón flotante de ayuda -->
     <button class="floating-help">?</button>
 
+    <!-- modal para detalles de destino -->
+    <div class="modal" id="destinationModal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="close-modal" id="closeDestinationModal">×</button>
+            <div id="destinationModalBody"></div>
+        </div>
+    </div>
+
+    <script src="../Scripts/ScriptsInicio.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
