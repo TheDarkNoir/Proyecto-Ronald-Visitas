@@ -38,6 +38,7 @@
     <section class="explorer-section">
         <div class="explorer-content">
             <h1 class="hero-title">Tu Escape Exótico <span>Te Espera</span></h1>
+            <p id="userGreeting" class="hero-subtitle">Bienvenido/a viajero.</p>
             <p class="hero-subtitle">Vive experiencias vibrantes, acogedoras y exóticas diseñadas por nuestros expertos locales de IA.</p>
 
             <div class="search-box">
@@ -243,6 +244,8 @@
             const username = loggedUser.username || 'Usuario';
             const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
             document.getElementById('userInitials').textContent = initials;
+            const greeting = document.getElementById('userGreeting');
+            if (greeting) greeting.textContent = `Hola ${username}, estos destinos son para ti.`;
         });
     </script>
 </body>

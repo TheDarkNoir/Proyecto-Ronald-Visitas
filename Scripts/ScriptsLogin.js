@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('http://localhost:3000/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user: email, password: pass })
+                body: JSON.stringify({ email, password: pass })
             });
             const result = await response.json();
             if (!response.ok) {

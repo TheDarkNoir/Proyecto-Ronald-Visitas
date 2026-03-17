@@ -112,6 +112,96 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === modal) modal.setAttribute('aria-hidden', 'true');
     });
 
+    function getLoggedUser() {
+        return JSON.parse(localStorage.getItem('loggedUser') || 'null');
+    }
+
+    async function getUserTrips() {
+        const user = getLoggedUser();
+        if (!user) return [];
+
+        try {
+            const res = await fetch(`http://localhost:3000/mis-viajes?userId=${user.id}`);
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    const mappedTrips = data.map((r, i) => ({
+                        id: r.id,
+                        title: r.destinos?.nombre_destino || `Viaje ${i + 1}`,
+                        location: r.destinos?.ubicacion || 'Colombia',
+                        duration: r.destinos?.duracion || '??',
+                        difficulty: 'MEDIA',
+                        rating: 4.5,
+                        description: r.destinos?.descripcion || 'Reserva',
+                        price: r.precio_total || 0,
+                        date: r.fecha_reserva || '',
+                        status: r.estado || 'pending'
+                    }));
+                    localStorage.setItem(`userTrips_${user.id || user.email}`, JSON.stringify(mappedTrips));
+                    return mappedTrips;
+                }
+            }
+        } catch (e) {
+            console.warn('No se pudo obtener viajes de la API', e);
+        }
+
+        const stored = localStorage.getItem(`userTrips_${user.id || user.email}`);
+        if (stored) return JSON.parse(stored);
+
+        const baseline = user.email.includes('a') ? [
+            {...tripsData[0], status:'confirmed', date:'2025-05-10'},
+            {...tripsData[2], status:'pending', date:'2025-06-01'}
+        ] : [
+            {...tripsData[1], status:'confirmed', date:'2025-05-12'},
+            {...tripsData[3], status:'pending', date:'2025-06-05'}
+        ];
+        localStorage.setItem(`userTrips_${user.id || user.email}`, JSON.stringify(baseline));
+        return baseline;
+    }
+
+    async function saveUserTrip(trip) {
+        const user = getLoggedUser();
+        if (!user) return;
+        try {
+            await fetch('http://localhost:3000/reserva', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ usuario_id: user.id, destino_id: trip.id, fecha_reserva: new Date().toISOString().slice(0,10), precio_total: trip.price || 0 })
+            });
+        } catch (e) {
+            console.warn('No se pudo guardar reserva en API', e);
+        }
+
+        const key = `userTrips_${user.id || user.email}`;
+        let list = JSON.parse(localStorage.getItem(key) || '[]');
+        const exists = list.some(t => t.id === trip.id && t.date === trip.date);
+        if (!exists) {
+            list.unshift({ ...trip, status: 'confirmed', date: new Date().toISOString().slice(0, 10) });
+            localStorage.setItem(key, JSON.stringify(list));
+        }
+    }
+
+    function showDetails(trip) {
+        modalBody.innerHTML = `
+            <h2>${trip.title}</h2>
+            <img src="${trip.image}" alt="${trip.title}" style="width:100%;border-radius:8px;margin-bottom:10px;">
+            <p><strong>Ubicación:</strong> ${trip.location}</p>
+            <p><strong>Duración:</strong> ${trip.duration}</p>
+            <p><strong>Dificultad:</strong> ${trip.difficulty}</p>
+            <p><strong>Calificación:</strong> ⭐ ${trip.rating}</p>
+            <p><strong>Precio:</strong> $${trip.price.toLocaleString('es-CO')} COP</p>
+            <p><strong>Descripción:</strong> ${trip.description}</p>
+            <button id="reserveBtn" class="btn-action">Reservar Viaje</button>
+        `;
+        modal.setAttribute('aria-hidden', 'false');
+
+        document.getElementById('reserveBtn').addEventListener('click', () => {
+            saveUserTrip(trip);
+            alert('¡Reserva confirmada! Tu viaje se ha guardado en Mis Viajes.');
+            modal.setAttribute('aria-hidden', 'true');
+        });
+    }
+
     // attach listener to each card
     const cards = document.querySelectorAll('.destination-card');
     cards.forEach(card => {
