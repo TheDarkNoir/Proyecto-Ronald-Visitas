@@ -15,21 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // credenciales admin hardcodeadas
-        const ADMIN_EMAIL = 'admin@gmail.com';
-        const ADMIN_PASSWORD = '12345678';
-        if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
-            localStorage.setItem('loggedUser', JSON.stringify({
-                email: ADMIN_EMAIL,
-                username: 'Administrador',
-                isAdmin: true,
-                loggedAt: new Date().toISOString()
-            }));
-            alert('¡Acceso Admin Concedido! Bienvenido al Panel de Control.');
-            window.location.href = 'HtmlPrin/InicioAdmin.html';
-            return;
-        }
-
         try {
             const response = await fetch('http://localhost:3000/login', {
                 method: 'POST',
@@ -41,19 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(result.error || 'Login fallido');
             }
 
-            // almacenar token y datos básicos
+            const isAdmin = (result.rol || '').toLowerCase() === 'admin';
+            const redirectUrl = isAdmin ? 'HtmlPrin/InicioAdmin.html' : 'HtmlPrin/Inicio.html';
+
             localStorage.setItem('authToken', result.token);
             localStorage.setItem('loggedUser', JSON.stringify({
                 id: result.userId,
                 email,
                 username: result.username || email,
                 rol: result.rol || 'cliente',
-                isAdmin: false,
+                isAdmin,
                 loggedAt: new Date().toISOString()
             }));
 
             alert('Acceso concedido. ¡Bienvenido a Tropical Travel!');
-            window.location.href = 'HtmlPrin/Inicio.html';
+            window.location.href = redirectUrl;
         } catch (err) {
             console.error('Error de login:', err);
             alert('Credenciales incorrectas o servidor no disponible.');
