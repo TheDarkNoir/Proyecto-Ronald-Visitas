@@ -146,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const stored = localStorage.getItem(`userTrips_${user.id || user.email}`);
-        if (stored) return JSON.parse(stored);
-
+        if (stored) return JSON.parse(stored); 
+ 
         const baseline = user.email.includes('a') ? [
             {...tripsData[0], status:'confirmed', date:'2025-05-10'},
             {...tripsData[2], status:'pending', date:'2025-06-01'}
