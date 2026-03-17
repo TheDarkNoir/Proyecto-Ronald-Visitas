@@ -89,19 +89,19 @@
 
                 <div class="profile-stats">
                     <div class="stat-item">
-                        <div class="stat-number">5</div>
+                        <div id="completedTrips" class="stat-number">0</div>
                         <p class="stat-label">Viajes Completados</p>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">1</div>
+                        <div id="pendingTrips" class="stat-number">0</div>
                         <p class="stat-label">En Progreso</p>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">12</div>
+                        <div id="savedDestinations" class="stat-number">0</div>
                         <p class="stat-label">Destinos Guardados</p>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">4.8</div>
+                        <div id="averageRating" class="stat-number">4.8</div>
                         <p class="stat-label">Rating Promedio</p>
                     </div>
                 </div>
@@ -323,7 +323,46 @@
             document.getElementById('profileName').textContent = username;
             document.getElementById('profileEmail').textContent = email;
 
-            // Notificaciones manejadas por ScriptsNotificacion.js
+            // Cargar estadísticas personalizadas por usuario
+            const tripsKey = `userTrips_${loggedUser.id || loggedUser.email}`;
+            const trips = JSON.parse(localStorage.getItem(tripsKey) || '[]');
+            const confirmed = trips.filter(t => t.status === 'confirmed').length;
+            const pending = trips.filter(t => t.status === 'pending').length;
+            const destinations = new Set(trips.map(t => t.title)).size;
+            const avgRating = trips.length ? (trips.reduce((a,b)=>a + (b.rating || 0), 0)/trips.length).toFixed(1) : '4.8';
+
+            document.getElementById('completedTrips').textContent = confirmed;
+            document.getElementById('pendingTrips').textContent = pending;
+            document.getElementById('savedDestinations').textContent = destinations;
+            document.getElementById('averageRating').textContent = avgRating;
+
+            // Notification functionality
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationPopup = document.getElementById('notificationPopup');
+            const closeNotifications = document.getElementById('closeNotifications');
+            const markReadBtn = document.querySelector('.btn-mark-read');
+
+            notificationBtn.addEventListener('click', () => {
+                notificationPopup.classList.toggle('active');
+            });
+
+            closeNotifications.addEventListener('click', () => {
+                notificationPopup.classList.remove('active');
+            });
+
+            markReadBtn.addEventListener('click', () => {
+                document.querySelectorAll('.notification-item.unread').forEach(item => {
+                    item.classList.remove('unread');
+                });
+                document.getElementById('notificationBadge').style.display = 'none';
+                alert('Todas las notificaciones marcadas como leídas');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.notification-btn') && !e.target.closest('.notification-popup')) {
+                    notificationPopup.classList.remove('active');
+                }
+            });
 
             // Tab switching
             document.querySelectorAll('.tab-btn').forEach(btn => {
