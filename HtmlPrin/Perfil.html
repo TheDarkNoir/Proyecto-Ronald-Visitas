@@ -9,10 +9,14 @@
 </head>
 <body>
     <!-- HEADER SUPERIOR -->
-    <header class="top-header">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="../Css/ClienteStyle.css">
+    <link rel="stylesheet" href="../Css/perfil.css">
+    <link rel="icon" href="../Imagenes/Icon_tropicals_T.png" type="image/png">
+    <link rel="apple-touch-icon" href="../Imagenes/Icon_tropicals_T.png">
         <div class="header-container">
             <div class="logo-section">
-                <div class="logo-icon">🏝️</div>
+                <div class="logo-icon" style="background-image: url('../Imagenes/Icon_tropicals_T.png');"></div>
                 <span class="logo-text">Tropical Travel</span>
             </div>
 
@@ -371,14 +375,14 @@
                 });
             });
 
-            // Save buttons
+            //guardar cambios
             document.querySelectorAll('.btn-save').forEach(btn => {
                 btn.addEventListener('click', () => {
                     alert('✅ Cambios guardados correctamente');
                 });
             });
 
-            // Edit profile
+            // EDITAR PEROFIL
             document.querySelector('.btn-edit-profile').addEventListener('click', () => {
                 document.getElementById('general').querySelector('input').disabled = false;
                 alert('Modo edición activado');
@@ -392,7 +396,7 @@
                 }
             });
 
-            // Tags interactivity
+            // Etiqueta interactivita
             document.querySelectorAll('.tag').forEach(tag => {
                 tag.addEventListener('click', () => {
                     tag.classList.toggle('active');
@@ -400,5 +404,6 @@
             });
         });
     </script>
+    <script src="../Scripts/ScriptsNotificacion.js" defer></script>
 </body>
 </html>

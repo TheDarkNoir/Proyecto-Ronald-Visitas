@@ -57,9 +57,14 @@ body {
 }
 
 .logo-icon {
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    width: 56px;
+    height: 56px;
     display: block;
+    margin-bottom: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0;
 }
 
 .logo-text {
