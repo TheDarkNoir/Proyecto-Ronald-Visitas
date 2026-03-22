@@ -1,21 +1,29 @@
 // Script para la página de login: valida credenciales contra servidor Node
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Ensure default demo user exists for login
-    (function ensureDemoUser(){
-        try{
-            const key = 'users';
-            const demoEmail = 'usuario@gmail.com';
-            const demoPass = '12345678';
-            const raw = localStorage.getItem(key) || '[]';
-            const arr = JSON.parse(raw);
-            const exists = arr.some(u => u.email && u.email.toLowerCase() === demoEmail);
-            if(!exists){
-                arr.push({ username: 'Usuario', email: demoEmail, password: btoa(demoPass), createdAt: new Date().toISOString() });
-                localStorage.setItem(key, JSON.stringify(arr));
-            }
-        }catch(e){ console.error('No se pudo asegurar usuario demo', e); }
-    })();
+// Asegura usuario demo al cargar 
+function ensureDemoUser() {
+  try {
+    const key = 'users';
+    const demoEmail = 'usuario@gmail.com';
+    const demoPass = '12345678';
+    const raw = localStorage.getItem(key) || '[]';
+    const users = JSON.parse(raw);
+    const exists = users.some(user => user.email?.toLowerCase() === demoEmail.toLowerCase());
+    if (!exists) {
+      users.push({
+        username: 'Usuario',
+        email: demoEmail,
+        password: btoa(demoPass),
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem(key, JSON.stringify(users));
+    }
+  } catch (error) {
+    console.error('Error al asegurar usuario demo:', error);
+  }
+}
+ensureDemoUser();  // Llamar explícitamente
+
 
     const form = document.querySelector('form');
     if (!form) return;
@@ -75,4 +83,3 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Credenciales incorrectas o servidor no disponible.');
         }
     });
-});

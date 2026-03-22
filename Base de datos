@@ -1,0 +1,415 @@
+🧍‍♂️ USUARIO (perfil de usuario)
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+ID del usuario (auth.users)
+nombre
+text
+Nombre completo
+email
+text
+Correo electrónico
+rol
+text
+Admin/ Cliente
+
+
+Contraseña
+
+
+
+
+foto
+binario
+imagen perfil / Null predeterminado
+
+
+
+
+
+
+
+
+⚙️ REFERENCIAS_USUARIOS
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+user_id
+uuid (FK → users.id)
+
+
+intereses
+jsonb
+Intereses turísticos
+presupuesto_min
+numeric
+
+
+presupuesto_max
+numeric
+
+
+idiomas_preferidos
+text[]
+
+
+notificaciones_activas
+boolean
+
+
+moneda
+Text
+Monedas o formato de pago
+
+
+
+🌍 DESTINO
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+nombre
+text
+Nombre del destino
+país
+text
+
+
+ciudad
+text
+
+
+descripción
+text
+
+
+clima
+text
+
+
+longitud
+numeric
+
+
+activo
+boolean
+
+
+
+
+
+🖼️ DESTINO_UI
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+destination_id
+uuid (FK → destinations.id)
+
+
+tipo
+text
+image / video
+url
+text
+
+
+solo_wifi
+boolean
+
+
+
+
+
+
+
+🍽️ RESTAURANTES
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+destination_id
+uuid (FK → destinations.id)
+
+
+nombre
+text
+
+
+tipo_comida
+text
+
+
+precio_promedio
+numeric
+
+
+capacidad
+numeric
+
+
+Horario
+text
+
+
+
+
+🎟️ ACTIVIDADES
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+destination_id
+uuid (FK → destinations.id)
+
+
+nombre
+text
+
+
+descripcion
+text
+
+
+duracion_horas
+numeric
+
+
+cupo_max
+int
+
+
+precio_referencia
+numeric
+
+
+
+
+📅 RESERVACION
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+user_id
+uuid (FK → users.id)
+
+
+destination_id
+uuid (FK → destinations.id)
+
+
+estado
+text
+Pendiente / Confirmada / Cancelada
+fecha_reserva
+date
+
+
+creado_en
+timestamptz
+
+
+
+
+🔔 ALERTAS
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+destination_id
+uuid (FK → destinations.id)
+
+
+tipo
+text
+precio / ruta
+mensaje
+text
+
+
+activo
+boolean
+
+
+
+
+🔕 NOTIFICACION_USUARIO
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+user_id
+uuid (FK → users.id)
+
+
+alert_id
+uuid (FK → alerts.id)
+
+
+visto
+boolean
+
+
+enviado_en
+timestamptz
+
+
+
+
+
+🧠 AI_LOGS
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+user_id
+uuid
+
+
+tipo_modelo
+text
+recomendaciones / rutas / chat
+resultado
+jsonb
+
+
+creado_en
+timestamptz
+
+
+
+
+🗺️ RUTAS
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+user_id
+uuid
+
+
+origen
+jsonb
+Coordenadas origen
+destino
+jsonb
+Coordenadas destino
+distancia_km
+numeric
+
+
+duracion_min
+numeric
+
+
+clima
+text
+
+
+
+
+🤝 ITINERARIOS
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+owner_id
+uuid (FK → users.id)
+
+
+nombre
+text
+
+
+enlace_publico
+text
+
+
+creado_en
+timestamptz
+
+
+
+
+👥ITINERARIO_COLABORADORES
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+itinerary_id
+uuid (FK → itineraries.id)
+
+
+user_id
+uuid (FK → users.id)
+
+
+permiso
+text
+editar / ver
+
+
+🌐 REPORTES
+Campo
+Tipo
+Descripción
+id
+uuid (PK)
+
+
+id_Usuario
+text
+
+
+descripcion
+text
+
+
+motivo
+text
+tipo de reporte /queja/sujerencia/reclamo
+documento
+text
+Reporte para ver los datos generales
+
+
+
