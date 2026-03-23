@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tropical Travel - Explorar Destinos</title>
+    <link rel="stylesheet" href="../Css/ClienteStyle.css">
+    <link rel="icon" href="../Imagenes/Icon_tropicals_T.png" type="image/png">
+    <link rel="apple-touch-icon" href="../Imagenes/Icon_tropicals_T.png">
+</head>
+<body>
+    <header class="top-header">
+        <div class="header-container">
+            <div class="logo-section" style="cursor:pointer;" onclick="location.href='Inicio.html';" title="Volver a Inicio">
+                <div class="logo-icon" style="background-image: url('../Imagenes/Icon_tropicals_T.png');"></div>
+                <span class="logo-text">Tropical Travel</span>
+            </div>
+            <nav class="top-nav">
+                <button class="nav-btn active" onclick="location.href='Explorar.html'">🧭 Explorar</button>
+                <button class="nav-btn" onclick="location.href='MisViajes.html'">📅 Mis Viajes</button>
+                <button class="nav-btn" onclick="location.href='Comunidad.html'">👥 Comunidad</button>
+                <button class="btn-iachat" onclick="location.href='IAChat.html'">💬 IA Chat</button>
+            </nav>
+            <div class="header-actions">
+                <div class="notification-wrapper">
+                    <button class="notification-btn" id="notificationBtn">🔔</button>
+                    <div class="notification-badge" id="notificationBadge">3</div>
+                </div>
+                <div class="user-avatar" id="userInitials" onclick="location.href='Perfil.html'" title="Mi perfil">TU</div>
+            </div>
+        </div>
+    </header>
+
+    <section class="explorer-section">
+        <div class="explorer-content">
+            <h1 class="hero-title">Encuentra tu próximo destino</h1>
+            <p class="hero-subtitle">Busca por ciudad, país o experiencia y descubre paquetes ideales para ti.</p>
+
+            <div class="search-box">
+                <div style="position:relative;flex:1;">
+                    <span class="search-input-icon">🔍</span>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar destino (e.g., Bogotá, Mar, Montaña)">
+                </div>
+                <button class="btn-explore" id="searchButton">Buscar</button>
+            </div>
+
+            <div class="quick-filters" style="margin-top:1rem; display:flex; gap:.5rem; flex-wrap:wrap;">
+                <button class="filter-btn" data-filter="todos">Todos</button>
+                <button class="filter-btn" data-filter="playa">Playa</button>
+                <button class="filter-btn" data-filter="aventura">Aventura</button>
+                <button class="filter-btn" data-filter="naturaleza">Naturaleza</button>
+                <button class="filter-btn" data-filter="cultura">Cultura</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="destinations-section">
+        <div class="section-container">
+            <div class="destinations-grid" id="destinationsGrid">
+                <!-- Destinos cargados desde scripts -->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let destinations = [];
+
+        function renderDestinos(list) {
+            const container = document.getElementById('destinationsGrid');
+            container.innerHTML = '';
+            if (!list.length) {
+                container.innerHTML = '<p style="padding:1rem; text-align:center;">No encontramos destinos para los criterios de búsqueda.</p>';
+                return;
+            }
+
+            list.forEach(d => {
+                const card = document.createElement('article');
+                card.className = 'dest-card';
+                card.innerHTML = `
+                    <h3>${d.nombre || d.name}</h3>
+                    <p>${d.pais ? d.ciudad + ', ' + d.pais : ''}</p>
+                    <p>Categoría: ${d.categoria || d.category || 'N/A'}</p>
+                    <p>${d.descripcion || ''}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function applyFilter(token) {
+            if (!destinations.length) return;
+            const filtered = token === 'todos'
+                ? destinations
+                : destinations.filter(d => (d.categoria || d.category || '').toLowerCase() === token);
+            renderDestinos(filtered);
+        }
+
+        async function loadDestinos() {
+            try {
+                const resp = await fetch('/destinos');
+                if (!resp.ok) throw new Error('No se pudo cargar destinos');
+                destinations = await resp.json();
+                renderDestinos(destinations);
+            } catch (err) {
+                console.error('Error al cargar destinos:', err);
+                document.getElementById('destinationsGrid').innerHTML = '<p style="padding:1rem; text-align:center;">Error al cargar destinos desde el servidor.</p>';
+            }
+        }
+
+        document.getElementById('searchButton').addEventListener('click', () => {
+            const q = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!q) {
+                renderDestinos(destinations);
+                return;
+            }
+            const result = destinations.filter(d => {
+                const name = (d.nombre || d.name || '').toLowerCase();
+                const country = (d.pais || '').toLowerCase();
+                const city = (d.ciudad || '').toLowerCase();
+                const cat = (d.categoria || d.category || '').toLowerCase();
+                return name.includes(q) || country.includes(q) || city.includes(q) || cat.includes(q);
+            });
+            renderDestinos(result);
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                applyFilter(btn.dataset.filter);
+            });
+        });
+
+        loadDestinos();
+    </script>
+</body>
+</html>

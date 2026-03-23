@@ -17,7 +17,7 @@ const supabaseUrl =  process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const port = 3000;
+const port = 5501;
 
 // servir index.html en la raíz
 app.get('/', (req, res) => {
@@ -28,7 +28,7 @@ app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`)
 });
 
-// Registrar usuario en tabla Usuario de Supabase
+// Registrar usuario en tabla Usuarios de Supabase
 app.post('/registrar', async (req, res) => {
     try {
         const { username, user, password } = req.body;
@@ -38,9 +38,9 @@ app.post('/registrar', async (req, res) => {
 
         // verificar si el correo ya existe
         const { data: existingUser } = await supabase
-            .from('Usuario')
-            .select('correo_usuario')
-            .eq('correo_usuario', user)
+            .from('Usuarios')
+            .select('email')
+            .eq('email', user)
             .single();
 
         if (existingUser) {
@@ -50,14 +50,14 @@ app.post('/registrar', async (req, res) => {
         // hashear contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // insertar en tabla Usuario
+        // insertar en tabla Usuarios
         const { data, error } = await supabase
-            .from('Usuario')
+            .from('Usuarios')
             .insert([{
-                correo_usuario: user,
-                nombre_usuario: username,
-                contraseña_usuario: hashedPassword,
-                rol_usuario: 'cliente'
+                email: user,
+                nombre: username,
+                password: hashedPassword,
+                rol: 'cliente'
             }]);
 
         if (error) {
@@ -72,7 +72,7 @@ app.post('/registrar', async (req, res) => {
     }
 });
 
-// Login usando tabla Usuario
+// Login usando tabla Usuarios
 app.post('/login', async (req, res) => {
     try {
         const { user, password } = req.body;
@@ -80,11 +80,13 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Correo y contraseña son requeridos' });
         }
 
-        // buscar usuario en tabla Usuario
+        console.log('Buscando usuario con email:', user);
+
+        // buscar usuario en tabla Usuarios
         const { data: usuarioData, error: queryError } = await supabase
-            .from('Usuario')
+            .from('Usuarios')
             .select('*')
-            .eq('correo_usuario', user)
+            .eq('email', user)
             .single();
 
         if (queryError || !usuarioData) {
@@ -92,8 +94,20 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
 
+        console.log('Usuario encontrado:', usuarioData.nombre);
+
         // validar contraseña
-        const isPasswordValid = await bcrypt.compare(password, usuarioData.contraseña_usuario);
+        let isPasswordValid;
+        if (usuarioData.password && usuarioData.password.startsWith('$2b$')) {
+            // Es un hash bcrypt
+            isPasswordValid = await bcrypt.compare(password, usuarioData.password);
+        } else {
+            // Es plain text (temporal, para migración)
+            isPasswordValid = password === usuarioData.password;
+        }
+        
+        console.log('Password válida:', isPasswordValid);
+        
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
@@ -104,9 +118,9 @@ app.post('/login', async (req, res) => {
         res.status(200).json({
             message: 'Inicio de sesión exitoso!',
             token,
-            username: usuarioData.nombre_usuario,
+            username: usuarioData.nombre,
             userId: usuarioData.id,
-            rol: usuarioData.rol_usuario
+            rol: usuarioData.rol
         });
     } catch (error) {
         console.error('Server error:', error);

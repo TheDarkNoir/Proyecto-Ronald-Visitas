@@ -1,35 +1,15 @@
 // Script para la página de login: valida credenciales contra servidor Node
 
-// Asegura usuario demo al cargar 
-function ensureDemoUser() {
-  try {
-    const key = 'users';
-    const demoEmail = 'usuario@gmail.com';
-    const demoPass = '12345678';
-    const raw = localStorage.getItem(key) || '[]';
-    const users = JSON.parse(raw);
-    const exists = users.some(user => user.email?.toLowerCase() === demoEmail.toLowerCase());
-    if (!exists) {
-      users.push({
-        username: 'Usuario',
-        email: demoEmail,
-        password: btoa(demoPass),
-        createdAt: new Date().toISOString()
-      });
-      localStorage.setItem(key, JSON.stringify(users));
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('loginForm');
+    if (!form) {
+        console.error('Formulario no encontrado');
+        return;
     }
-  } catch (error) {
-    console.error('Error al asegurar usuario demo:', error);
-  }
-}
-ensureDemoUser();  // Llamar explícitamente
-
-
-    const form = document.querySelector('form');
-    if (!form) return;
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        console.log('Submit del formulario capturado');
 
         const email = (document.getElementById('username')?.value || '').trim().toLowerCase();
         const pass = (document.getElementById('Contrasena')?.value || '');
@@ -39,28 +19,19 @@ ensureDemoUser();  // Llamar explícitamente
             return;
         }
 
-        // credenciales admin hardcodeadas
-        const ADMIN_EMAIL = 'admin@gmail.com';
-        const ADMIN_PASSWORD = '12345678';
-        if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
-            localStorage.setItem('loggedUser', JSON.stringify({
-                email: ADMIN_EMAIL,
-                username: 'Administrador',
-                isAdmin: true,
-                loggedAt: new Date().toISOString()
-            }));
-            alert('¡Acceso Admin Concedido! Bienvenido al Panel de Control.');
-            window.location.href = 'HtmlPrin/InicioAdmin.html';
-            return;
-        }
+        console.log('Intentando login con:', email);
 
         try {
-            const response = await fetch('http://localhost:3000/login', {
+            const response = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user: email, password: pass })
             });
+
+            console.log('Response status:', response.status);
             const result = await response.json();
+            console.log('Response:', result);
+
             if (!response.ok) {
                 throw new Error(result.error || 'Login fallido');
             }
@@ -72,14 +43,22 @@ ensureDemoUser();  // Llamar explícitamente
                 email,
                 username: result.username || email,
                 rol: result.rol || 'cliente',
-                isAdmin: false,
+                isAdmin: result.rol === 'admin',
                 loggedAt: new Date().toISOString()
             }));
 
+            console.log('Login exitoso, rol:', result.rol);
             alert('Acceso concedido. ¡Bienvenido a Tropical Travel!');
-            window.location.href = 'HtmlPrin/Inicio.html';
+            
+            // Redirigir basado en el rol
+            if (result.rol === 'admin') {
+                window.location.href = 'HtmlPrin/InicioAdmin.html';
+            } else {
+                window.location.href = 'HtmlPrin/Inicio.html';
+            }
         } catch (err) {
             console.error('Error de login:', err);
             alert('Credenciales incorrectas o servidor no disponible.');
         }
     });
+});

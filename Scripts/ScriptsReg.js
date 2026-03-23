@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // enviar datos al servidor para registrar en supabase
-            const response = await fetch('http://localhost:3000/registrar', {
+            const response = await fetch('http://localhost:5501/registrar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, user: email, password: pass })
