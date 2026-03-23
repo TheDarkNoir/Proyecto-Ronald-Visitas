@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user: email, password: pass })
+                body: JSON.stringify({ email, password: pass })
             });
 
             console.log('Response status:', response.status);
@@ -36,7 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(result.error || 'Login fallido');
             }
 
-            // almacenar token y datos básicos
+            const isAdmin = (result.rol || '').toLowerCase() === 'admin';
+            const redirectUrl = isAdmin ? 'HtmlPrin/InicioAdmin.html' : 'HtmlPrin/Inicio.html';
+
             localStorage.setItem('authToken', result.token);
             localStorage.setItem('loggedUser', JSON.stringify({
                 id: result.userId,

@@ -31,8 +31,8 @@ app.listen(port, () => {
 // Registrar usuario en tabla Usuarios de Supabase
 app.post('/registrar', async (req, res) => {
     try {
-        const { username, user, password } = req.body;
-        if (!username || !user || !password) {
+        const { nombre, email, password } = req.body;
+        if (!nombre || !email || !password) {
             return res.status(400).json({ error: 'Nombre, correo y contraseña son requeridos' });
         }
 
@@ -43,11 +43,13 @@ app.post('/registrar', async (req, res) => {
             .eq('email', user)
             .single();
 
-        if (existingUser) {
+        if (existsError) {
+            return res.status(500).json({ error: existsError.message });
+        }
+        if (existingUser && existingUser.length > 0) {
             return res.status(400).json({ error: 'El correo ya está registrado' });
         }
 
-        // hashear contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // insertar en tabla Usuarios
@@ -65,7 +67,7 @@ app.post('/registrar', async (req, res) => {
             return res.status(400).json({ error: error.message });
         }
 
-        res.status(201).json({ message: 'Usuario registrado correctamente. ¡Bienvenido a Tropical Travel!' });
+        res.status(201).json({ message: 'Usuario registrado correctamente. ¡Bienvenido a Tropical Travel!', user: data[0] });
     } catch (error) {
         console.error('Server error: ', error);
         res.status(500).json({ error: 'Error interno del servidor' });
@@ -75,8 +77,8 @@ app.post('/registrar', async (req, res) => {
 // Login usando tabla Usuarios
 app.post('/login', async (req, res) => {
     try {
-        const { user, password } = req.body;
-        if (!user || !password) {
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(400).json({ error: 'Correo y contraseña son requeridos' });
         }
 
@@ -89,7 +91,7 @@ app.post('/login', async (req, res) => {
             .eq('email', user)
             .single();
 
-        if (queryError || !usuarioData) {
+        if (queryError || !userData || !Array.isArray(userData) || userData.length === 0) {
             console.error('Usuario no encontrado:', queryError);
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
@@ -112,9 +114,7 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
 
-        // generar token simple (puede mejorar con JWT)
-        const token = Buffer.from(user + ':' + Date.now()).toString('base64');
-
+        const token = Buffer.from(`${email}:${Date.now()}`).toString('base64');
         res.status(200).json({
             message: 'Inicio de sesión exitoso!',
             token,

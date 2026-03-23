@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const callBtn = document.getElementById('callBtn');
     const menuBtn = document.getElementById('menuBtn');
 
+    const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+    if (!loggedUser) {
+        window.location.href = '../index.html';
+        return;
+    }
     let activeChatId = null;
     let chats = [];
 
@@ -26,23 +31,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // load or initialize chats
     function loadChats() {
-        const stored = localStorage.getItem('comunidadChats');
+        const user = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+        if (!user) {
+            chats = [];
+            return;
+        }
+        const key = `comunidadChats_${user.id || user.email}`;
+        const stored = localStorage.getItem(key);
         if (stored) {
             chats = JSON.parse(stored);
         } else {
-            // sample chats
             chats = [
-                { id: 'group1', name: 'Grupo: Viajeros Cartagena', avatar: 'G', messages: [{ from: 'other', text: '¿A qué hora es el tour mañana?', time: '14:20' }], autoReplied: false },
-                { id: 'guide1', name: 'Guía: Carlos Méndez', avatar: 'G', messages: [{ from: 'other', text: 'Te espero en el lobby a las 8am', time: '12:05' }], autoReplied: false },
-                { id: 'comm1', name: 'Comunidad: Amantes de la Playa', avatar: 'C', messages: [{ from: 'other', text: '¡Miren esta foto del Tayrona!', time: 'ayer' }], autoReplied: false },
-                { id: 'support', name: 'Soporte Tropical', avatar: 'S', messages: [{ from: 'other', text: 'Tu reserva ha sido confirmada', time: 'lunes' }], autoReplied: false }
+                { id: `group-${user.id || user.email}-1`, name: `${user.username || 'Tu'} Grupo`, avatar: 'G', messages: [{ from: 'other', text: `¡Bienvenido ${user.username || 'viajero'}!`, time: 'ahora' }], autoReplied: false },
+                { id: `guide-${user.id || user.email}`, name: 'Guía Tropical', avatar: 'T', messages: [{ from: 'other', text: 'Tu guía te esperará en el hotel.', time: 'hoy' }], autoReplied: false }
             ];
             saveChats();
         }
     }
 
     function saveChats() {
-        localStorage.setItem('comunidadChats', JSON.stringify(chats));
+        const user = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+        if (!user) return;
+        const key = `comunidadChats_${user.id || user.email}`;
+        localStorage.setItem(key, JSON.stringify(chats));
     }
 
     function renderChatList() {
