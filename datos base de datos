@@ -1,0 +1,38 @@
+ // datos base de datos
+
+INSERT INTO public."Usuarios" (id, email, nombre, password, rol)
+VALUES
+  ('11111111-1111-1111-1111-111111111111', 'admin@tropical.com', 'Admin Master', '$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'admin'),
+  ('22222222-2222-2222-2222-222222222222', 'cliente@gmail.com', 'Cliente Demo', '$2a$10$yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', 'cliente');
+
+//Destinos, Actividades, Restaurantes, Alertas, Reservaciones
+
+INSERT INTO public."Destinos" (id, nombre, pais, ciudad, descripcion, clima, longitud, latitud, activo)
+VALUES
+  ('a1111111-1111-1111-1111-111111111111', 'Cartagena de Indias', 'Colombia', 'Cartagena', 'Ciudad histórica y playa con balneario caribeño.', 'Tropical', -75.4794, 10.3910, true),
+  ('a2222222-2222-2222-2222-222222222222', 'Parque Tayrona', 'Colombia', 'Santa Marta', 'Respira naturaleza y senderismo junto al mar.', 'Costa', -74.1748, 11.3043, true),
+  ('a3333333-3333-3333-3333-333333333333', 'Valle de Cocora', 'Colombia', 'Salento', 'Pantano de palmas de cera y miradores increíbles.', 'Montaña', -75.3558, 4.6431, true),
+  ('a4444444-4444-4444-4444-444444444444', 'San Andrés Islas', 'Colombia', 'San Andrés', 'Islas caribeñas de aguas claras y deportes acuáticos.', 'Caribe', -81.7264, 12.5847, true);
+
+INSERT INTO public."Actividades" (id, destination_id, nombre, descripcion, duracion_horas, cupo_max, precio_referencia)
+VALUES
+  ('b1111111-1111-1111-1111-111111111111', 'a1111111-1111-1111-1111-111111111111', 'Tour colonial', 'Recorrido a pie por el centro histórico de Cartagena.', 3, 25, 80000),
+  ('b2222222-2222-2222-2222-222222222222', 'a1111111-1111-1111-1111-111111111111', 'Paseo en barco a Islas del Rosario', 'Excursión de día completo con snorkel.', 8, 40, 180000),
+  ('b3333333-3333-3333-3333-333333333333', 'a2222222-2222-2222-2222-222222222222', 'Sendero hasta Cabo San Juan', 'Trekking con guías por senderos del Parque Tayrona.', 6, 20, 150000),
+  ('b4444444-4444-4444-4444-444444444444', 'a3333333-3333-3333-3333-333333333333', 'Cabalgata Valle de Cocora', 'Cabalgata entre palmas de cera y fincas cafeteras.', 4, 15, 120000),
+  ('b5555555-5555-5555-5555-555555555555', 'a4444444-4444-4444-4444-444444444444', 'Snorkel en West View', 'Buceo de superficie con equipo incluido.', 3, 30, 140000);
+
+INSERT INTO public."Restaurantes" (id, destination_id, nombre, tipo_comida, precio_promedio, capacidad, horario)
+VALUES
+  ('c1111111-1111-1111-1111-111111111111', 'a1111111-1111-1111-1111-111111111111', 'Mar & Salsa', 'Mariscos', 65000, 70, '10:00-23:00'),
+  ('c2222222-2222-2222-2222-222222222222', 'a2222222-2222-2222-2222-222222222222', 'EcoLodge Café', 'Comida típica', 42000, 50, '07:00-20:00');
+
+INSERT INTO public."Alertas" (id, destination_id, tipo, mensaje, activo)
+VALUES
+  ('d1111111-1111-1111-1111-111111111111', 'a1111111-1111-1111-1111-111111111111', 'precio', 'Tour con 20% de descuento hasta fin de mes.', true),
+  ('d2222222-2222-2222-2222-222222222222', 'a2222222-2222-2222-2222-222222222222', 'ruta', 'Cierre de camino Ltheño por mantenimiento.', true);
+
+INSERT INTO public."Reservaciones" (id, user_id, destination_id, estado, fecha_reserva, creado_en)
+VALUES
+  ('e1111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222', 'a1111111-1111-1111-1111-111111111111', 'Pendiente', '2026-03-30', now()),
+  ('e2222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', 'a3333333-3333-3333-3333-333333333333', 'Confirmada', '2026-04-10', now());
