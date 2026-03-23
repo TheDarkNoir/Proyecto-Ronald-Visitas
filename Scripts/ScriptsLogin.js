@@ -1,27 +1,15 @@
 // Script para la página de login: valida credenciales contra servidor Node
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure default demo user exists for login
-    (function ensureDemoUser(){
-        try{
-            const key = 'users';
-            const demoEmail = 'usuario@gmail.com';
-            const demoPass = '12345678';
-            const raw = localStorage.getItem(key) || '[]';
-            const arr = JSON.parse(raw);
-            const exists = arr.some(u => u.email && u.email.toLowerCase() === demoEmail);
-            if(!exists){
-                arr.push({ username: 'Usuario', email: demoEmail, password: btoa(demoPass), createdAt: new Date().toISOString() });
-                localStorage.setItem(key, JSON.stringify(arr));
-            }
-        }catch(e){ console.error('No se pudo asegurar usuario demo', e); }
-    })();
-
-    const form = document.querySelector('form');
-    if (!form) return;
+    const form = document.getElementById('loginForm');
+    if (!form) {
+        console.error('Formulario no encontrado');
+        return;
+    }
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        console.log('Submit del formulario capturado');
 
         const email = (document.getElementById('username')?.value || '').trim().toLowerCase();
         const pass = (document.getElementById('Contrasena')?.value || '');
@@ -31,13 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        console.log('Intentando login con:', email);
+
         try {
-            const response = await fetch('http://localhost:3000/login', {
+            const response = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password: pass })
             });
+
+            console.log('Response status:', response.status);
             const result = await response.json();
+            console.log('Response:', result);
+
             if (!response.ok) {
                 throw new Error(result.error || 'Login fallido');
             }
@@ -51,12 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 email,
                 username: result.username || email,
                 rol: result.rol || 'cliente',
-                isAdmin,
+                isAdmin: result.rol === 'admin',
                 loggedAt: new Date().toISOString()
             }));
 
+            console.log('Login exitoso, rol:', result.rol);
             alert('Acceso concedido. ¡Bienvenido a Tropical Travel!');
-            window.location.href = redirectUrl;
+            
+            // Redirigir basado en el rol
+            if (result.rol === 'admin') {
+                window.location.href = 'HtmlPrin/InicioAdmin.html';
+            } else {
+                window.location.href = 'HtmlPrin/Inicio.html';
+            }
         } catch (err) {
             console.error('Error de login:', err);
             alert('Credenciales incorrectas o servidor no disponible.');

@@ -17,14 +17,18 @@ const supabaseUrl =  process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const port = 3000;
+const port = 5501;
 
 // servir index.html en la raíz
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Registrar usuario en tabla usuarios de Supabase
+app.listen(port, () => {
+    console.log(`Servidor escuchando en http://localhost:${port}`)
+});
+
+// Registrar usuario en tabla Usuarios de Supabase
 app.post('/registrar', async (req, res) => {
     try {
         const { nombre, email, password } = req.body;
@@ -32,12 +36,12 @@ app.post('/registrar', async (req, res) => {
             return res.status(400).json({ error: 'Nombre, correo y contraseña son requeridos' });
         }
 
-        const lowerEmail = email.toLowerCase();
-        const { data: existingUser, error: existsError } = await supabase
+        // verificar si el correo ya existe
+        const { data: existingUser } = await supabase
             .from('Usuarios')
             .select('email')
-            .eq('email', lowerEmail)
-            .limit(1);
+            .eq('email', user)
+            .single();
 
         if (existsError) {
             return res.status(500).json({ error: existsError.message });
@@ -47,10 +51,16 @@ app.post('/registrar', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        // insertar en tabla Usuarios
         const { data, error } = await supabase
             .from('Usuarios')
-            .insert([{ nombre, email: lowerEmail, password: hashedPassword, rol: 'cliente', foto: null }])
-            .select('*');
+            .insert([{
+                email: user,
+                nombre: username,
+                password: hashedPassword,
+                rol: 'cliente'
+            }]);
 
         if (error) {
             console.error('Error durante el registro: ', error);
@@ -64,7 +74,7 @@ app.post('/registrar', async (req, res) => {
     }
 });
 
-// Login usando tabla usuarios
+// Login usando tabla Usuarios
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -72,19 +82,34 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Correo y contraseña son requeridos' });
         }
 
-        const lowerEmail = email.toLowerCase();
-        const { data: userData, error: queryError } = await supabase
+        console.log('Buscando usuario con email:', user);
+
+        // buscar usuario en tabla Usuarios
+        const { data: usuarioData, error: queryError } = await supabase
             .from('Usuarios')
             .select('*')
-            .eq('email', lowerEmail)
-            .limit(1);
+            .eq('email', user)
+            .single();
 
         if (queryError || !userData || !Array.isArray(userData) || userData.length === 0) {
             console.error('Usuario no encontrado:', queryError);
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
-        const user = userData[0];
-        const isPasswordValid = await bcrypt.compare(password, user.password || '');
+
+        console.log('Usuario encontrado:', usuarioData.nombre);
+
+        // validar contraseña
+        let isPasswordValid;
+        if (usuarioData.password && usuarioData.password.startsWith('$2b$')) {
+            // Es un hash bcrypt
+            isPasswordValid = await bcrypt.compare(password, usuarioData.password);
+        } else {
+            // Es plain text (temporal, para migración)
+            isPasswordValid = password === usuarioData.password;
+        }
+        
+        console.log('Password válida:', isPasswordValid);
+        
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
@@ -93,9 +118,9 @@ app.post('/login', async (req, res) => {
         res.status(200).json({
             message: 'Inicio de sesión exitoso!',
             token,
-            username: user.nombre,
-            userId: user.id,
-            rol: user.rol
+            username: usuarioData.nombre,
+            userId: usuarioData.id,
+            rol: usuarioData.rol
         });
     } catch (error) {
         console.error('Server error:', error);
@@ -103,186 +128,133 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Validación de esquema rápido para tablas importantes
-app.get('/validate-schema', async (req, res) => {
-    const tables = [
-        { name: 'Usuarios', checks: ['id', 'nombre', 'email', 'rol', 'password'] },
-        { name: 'Destinos', checks: ['id', 'nombre_destino', 'ubicacion', 'precio', 'estado'] },
-        { name: 'Reservaciones', checks: ['id', 'usuario_id', 'destino_id', 'fecha_reserva', 'estado'] }
-    ];
-
-    const results = [];
-    for (const table of tables) {
-        try {
-            const { data, error } = await supabase.from(table.name).select('*').limit(1);
-            if (error) {
-                results.push({ table: table.name, exists: false, error: error.message });
-                continue;
-            }
-            const sample = data && data[0] ? Object.keys(data[0]) : [];
-            const missing = table.checks.filter(c => !sample.includes(c));
-            results.push({ table: table.name, exists: true, missingColumns: missing, sampleColumns: sample });
-        } catch (err) {
-            results.push({ table: table.name, exists: false, error: err.message });
-        }
-    }
-    res.json(results);
-});
-
-// Sembrar registros de ejemplo para mostrar destinos y reservas
-app.post('/seed-demo', async (req, res) => {
-    try {
-        await supabase.from('Reservaciones').delete().neq('id', '');
-        await supabase.from('Destinos').delete().neq('id', '');
-        await supabase.from('Usuarios').delete().neq('id', '');
-
-        const usuariosDemo = [
-            { nombre: 'María Rodríguez', email: 'maria@demo.com', password: await bcrypt.hash('Demo1234', 10), rol: 'cliente', foto: null },
-            { nombre: 'Carlos Méndez', email: 'carlos@demo.com', password: await bcrypt.hash('Demo1234', 10), rol: 'cliente', foto: null }
-        ];
-        const { data: usuarios, error: usuarioError } = await supabase.from('Usuarios').upsert(usuariosDemo, { onConflict: 'email' }).select('*');
-        if (usuarioError) return res.status(500).json({ error: usuarioError.message });
-
-        const destinosDemo = [
-            { nombre_destino: 'Cartagena de Indias', ubicacion: 'Bolívar', precio: 450000 },
-            { nombre_destino: 'Parque Tayrona', ubicacion: 'Magdalena', precio: 320000 }
-        ];
-        const { data: destinos, error: destinoError } = await supabase.from('Destinos').insert(destinosDemo).select('*');
-        if (destinoError) return res.status(500).json({ error: destinoError.message });
-
-        if (usuarios?.length >= 2 && destinos?.length >= 2) {
-            const usersByEmail = {};
-            usuarios.forEach(u => { usersByEmail[u.email] = u; });
-            if (destinos.length > 0 && usuarios.length > 0) {
-                await supabase.from('Reservaciones').insert([
-                    { usuario_id: usuarios[0].id, destino_id: destinos[0].id, fecha_reserva: '2025-03-15', estado: 'confirmada', precio_total: destinos[0].precio || 0 },
-                    { usuario_id: usuarios[Math.min(1, usuarios.length -1)].id, destino_id: destinos[Math.min(1, destinos.length -1)].id, fecha_reserva: '2025-03-20', estado: 'pending', precio_total: destinos[Math.min(1, destinos.length -1)].precio || 0 }
-                ]);
-            }
-        }
-
-        res.json({ message: 'Semilla demo ejecutada.' });
-    } catch (error) {
-        console.error('seed-demo error:', error);
-        res.status(500).json({ error: 'Error interno al sembrar datos demo.' });
-    }
-});
-
-// API destinos
+// Endpoint para obtener destinos
 app.get('/destinos', async (req, res) => {
     try {
-        const { data, error } = await supabase.from('Destinos').select('*');
-        if (error) return res.status(400).json({ error: error.message });
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: 'Error al cargar destinos.' });
-    }
-});
+        const { data, error } = await supabase
+            .from('Destinos')
+            .select('id, nombre, pais, ciudad, descripcion, clima, longitud, latitud')
+            .eq('activo', true);
 
-// Reservas por usuario
-app.get('/mis-viajes', async (req, res) => {
-    try {
-        const userId = req.query.userId;
-        if (!userId) return res.status(400).json({ error: 'userId es requerido.' });
-
-        const queryFields = ['usuario_id', 'id_usuario', 'user_id'];
-        let data = [];
-        let error = null;
-        for (const field of queryFields) {
-            const q = await supabase.from('Reservaciones').select('*').eq(field, userId).order('fecha_reserva', { ascending: false });
-            if (!q.error) {
-                data = q.data || [];
-                error = null;
-                break;
-            }
-            error = q.error;
-            if (!/does not exist/.test((q.error.message || '').toLowerCase())) {
-                break;
-            }
-        }
-        if (error) return res.status(400).json({ error: error.message });
-        return res.json(data);
-    } catch (error) {
-        return res.status(500).json({ error: 'Error al obtener reservas.' });
-    }
-});
-
-app.post('/reserva', async (req, res) => {
-    try {
-        const { usuario_id, destino_id, fecha_reserva, precio_total } = req.body;
-        if (!usuario_id || !destino_id || !fecha_reserva) {
-            return res.status(400).json({ error: 'usuario_id, destino_id y fecha_reserva son requeridos' });
+        if (error) {
+            console.error('Error obteniendo destinos:', error);
+            return res.status(500).json({ error: error.message });
         }
 
-        const { data, error } = await supabase.from('Reservaciones').insert([{ usuario_id, destino_id, fecha_reserva, precio_total, estado: 'pending' }]).select('*');
-        if (error) return res.status(400).json({ error: error.message });
+        // Mapear los datos para que coincidan con el formato esperado
+        const destinosFormateados = data.map(destino => {
+            // Mapear imágenes conocidas
+            const imageMap = {
+                'Cartagena de Indias': '/Imagenes/cartagenaimg.jpg',
+                'Parque Tayrona': '/Imagenes/Tayrona.jpg',
+                'Valle de Cocora': '/Imagenes/valle-de-cocora.jpeg',
+                'Cañón del Chicamocha': '/Imagenes/chicamocha.jpg',
+                'Eje Cafetero': '/Imagenes/eje cafe.jpg',
+                'San Andrés Islas': '/Imagenes/san andre.jpg'
+            };
+            const image = imageMap[destino.nombre] || '/Imagenes/default.jpg';
 
-        res.json({ message: 'Reserva creada exitosamente.', reserva: data[0] });
+            // Mapear precios conocidos
+            const priceMap = {
+                'Cartagena de Indias': 450000,
+                'Parque Tayrona': 320000,
+                'Valle de Cocora': 280000,
+                'Cañón del Chicamocha': 390000,
+                'Eje Cafetero': 360000,
+                'San Andrés Islas': 520000
+            };
+            const price = priceMap[destino.nombre] || 0;
+
+            // Mapear ratings conocidos
+            const ratingMap = {
+                'Cartagena de Indias': 4.9,
+                'Parque Tayrona': 4.5,
+                'Valle de Cocora': 4.8,
+                'Cañón del Chicamocha': 4.7,
+                'Eje Cafetero': 4.6,
+                'San Andrés Islas': 4.9
+            };
+            const rating = ratingMap[destino.nombre] || 4.5;
+
+            // Mapear dificultad
+            const difficultyMap = {
+                'Cartagena de Indias': 'FÁCIL',
+                'Parque Tayrona': 'MODERADO',
+                'Valle de Cocora': 'DIFÍCIL',
+                'Cañón del Chicamocha': 'MODERADO',
+                'Eje Cafetero': 'FÁCIL',
+                'San Andrés Islas': 'FÁCIL'
+            };
+            const difficulty = difficultyMap[destino.nombre] || 'MODERADO';
+
+            // Mapear duración
+            const durationMap = {
+                'Cartagena de Indias': '3-4 DÍAS',
+                'Parque Tayrona': '2-3 DÍAS',
+                'Valle de Cocora': '1 DÍA',
+                'Cañón del Chicamocha': '2 DÍAS',
+                'Eje Cafetero': '2-3 DÍAS',
+                'San Andrés Islas': '3-5 DÍAS'
+            };
+            const duration = durationMap[destino.nombre] || '2-3 DÍAS';
+
+            return {
+                id: destino.id,
+                title: destino.nombre,
+                location: `${destino.ciudad}, ${destino.pais}`,
+                description: destino.descripcion,
+                clima: destino.clima,
+                image: image,
+                price: price,
+                rating: rating,
+                difficulty: difficulty,
+                duration: duration
+            };
+        });
+
+        res.json(destinosFormateados);
     } catch (error) {
-        res.status(500).json({ error: 'Error al crear reserva.' });
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
-app.get('/perfil', async (req, res) => {
+// Endpoint para obtener reservas del usuario
+app.get('/reservas/:userId', async (req, res) => {
     try {
-        const userId = Number(req.query.userId);
-        if (!userId) return res.status(400).json({ error: 'userId es requerido.' });
+        const { userId } = req.params;
+        const { data, error } = await supabase
+            .from('Reservaciones')
+            .select(`
+                id,
+                estado,
+                fecha_reserva,
+                creado_en,
+                Destinos(id, nombre, ciudad, pais, descripcion)
+            `)
+            .eq('user_id', userId);
 
-        const { data, error } = await supabase.from('Perfil').select('*').eq('usuario_id', userId).single();
-        if (error && error.code !== 'PGRST116') return res.status(400).json({ error: error.message });
-
-        res.json(data || { usuario_id: userId, telefono: '', ciudad: '', pais: '' });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al obtener perfil.' });
-    }
-});
-
-app.post('/perfil', async (req, res) => {
-    try {
-        const { usuario_id, telefono, ciudad, pais } = req.body;
-        if (!usuario_id) return res.status(400).json({ error: 'usuario_id es requerido.' });
-
-        const { data: existing } = await supabase.from('Perfil').select('*').eq('usuario_id', usuario_id).single();
-        if (existing) {
-            const { data, error } = await supabase.from('Perfil').update({ telefono, ciudad, pais, updated_at: new Date().toISOString() }).eq('usuario_id', usuario_id).select('*');
-            if (error) return res.status(400).json({ error: error.message });
-            return res.json(data[0]);
+        if (error) {
+            console.error('Error obteniendo reservas:', error);
+            return res.status(500).json({ error: error.message });
         }
 
-        const { data, error } = await supabase.from('Perfil').insert([{ usuario_id, telefono, ciudad, pais }]).select('*');
-        if (error) return res.status(400).json({ error: error.message });
-        res.json(data[0]);
-    } catch (error) {
-        res.status(500).json({ error: 'Error al guardar perfil.' });
-    }
-});
+        // Mapear los datos
+        const reservasFormateadas = data.map(reserva => ({
+            id: reserva.id,
+            title: reserva.Destinos.nombre,
+            location: `${reserva.Destinos.ciudad}, ${reserva.Destinos.pais}`,
+            date: reserva.fecha_reserva || 'Fecha por confirmar',
+            status: reserva.estado,
+            price: 0, // Se puede agregar precio a Reservaciones o calcular
+            image: '/Imagenes/default.jpg', // Mapear imagen
+            rating: 4.5,
+            description: reserva.Destinos.descripcion
+        }));
 
-app.get('/comunidad-chats', async (req, res) => {
-    try {
-        const userId = Number(req.query.userId);
-        if (!userId) return res.status(400).json({ error: 'userId es requerido.' });
-        const { data, error } = await supabase.from('Chat').select('*').eq('usuario_id', userId).order('created_at', { ascending: true });
-        if (error) return res.status(400).json({ error: error.message });
-        res.json(data);
+        res.json(reservasFormateadas);
     } catch (error) {
-        res.status(500).json({ error: 'Error al cargar chats.' });
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
-});
-
-app.post('/comunidad-chats', async (req, res) => {
-    try {
-        const { usuario_id, chat_name, message, sender } = req.body;
-        if (!usuario_id || !chat_name || !message || !sender) {
-            return res.status(400).json({ error: 'usuario_id, chat_name, message y sender son requeridos.' });
-        }
-        const { data, error } = await supabase.from('Chat').insert([{ usuario_id, chat_name, message, sender, created_at: new Date().toISOString() }]).select('*');
-        if (error) return res.status(400).json({ error: error.message });
-        res.json(data[0]);
-    } catch (error) {
-        res.status(500).json({ error: 'Error al crear chat.' });
-    }
-});
-
-app.listen(port, () => {
-    console.log(`Servidor escuchando en http://localhost:${port}`);
 });

@@ -1,44 +1,42 @@
 // Generación dinámica de tarjetas de viaje y filtros (datos por usuario)
 
 document.addEventListener('DOMContentLoaded', () => {
-    const baseTrips = [
-        {
-            id: 'B001',
-            title: 'Cartagena de Indias',
-            location: 'Bolívar, Colombia',
-            price: 450000,
-            image: '/Imagenes/cartagenaimg.jpg',
-            rating: 4.9,
-            description: 'Recorre las murallas y disfruta de playas caribeñas en esta histórica ciudad portuaria.'
-        },
-        {
-            id: 'B002',
-            title: 'Parque Tayrona',
-            location: 'Magdalena, Colombia',
-            price: 320000,
-            image: '/Imagenes/Tayrona.jpg',
-            rating: 4.5,
-            description: 'Aventura entre selvas y playas, ideal para caminatas y snorkel.'
-        },
-        {
-            id: 'B003',
-            title: 'Valle de Cocora',
-            location: 'Quindío, Colombia',
-            price: 280000,
-            image: '/Imagenes/valle-de-cocora.jpeg',
-            rating: 4.8,
-            description: 'Senderismo entre palmas de cera gigantes en un paisaje surrealista.'
-        },
-        {
-            id: 'B004',
-            title: 'Cañón del Chicamocha',
-            location: 'Santander, Colombia',
-            price: 390000,
-            image: '/Imagenes/chicamocha.jpg',
-            rating: 4.7,
-            description: 'Disfruta vistas panorámicas del cañón y actividades de aventura como parapente.'
+    let tripsData = []; // Se cargará dinámicamente
+
+    // Función para cargar reservas
+    async function loadReservations() {
+        try {
+            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+            if (!loggedUser || !loggedUser.userId) {
+                console.error('Usuario no logueado');
+                return;
+            }
+            const response = await fetch(`/reservas/${loggedUser.userId}`);
+            if (!response.ok) {
+                throw new Error('Error al cargar reservas');
+            }
+            tripsData = await response.json();
+            renderTrips();
+        } catch (error) {
+            console.error('Error cargando reservas:', error);
+            // Fallback a datos hardcodeados si falla la carga
+            tripsData = [
+                {
+                    id: 'B001',
+                    title: 'Cartagena de Indias',
+                    location: 'Bolívar, Colombia',
+                    date: '2025-03-15',
+                    status: 'confirmed',
+                    price: 450000,
+                    image: '/Imagenes/cartagenaimg.jpg',
+                    rating: 4.9,
+                    description: 'Recorre las murallas y disfruta de playas caribeñas en esta histórica ciudad portuaria.'
+                },
+                // ... otros como fallback
+            ];
+            renderTrips();
         }
-    ];
+    }
 
     const grid = document.getElementById('tripsGrid');
     const filters = document.querySelectorAll('.filter-btn');
@@ -124,9 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="trip-content">
                     <span class="location-tag">${trip.location}</span>
                     <h3>${trip.title}</h3>
-                    <p>Fecha de salida: <strong>${trip.date || 'Próximamente'}</strong></p>
-                    <p>Reserva: <strong>${trip.id}</strong></p>
-                    <p>Precio: <strong>$${trip.price.toLocaleString('es-CO')} COP</strong></p>
+                    <p>Fecha de salida: <strong>${trip.date}</strong></p>
+                    <p>ID de Reserva: <strong>${trip.id}</strong></p>
+                    <p>Precio: <strong>${trip.price > 0 ? '$' + trip.price.toLocaleString('es-CO') + ' COP' : 'Consultar precio'}</strong></p>
                     <div class="trip-footer">
                         <span>⭐ ${trip.rating}</span>
                         <button class="btn-action view-btn">Ver Detalles</button>
@@ -146,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p><strong>Ubicación:</strong> ${trip.location}</p>
             <p><strong>Fecha de salida:</strong> ${trip.date || 'Próximamente'}</p>
             <p><strong>ID reserva:</strong> ${trip.id}</p>
-            <p><strong>Precio:</strong> $${trip.price.toLocaleString('es-CO')} COP</p>
+            <p><strong>Precio:</strong> ${trip.price > 0 ? '$' + trip.price.toLocaleString('es-CO') + ' COP' : 'Consultar precio'}</p>
             <p><strong>Descripción:</strong> ${trip.description}</p>
             <button id="confirmBtn" class="btn-action">Marcar como completado</button>
         `;
@@ -173,4 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTrips(btn.dataset.status);
         });
     });
+
+    // Cargar reservas al iniciar
+    loadReservations();
 });

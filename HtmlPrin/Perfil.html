@@ -15,13 +15,13 @@
     <link rel="icon" href="../Imagenes/Icon_tropicals_T.png" type="image/png">
     <link rel="apple-touch-icon" href="../Imagenes/Icon_tropicals_T.png">
         <div class="header-container">
-            <div class="logo-section">
+            <div class="logo-section" style="cursor:pointer;" onclick="location.href='Inicio.html';" title="Volver a Inicio">
                 <div class="logo-icon" style="background-image: url('../Imagenes/Icon_tropicals_T.png');"></div>
                 <span class="logo-text">Tropical Travel</span>
             </div>
 
             <nav class="top-nav">
-                <button class="nav-btn" onclick="location.href='Inicio.html'">🧭 Explorar</button>
+                <button class="nav-btn" onclick="location.href='Explorar.html'">🧭 Explorar</button>
                 <button class="nav-btn" onclick="location.href='MisViajes.html'">📅 Mis Viajes</button>
                 <button class="nav-btn" onclick="location.href='Comunidad.html'">👥 Comunidad</button>
                 <button class="btn-iachat" onclick="location.href='IAChat.html'">💬 IA Chat</button>
@@ -323,46 +323,7 @@
             document.getElementById('profileName').textContent = username;
             document.getElementById('profileEmail').textContent = email;
 
-            // Cargar estadísticas personalizadas por usuario
-            const tripsKey = `userTrips_${loggedUser.id || loggedUser.email}`;
-            const trips = JSON.parse(localStorage.getItem(tripsKey) || '[]');
-            const confirmed = trips.filter(t => t.status === 'confirmed').length;
-            const pending = trips.filter(t => t.status === 'pending').length;
-            const destinations = new Set(trips.map(t => t.title)).size;
-            const avgRating = trips.length ? (trips.reduce((a,b)=>a + (b.rating || 0), 0)/trips.length).toFixed(1) : '4.8';
-
-            document.getElementById('completedTrips').textContent = confirmed;
-            document.getElementById('pendingTrips').textContent = pending;
-            document.getElementById('savedDestinations').textContent = destinations;
-            document.getElementById('averageRating').textContent = avgRating;
-
-            // Notification functionality
-            const notificationBtn = document.getElementById('notificationBtn');
-            const notificationPopup = document.getElementById('notificationPopup');
-            const closeNotifications = document.getElementById('closeNotifications');
-            const markReadBtn = document.querySelector('.btn-mark-read');
-
-            notificationBtn.addEventListener('click', () => {
-                notificationPopup.classList.toggle('active');
-            });
-
-            closeNotifications.addEventListener('click', () => {
-                notificationPopup.classList.remove('active');
-            });
-
-            markReadBtn.addEventListener('click', () => {
-                document.querySelectorAll('.notification-item.unread').forEach(item => {
-                    item.classList.remove('unread');
-                });
-                document.getElementById('notificationBadge').style.display = 'none';
-                alert('Todas las notificaciones marcadas como leídas');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.notification-btn') && !e.target.closest('.notification-popup')) {
-                    notificationPopup.classList.remove('active');
-                }
-            });
+            // Notificaciones manejadas por ScriptsNotificacion.js
 
             // Tab switching
             document.querySelectorAll('.tab-btn').forEach(btn => {
