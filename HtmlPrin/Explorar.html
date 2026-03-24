@@ -33,23 +33,25 @@
 
     <section class="explorer-section">
         <div class="explorer-content">
-            <h1 class="hero-title">Encuentra tu próximo destino</h1>
-            <p class="hero-subtitle">Busca por ciudad, país o experiencia y descubre paquetes ideales para ti.</p>
+            <h1 class="hero-title">Descubre Sitios <span>Magicos</span></h1>
+            <p class="hero-subtitle">Explora los destinos mas exoticos y vibrantes. Filtra por tus preferencias y encuentra ofertas exclusivas.</p>
 
-            <div class="search-box">
-                <div style="position:relative;flex:1;">
-                    <span class="search-input-icon">🔍</span>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar destino (e.g., Bogotá, Mar, Montaña)">
+            <div class="explorer-toolbar">
+                <div class="search-box">
+                    <div class="search-input-wrap">
+                        <span class="search-input-icon">🔍</span>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Buscar destinos, actividades...">
+                    </div>
+                    <button class="btn-explore" id="searchButton">Buscar</button>
                 </div>
-                <button class="btn-explore" id="searchButton">Buscar</button>
-            </div>
 
-            <div class="quick-filters" style="margin-top:1rem; display:flex; gap:.5rem; flex-wrap:wrap;">
-                <button class="filter-btn" data-filter="todos">Todos</button>
-                <button class="filter-btn" data-filter="playa">Playa</button>
-                <button class="filter-btn" data-filter="aventura">Aventura</button>
-                <button class="filter-btn" data-filter="naturaleza">Naturaleza</button>
-                <button class="filter-btn" data-filter="cultura">Cultura</button>
+                <div class="quick-filters">
+                    <button class="filter-btn" data-filter="todos">Todos</button>
+                    <button class="filter-btn" data-filter="playa">Playa</button>
+                    <button class="filter-btn" data-filter="aventura">Aventura</button>
+                    <button class="filter-btn" data-filter="naturaleza">Naturaleza</button>
+                    <button class="filter-btn" data-filter="cultura">Cultura</button>
+                </div>
             </div>
         </div>
     </section>
@@ -62,94 +64,6 @@
         </div>
     </section>
 
-    <script>
-        (function () {
-            const lu = JSON.parse(localStorage.getItem('loggedUser') || 'null');
-            if (!lu) { window.location.href = '../index.html'; return; }
-            const initials = (lu.username || lu.email || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-            document.getElementById('userInitials').textContent = initials;
-        })();
-
-        let destinations = [];
-
-        function renderDestinos(list) {
-            const container = document.getElementById('destinationsGrid');
-            container.innerHTML = '';
-            if (!list.length) {
-                container.innerHTML = '<p style="padding:2rem; text-align:center; color:#888;">No encontramos destinos para los criterios de búsqueda.</p>';
-                return;
-            }
-            list.forEach(d => {
-                const card = document.createElement('div');
-                card.className = 'destination-card';
-                const desc = d.description || '';
-                const shortDesc = desc.length > 90 ? desc.slice(0, 90) + '...' : desc;
-                const priceText = d.price > 0 ? '$' + Number(d.price).toLocaleString('es-CO') + ' COP' : 'Consultar precio';
-                const cardHtml = '<div class="card-image" style="background-image: url(\'' + d.image + '\');">'
-                    + '<div class="card-rating">&#11088; ' + (d.rating || '4.5') + '</div>'
-                    + '<div class="difficulty-badge">' + (d.difficulty || '') + '</div>'
-                    + '<div class="duration-badge">' + (d.duration || '') + '</div>'
-                    + '</div>'
-                    + '<div class="card-content">'
-                    + '<h3 class="card-title">' + d.title + '</h3>'
-                    + '<p class="card-location">&#128205; ' + d.location + '</p>'
-                    + '<p style="font-size:.85rem;color:#666;margin:.3rem 0 .6rem;">' + shortDesc + '</p>'
-                    + '<div class="card-footer">'
-                    + '<div class="card-price">' + priceText + '</div>'
-                    + '<button class="card-btn" data-id="' + d.id + '">Reservar &#8594;</button>'
-                    + '</div>'
-                    + '</div>';
-                card.innerHTML = cardHtml;
-                container.appendChild(card);
-            });
-        }
-
-        function applyFilter(token, activeBtn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            if (activeBtn) activeBtn.classList.add('active');
-            if (!destinations.length) return;
-            const filtered = token === 'todos'
-                ? destinations
-                : destinations.filter(d => (d.categoria || '').toLowerCase() === token);
-            renderDestinos(filtered);
-        }
-
-        async function loadDestinos() {
-            try {
-                const resp = await fetch('/destinos');
-                if (!resp.ok) throw new Error('No se pudo cargar destinos');
-                destinations = await resp.json();
-                const todosBtn = document.querySelector('.filter-btn[data-filter="todos"]');
-                if (todosBtn) todosBtn.classList.add('active');
-                renderDestinos(destinations);
-            } catch (err) {
-                console.error('Error al cargar destinos:', err);
-                document.getElementById('destinationsGrid').innerHTML = '<p style="padding:1rem; text-align:center;">Error al cargar destinos desde el servidor.</p>';
-            }
-        }
-
-        document.getElementById('searchButton').addEventListener('click', () => {
-            const q = document.getElementById('searchInput').value.trim().toLowerCase();
-            if (!q) { renderDestinos(destinations); return; }
-            const result = destinations.filter(d => {
-                const title = (d.title || '').toLowerCase();
-                const location = (d.location || '').toLowerCase();
-                const cat = (d.categoria || '').toLowerCase();
-                const desc = (d.description || '').toLowerCase();
-                return title.includes(q) || location.includes(q) || cat.includes(q) || desc.includes(q);
-            });
-            renderDestinos(result);
-        });
-
-        document.getElementById('searchInput').addEventListener('keydown', e => {
-            if (e.key === 'Enter') document.getElementById('searchButton').click();
-        });
-
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => applyFilter(btn.dataset.filter, btn));
-        });
-
-        loadDestinos();
-    </script>
+    <script src="../Scripts/ScriptsExplorar.js" defer></script>
 </body>
 </html>

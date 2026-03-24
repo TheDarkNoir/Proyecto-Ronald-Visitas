@@ -13,6 +13,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    const initials = (loggedUser.username || loggedUser.email || 'U')
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    const userInitials = document.getElementById('userInitials');
+    if (userInitials) {
+        userInitials.textContent = initials;
+    }
+
     const userId = loggedUser.userId || loggedUser.id;
     const tripsKey = `userTrips_${userId || loggedUser.email}`;
     let tripsData = [];
@@ -56,6 +67,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'pending';
     }
 
+    function normalizePrice(value) {
+        const number = Number(value);
+        return Number.isFinite(number) ? number : 0;
+    }
+
+    function formatPrice(value) {
+        return '$' + normalizePrice(value).toLocaleString('es-CO') + ' COP';
+    }
+
     function saveUserTrips(list) {
         localStorage.setItem(tripsKey, JSON.stringify(list));
     }
@@ -93,7 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tripsData = Array.isArray(result)
                 ? result.map((trip) => ({
                     ...trip,
-                    status: normalizeStatus(trip.status)
+                    status: normalizeStatus(trip.status),
+                    price: normalizePrice(trip.price)
                 }))
                 : [];
 
@@ -122,38 +143,59 @@ document.addEventListener('DOMContentLoaded', () => {
         filtered.forEach((trip) => {
             const card = document.createElement('div');
             card.className = 'trip-card';
+            const normalizedPrice = normalizePrice(trip.price);
+            const statusText = trip.status === 'confirmed' ? 'Confirmado' : trip.status === 'cancelled' ? 'Cancelado' : 'Pendiente';
             card.innerHTML = `
                 <div class="trip-image" style="background-image:url('${trip.image}')">
-                    <div class="status-badge ${trip.status}">${trip.status === 'confirmed' ? 'Confirmada' : trip.status === 'cancelled' ? 'Cancelada' : 'Pendiente'}</div>
+                    <div class="status-badge ${trip.status}">${statusText}</div>
                 </div>
                 <div class="trip-content">
                     <span class="location-tag">${trip.location}</span>
                     <h3>${trip.title}</h3>
-                    <p>Fecha de salida: <strong>${trip.date}</strong></p>
-                    <p>ID de Reserva: <strong>${trip.id}</strong></p>
-                    <p>Precio: <strong>${trip.price > 0 ? '$' + Number(trip.price).toLocaleString('es-CO') + ' COP' : 'Consultar precio'}</strong></p>
+                    <div class="trip-meta-row"><span>Fecha de salida</span><strong>${trip.date || 'Por confirmar'}</strong></div>
+                    <div class="trip-meta-row"><span>ID de Reserva</span><strong>${trip.id}</strong></div>
+                    <div class="trip-meta-row"><span>Precio</span><strong>${formatPrice(normalizedPrice)}</strong></div>
                     <div class="trip-footer">
-                        <span>⭐ ${trip.rating || 4.5}</span>
-                        <button class="btn-action view-btn">Ver Detalles</button>
+                        <button class="btn-secondary view-btn">Ver Detalles</button>
+                        ${trip.status === 'pending' ? '<button class="btn-action pay-btn">Pagar Ahora</button>' : ''}
                     </div>
                 </div>
             `;
 
             card.querySelector('.view-btn').addEventListener('click', () => showDetails(trip));
+            const payBtn = card.querySelector('.pay-btn');
+            if (payBtn) {
+                payBtn.addEventListener('click', () => openPaymentMenu(trip));
+            }
             grid.appendChild(card);
         });
     }
 
     function showDetails(trip) {
+        const normalizedPrice = normalizePrice(trip.price);
+        const statusText = trip.status === 'confirmed' ? 'CONFIRMADO' : trip.status === 'cancelled' ? 'CANCELADO' : 'PENDIENTE';
         modalBody.innerHTML = `
-            <h2>${trip.title}</h2>
-            <img src="${trip.image}" alt="${trip.title}" style="width:100%;border-radius:8px;margin-bottom:10px;">
-            <p><strong>Ubicación:</strong> ${trip.location}</p>
-            <p><strong>Fecha de salida:</strong> ${trip.date || 'Próximamente'}</p>
-            <p><strong>ID reserva:</strong> ${trip.id}</p>
-            <p><strong>Precio:</strong> ${trip.price > 0 ? '$' + Number(trip.price).toLocaleString('es-CO') + ' COP' : 'Consultar precio'}</p>
-            <p><strong>Descripción:</strong> ${trip.description || 'Sin descripción disponible.'}</p>
-            <button id="confirmBtn" class="btn-action">Marcar como confirmado</button>
+            <div class="trip-detail-hero" style="background-image:url('${trip.image}')">
+                <span class="status-badge ${trip.status}">${statusText}</span>
+                <h2>${trip.title}</h2>
+            </div>
+            <div class="trip-detail-body">
+                <div class="trip-detail-stats">
+                    <div class="trip-stat-box"><small>PRECIO</small><strong>${formatPrice(normalizedPrice)}</strong></div>
+                    <div class="trip-stat-box"><small>RATING</small><strong>${trip.rating || 4.5}</strong></div>
+                    <div class="trip-stat-box"><small>CATEGORIA</small><strong>Tropical</strong></div>
+                </div>
+                <h4>DESCRIPCION</h4>
+                <p>${trip.description || 'Sin descripción disponible.'}</p>
+                <div class="trip-detail-meta">
+                    <div class="trip-meta-item"><span>Fecha de salida</span><strong>${trip.date || 'Por confirmar'}</strong></div>
+                    <div class="trip-meta-item"><span>ID reserva</span><strong>${trip.id}</strong></div>
+                </div>
+                <div class="trip-detail-actions">
+                    <button id="confirmBtn" class="btn-secondary">Marcar como confirmado</button>
+                    ${trip.status === 'pending' ? '<button id="payNowBtn" class="btn-action">Pagar Ahora</button>' : ''}
+                </div>
+            </div>
         `;
         modal.setAttribute('aria-hidden', 'false');
 
@@ -164,6 +206,44 @@ document.addEventListener('DOMContentLoaded', () => {
             saveUserTrips(tripsData);
             renderTrips(document.querySelector('.filter-btn.active')?.dataset.status || 'all');
             modal.setAttribute('aria-hidden', 'true');
+        });
+
+        const payNowBtn = document.getElementById('payNowBtn');
+        if (payNowBtn) {
+            payNowBtn.addEventListener('click', () => openPaymentMenu(trip));
+        }
+    }
+
+    function openPaymentMenu(trip) {
+        modalBody.innerHTML = `
+            <div class="payment-card">
+                <h2>Finalizar Reserva</h2>
+                <div class="payment-field">
+                    <small>DESTINO</small>
+                    <strong>${trip.title}</strong>
+                </div>
+                <div class="payment-field">
+                    <small>MONTO TOTAL</small>
+                    <strong>${formatPrice(trip.price)}</strong>
+                </div>
+                <button id="confirmPayBtn" class="btn-action payment-main-btn">Confirmar Pago</button>
+                <button id="cancelPayBtn" class="btn-secondary payment-cancel-btn">Cancelar</button>
+            </div>
+        `;
+        modal.setAttribute('aria-hidden', 'false');
+
+        document.getElementById('confirmPayBtn').addEventListener('click', () => {
+            tripsData = tripsData.map((currentTrip) => currentTrip.id === trip.id
+                ? { ...currentTrip, status: 'confirmed' }
+                : currentTrip);
+            saveUserTrips(tripsData);
+            renderTrips(document.querySelector('.filter-btn.active')?.dataset.status || 'all');
+            modal.setAttribute('aria-hidden', 'true');
+            alert('Pago confirmado correctamente.');
+        });
+
+        document.getElementById('cancelPayBtn').addEventListener('click', () => {
+            showDetails(trip);
         });
     }
 
