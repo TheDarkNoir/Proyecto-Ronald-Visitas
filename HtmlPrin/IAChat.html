@@ -76,51 +76,12 @@
                 <button class="btn-new-chat">+ Nuevo Chat</button>
                 <div class="chat-history">
                     <h4>Conversaciones Recientes</h4>
-                    <div class="chat-item active">
-                        <span>Recomendaciones para viaje</span>
-                        <button class="delete-chat">✕</button>
-                    </div>
-                    <div class="chat-item">
-                        <span>Mejores destinos en agosto</span>
-                        <button class="delete-chat">✕</button>
-                    </div>
-                    <div class="chat-item">
-                        <span>Presupuesto y actividades</span>
-                        <button class="delete-chat">✕</button>
-                    </div>
                 </div>
             </aside>
 
             <!-- MAIN CHAT -->
             <div class="chat-main">
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message ai-message">
-                        <div class="message-avatar">🤖</div>
-                        <div class="message-content">
-                            <p>¡Hola! Soy tu asistente de viajes de Tropical Travel. ¿A dónde te gustaría viajar? Puedo ayudarte con recomendaciones, presupuestos, itinerarios y mucho más.</p>
-                        </div>
-                    </div>
-
-                    <div class="message user-message">
-                        <div class="message-avatar" id="msgUserInitials">JA</div>
-                        <div class="message-content">
-                            <p>¿Qué me recomiendan para un viaje de 3 días con presupuesto de $500.000?</p>
-                        </div>
-                    </div>
-
-                    <div class="message ai-message">
-                        <div class="message-avatar">🤖</div>
-                        <div class="message-content">
-                            <p>Excelente pregunta. Con tu presupuesto te recomiendo estas opciones:</p>
-                            <ul class="recommendations">
-                                <li><strong>Cartagena de Indias</strong> - $450.000 (Histórica y playas)</li>
-                                <li><strong>Valle de Cocora</strong> - $280.000 (Naturaleza pura)</li>
-                                <li><strong>Parque Tayrona</strong> - $320.000 (Selva y mar)</li>
-                            </ul>
-                            <p>¿Te interesa alguno de estos destinos?</p>
-                        </div>
-                    </div>
-                </div>
+                <div class="chat-messages" id="chatMessages"></div>
 
                 <!-- sugerencias rapida -->
                 <div class="quick-suggestions">
@@ -145,111 +106,7 @@
         </div>
     </section>
 
+    <script src="../Scripts/ScriptsIAChat.js" defer></script>
     <script src="../Scripts/ScriptsNotificacion.js" defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
-            
-            if (!loggedUser) {
-                window.location.href = '../index.html';
-                return;
-            }
-
-            const username = loggedUser.username || 'Usuario';
-            const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-            document.getElementById('userInitials').textContent = initials;
-            document.getElementById('msgUserInitials').textContent = initials;
-
-            // Notificaciones manejadas por ScriptsNotificacion.js
-
-            // Chat funcionalidad
-            const chatInput = document.getElementById('chatInput');
-            const sendBtn = document.getElementById('sendBtn');
-            const chatMessages = document.getElementById('chatMessages');
-
-            const aiResponses = [
-                'Excelente opción. ¿Cuándo planeas viajar?',
-                'Ese destino es maravilloso. ¿Irás solo o con familia?',
-                'Perfecto para ti. ¿Prefieres actividades de aventura o relajación?',
-                'Buena elección. ¿Necesitas ayuda con reservas o transporte?',
-                'Te encantará. ¿Requieres recomendaciones de hoteles?'
-            ];
-
-            sendBtn.addEventListener('click', sendMessage);
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-
-            function sendMessage() {
-                const message = chatInput.value.trim();
-                if (!message) return;
-
-                // usuario mensaje
-                const userMsg = document.createElement('div');
-                userMsg.classList.add('message', 'user-message');
-                userMsg.innerHTML = `
-                    <div class="message-avatar">${initials}</div>
-                    <div class="message-content">
-                        <p>${message}</p>
-                    </div>
-                `;
-                chatMessages.appendChild(userMsg);
-
-                chatInput.value = '';
-
-                // AI response
-                setTimeout(() => {
-                    const aiMsg = document.createElement('div');
-                    aiMsg.classList.add('message', 'ai-message');
-                    aiMsg.innerHTML = `
-                        <div class="message-avatar">🤖</div>
-                        <div class="message-content">
-                            <p>${aiResponses[Math.floor(Math.random() * aiResponses.length)]}</p>
-                        </div>
-                    `;
-                    chatMessages.appendChild(aiMsg);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 500);
-
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-
-            // sugerencias buttons
-            document.querySelectorAll('.suggestion-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    chatInput.value = btn.textContent;
-                    sendMessage();
-                });
-            });
-
-            // Chat history
-            document.querySelectorAll('.chat-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                });
-            });
-
-            // borrar chat
-            document.querySelectorAll('.delete-chat').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    btn.parentElement.remove();
-                });
-            });
-
-            // nuevo chat
-            document.querySelector('.btn-new-chat').addEventListener('click', () => {
-                chatMessages.innerHTML = `
-                    <div class="message ai-message">
-                        <div class="message-avatar">🤖</div>
-                        <div class="message-content">
-                            <p>¡Nuevo chat iniciado! ¿En qué puedo ayudarte hoy?</p>
-                        </div>
-                    </div>
-                `;
-            });
-        });
-    </script>
 </body>
 </html>

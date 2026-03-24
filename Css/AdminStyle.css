@@ -128,6 +128,28 @@ body {
     margin-bottom: 15px;
 }
 
+.admin-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.16);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.admin-name {
+    font-weight: 700;
+}
+
+.admin-role {
+    font-size: 12px;
+    opacity: .8;
+    margin-top: 4px;
+}
+
 .logout-btn {
     width: 100%;
     padding: 10px;
@@ -158,6 +180,43 @@ body {
     background: white;
     padding: 25px;
     border-radius: 10px;
+}
+
+.admin-header h1 {
+    font-size: 2.15rem;
+    margin-bottom: 8px;
+}
+
+.admin-header p {
+    color: var(--text-light);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.btn-colombia-hub,
+.btn-notification {
+    border: none;
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #ff6b35;
+    padding: 10px 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(15,23,42,0.05);
+}
+
+.btn-notification {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #1e3a8a;
+    font-size: 18px;
 }
 
 /* ===============================
@@ -252,6 +311,33 @@ body {
     border-radius: 10px;
 }
 
+.chart-section,
+.cashflow-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-section {
+    min-height: 420px;
+}
+
+.cashflow-card {
+    min-height: 380px;
+}
+
+.chart-section canvas,
+.cashflow-card canvas {
+    display: block;
+    width: 100% !important;
+    height: 320px !important;
+    max-height: 320px;
+}
+
+.chart-section h2,
+.cashflow-card h3 {
+    margin-bottom: 16px;
+}
+
 /* ===============================
    INVENTARIO
 ================================*/
@@ -286,6 +372,7 @@ body {
 .status-badge{ padding:6px 10px; border-radius:14px; font-weight:700; font-size:12px }
 .status-badge.active{ background:#e6f8ee; color:#0b8a45 }
 .status-badge.full{ background:#f2f0ff; color:#6b46c1 }
+.status-badge.draft{ background:#fff7e6; color:#b36a00 }
 .col.acciones{ text-align:right }
 .icon{ background:transparent; border:none; cursor:pointer; margin-left:8px; font-size:16px }
 
@@ -412,6 +499,25 @@ body {
 .muted{ color:var(--text-light); font-size:13px; margin-top:6px }
 .toggle-wrap{ display:flex; align-items:center }
 
+.status-chip{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:82px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#1e3a8a;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.3px;
+}
+
+.status-chip.online{
+    background:#e6f8ee;
+    color:#0b8a45;
+}
+
 /* toggle switch */
 .switch{ position:relative; display:inline-block; width:48px; height:26px }
 .switch input{ opacity:0; width:0; height:0 }
@@ -492,11 +598,45 @@ body {
 
 .alert-item {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 15px;
     padding: 15px;
     background: #faf5f0;
     border-left: 4px solid #ff6b6b;
     border-radius: 6px;
+}
+
+.alert-item strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.alert-item p {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.alert-ok {
+    background: #f0fdf4;
+    border-left-color: #10b981;
+}
+
+.alert-pending {
+    background: #fff7ed;
+    border-left-color: #f59e0b;
+}
+
+.alert-capacity,
+.alert-inventory,
+.alert-cancelled {
+    background: #fff7f0;
+    border-left-color: #ff6b35;
+}
+
+.admin-views {
+    display: flex;
+    flex-direction: column;
 }
 
 /* =====================================================

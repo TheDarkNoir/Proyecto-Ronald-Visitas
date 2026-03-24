@@ -53,88 +53,121 @@
 
 /* reutilizamos clases de destination-card pero adaptamos badges de estado */
 .trip-card {
-    background: var(--white);
-    border-radius: 12px;
+    background: #ffffff;
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
 }
 
 .trip-card:hover {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    transform: translateY(-8px);
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
+    transform: translateY(-4px);
 }
 
 .trip-image {
-    height: 180px;
+    height: 176px;
     background-size: cover;
     background-position: center;
     position: relative;
     display: flex;
     align-items: flex-end;
-    padding: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .status-badge {
     position: absolute;
-    top: 12px;
+    top: 14px;
     right: 12px;
-    background: #4caf50;
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.75em;
+    background: linear-gradient(135deg, #ffb067 0%, #ff9700 100%);
+    color: #ffffff;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
 }
-.status-badge.pending { background: #ff9800; }
-.status-badge.cancelled { background: #f44336; }
+.status-badge.confirmed { background: linear-gradient(135deg, #ffc07b 0%, #ff8f68 100%); }
+.status-badge.pending { background: linear-gradient(135deg, #ffb067 0%, #ff9700 100%); }
+.status-badge.cancelled { background: linear-gradient(135deg, #f87171 0%, #ef4444 100%); }
 
 .trip-content {
-    padding: 20px;
+    padding: 18px 20px 20px;
 }
 
 .trip-content h3 {
-    font-size: 1.3em;
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 6px;
-    color: var(--text-dark);
-}
-
-.trip-content p {
-    font-size: 0.85em;
-    margin: 4px 0;
-    color: var(--text-light);
+    margin: 2px 0 10px;
+    color: #1e293b;
 }
 
 .trip-content .location-tag {
     display: block;
-    font-size: 0.75em;
+    font-size: 0.82em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-red);
-    margin-bottom: 4px;
+    color: #f97316;
+    margin-bottom: 6px;
 }
 
-.trip-footer {
+.trip-meta-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
+    margin-top: 8px;
+    font-size: 0.95rem;
+}
+
+.trip-meta-row span {
+    color: #8aa0bd;
+}
+
+.trip-meta-row strong {
+    color: #334155;
+}
+
+.trip-footer {
+    margin-top: 16px;
+    display: grid;
+    gap: 10px;
 }
 
 .btn-action {
-    padding: 8px 16px;
+    width: 100%;
+    padding: 13px 16px;
     border: none;
-    border-radius: 8px;
+    border-radius: 14px;
     background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
     color: #fff;
-    font-size: 0.9em;
+    font-size: 1.02em;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.btn-action:hover { transform: translateY(-2px); }
+.btn-action:hover { transform: translateY(-1px); }
+
+.btn-secondary {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 14px;
+    background: #eef2f7;
+    color: #475569;
+    font-size: 1.02em;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+}
 
 /* modal */
 .modal {
@@ -149,20 +182,183 @@
 .modal[aria-hidden="false"] { display: flex; }
 
 .modal-content {
-    background: #fff;
-    border-radius: 12px;
-    max-width: 500px;
-    width: 90%;
-    padding: 20px 30px;
+    background: #ffffff;
+    border-radius: 24px;
+    max-width: 560px;
+    width: 92%;
+    padding: 0;
     position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 48px rgba(15, 23, 42, 0.28);
 }
 
 .close-modal {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: rgba(100, 116, 139, 0.55);
+    color: #ffffff;
     border: none;
-    font-size: 1.5em;
+    font-size: 1.3em;
     cursor: pointer;
+    z-index: 3;
+}
+
+#modalBody {
+    padding: 0;
+}
+
+.trip-detail-hero {
+    min-height: 220px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 8px;
+    background-size: cover;
+    background-position: center;
+}
+
+.trip-detail-hero h2 {
+    margin: 0;
+    font-size: 2.8rem;
+    color: #ffffff;
+    text-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+}
+
+.trip-detail-body {
+    padding: 22px;
+}
+
+.trip-detail-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.trip-stat-box {
+    background: #f4f7fb;
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.trip-stat-box small {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #8aa0bd;
+}
+
+.trip-stat-box strong {
+    display: block;
+    margin-top: 4px;
+    color: #1e293b;
+    font-size: 1.3rem;
+}
+
+.trip-detail-body h4 {
+    margin: 8px 0 8px;
+    font-size: 1.2rem;
+    color: #0f172a;
+    letter-spacing: 0.06em;
+}
+
+.trip-detail-body p {
+    margin: 0 0 16px;
+    color: #475569;
+    font-size: 1.05rem;
+    line-height: 1.5;
+}
+
+.trip-detail-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.trip-meta-item {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 11px 12px;
+}
+
+.trip-meta-item span {
+    display: block;
+    font-size: 0.78rem;
+    color: #8aa0bd;
+}
+
+.trip-meta-item strong {
+    display: block;
+    margin-top: 4px;
+    color: #334155;
+}
+
+.trip-detail-actions {
+    display: grid;
+    gap: 10px;
+}
+
+.payment-card {
+    padding: 26px;
+}
+
+.payment-card h2 {
+    margin: 0 0 18px;
+    font-size: 2rem;
+    color: #0f172a;
+}
+
+.payment-field {
+    background: #f2f5fa;
+    border-radius: 14px;
+    padding: 14px 15px;
+    margin-bottom: 12px;
+}
+
+.payment-field small {
+    display: block;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #8aa0bd;
+}
+
+.payment-field strong {
+    display: block;
+    margin-top: 4px;
+    color: #1e293b;
+    font-size: 1.6rem;
+}
+
+.payment-main-btn {
+    margin-top: 6px;
+}
+
+.payment-cancel-btn {
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .trips-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .trip-content h3 {
+        font-size: 1.8rem;
+    }
+
+    .trip-detail-hero h2 {
+        font-size: 2rem;
+    }
+
+    .trip-detail-stats,
+    .trip-detail-meta {
+        grid-template-columns: 1fr;
+    }
 }

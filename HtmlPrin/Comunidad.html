@@ -73,17 +73,18 @@
         <aside class="chat-list">
             <div class="chat-list-header">
                 <div class="current-user">
-                    <div class="avatar small">JA</div>
+                    <div class="avatar small" id="currentUserAvatar">JA</div>
                     <div class="user-actions">
-                        <button title="Nuevo chat">＋</button>
-                        <button title="Grupos">👥</button>
-                        <button title="Opciones">⋯</button>
+                        <button id="newChatBtn" title="Nuevo chat">＋</button>
+                        <button id="newGroupBtn" title="Crear grupo">👥</button>
+                        <button id="sidebarOptionsBtn" title="Opciones">⋯</button>
                     </div>
                 </div>
                 <div class="chat-search">
                     <input type="text" id="chatSearch" placeholder="Busca un chat o inicia uno nuevo" />
                 </div>
             </div>
+            <div id="chatItems"></div>
             <!-- lista de chats generada por JS -->
         </aside>
         <!-- NOTIFICATION POPUP -->
@@ -126,19 +127,35 @@
         </section>
     </main>
 
+    <input type="file" id="photoInput" accept="image/*" hidden>
+
+    <div class="community-modal" id="addUserModal" aria-hidden="true">
+        <div class="community-modal-card">
+            <h2>Añadir Usuario</h2>
+            <input type="text" id="addUserSearch" class="community-modal-search" placeholder="Buscar por nombre o correo" />
+            <div class="community-user-list" id="addUserList"></div>
+            <div class="community-modal-actions">
+                <button id="closeAddUserModal" class="community-secondary-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="community-modal" id="createGroupModal" aria-hidden="true">
+        <div class="community-modal-card">
+            <h2>Crear Nuevo Grupo</h2>
+            <label for="groupNameInput" class="community-modal-label">Nombre del Grupo</label>
+            <input type="text" id="groupNameInput" class="community-modal-search" placeholder="Ej: Exploradores de Selva" />
+            <label for="groupMemberSearch" class="community-modal-label">Seleccionar Miembros</label>
+            <input type="text" id="groupMemberSearch" class="community-modal-search" placeholder="Buscar miembros" />
+            <div class="community-user-list" id="groupUsersList"></div>
+            <div class="community-modal-actions two-buttons">
+                <button id="cancelCreateGroup" class="community-secondary-btn">Cancelar</button>
+                <button id="confirmCreateGroup" class="community-primary-btn">Crear Grupo</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../Scripts/ScriptsComunidad.js" defer></script>
     <script src="../Scripts/ScriptsNotificacion.js" defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
-            if (!loggedUser) {
-                window.location.href = '../index.html';
-                return;
-            }
-            const username = loggedUser.username || 'Usuario';
-            const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-            document.getElementById('userInitials').textContent = initials;
-        });
-    </script>
 </body>
 </html>

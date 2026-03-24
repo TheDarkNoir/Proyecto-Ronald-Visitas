@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = (document.getElementById('email')?.value || '').trim().toLowerCase();
         const pass = (document.getElementById('nueva-password')?.value || '');
         const pass2 = (document.getElementById('nueva-password-confir')?.value || '');
+        const telefono = (document.getElementById('reg-telefono')?.value || '').trim();
+        const pais = (document.getElementById('reg-pais')?.value || 'Colombia').trim();
+        const ciudad = (document.getElementById('reg-ciudad')?.value || '').trim();
+        const fechaNacimiento = (document.getElementById('reg-fechanac')?.value || '');
 
         if (!username || !email || !pass || !pass2) {
             alert('Completa todos los campos.');
@@ -36,10 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // enviar datos al servidor para registrar en supabase
-            const response = await fetch('http://localhost:5501/registrar', {
+            const response = await fetch('/registrar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre: username, email, password: pass })
+                body: JSON.stringify({
+                    nombre: username,
+                    email,
+                    password: pass,
+                    telefono,
+                    pais,
+                    ciudad,
+                    fecha_nacimiento: fechaNacimiento || null
+                })
             });
 
             const result = await response.json();
@@ -47,11 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(result.error || 'Error al registrar usuario');
             }
 
-            alert('Registro exitoso. ¡Bienvenido a Tropical Travel! Ahora inicia sesión.');
+            alert('Registro exitoso. Ahora inicia sesión.');
             window.location.href = 'index.html';
         } catch (err) {
             console.error('Registro fallido:', err);
-            alert('Error: ' + err.message);
+            alert(err.message || 'No se pudo completar el registro.');
         }
     });
 
