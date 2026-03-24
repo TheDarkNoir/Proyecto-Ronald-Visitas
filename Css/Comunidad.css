@@ -18,7 +18,12 @@
     border-right: 1px solid #e5e5e5;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+}
+
+#chatItems {
     overflow-y: auto;
+    flex: 1;
 }
 
 .chat-list-header {
@@ -157,6 +162,24 @@
     word-wrap: break-word;
 }
 
+.message-highlight {
+    outline: 2px solid rgba(249, 115, 22, 0.45);
+}
+
+.message-image {
+    display: block;
+    max-width: 260px;
+    max-height: 220px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.message-caption {
+    margin-top: 6px;
+    font-size: 0.82rem;
+    color: #475569;
+}
+
 /* SENT */
 
 .message.sent {
@@ -236,6 +259,36 @@
     background: #f5f5f5;
 }
 
+.emoji-panel {
+    position: fixed;
+    display: none;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px;
+    z-index: 1400;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.2);
+}
+
+.emoji-panel.active {
+    display: grid;
+}
+
+.emoji-item {
+    border: none;
+    background: #f8fafc;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.emoji-item:hover {
+    background: #eef2f7;
+}
+
 /* ===============================
    CALL OVERLAY
 =================================*/
@@ -253,4 +306,156 @@
 
 .call-overlay.active {
     display: flex;
+}
+
+/* ===============================
+   COMMUNITY MODALS
+=================================*/
+
+.community-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+}
+
+.community-modal.active {
+    display: flex;
+}
+
+.community-modal-card {
+    width: min(460px, 92vw);
+    max-height: 85vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+}
+
+.community-modal-card h2 {
+    margin: 0;
+    color: #1e293b;
+}
+
+.community-modal-label {
+    margin-top: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.community-modal-search {
+    width: 100%;
+    border: 1px solid #dbe1ea;
+    background: #eef2f7;
+    color: #334155;
+    border-radius: 14px;
+    padding: 12px 14px;
+    outline: none;
+}
+
+.community-user-list {
+    max-height: 300px;
+    overflow-y: auto;
+    display: grid;
+    gap: 10px;
+    padding-right: 4px;
+}
+
+.community-user-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border: 1px solid #dce3ee;
+    border-radius: 14px;
+    background: #ffffff;
+    gap: 12px;
+}
+
+.community-user-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.community-user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: #d1fae5;
+    color: #059669;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.community-user-name {
+    margin: 0;
+    font-weight: 600;
+    color: #334155;
+}
+
+.community-user-mail {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.78rem;
+}
+
+.community-user-add,
+.community-user-check {
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: #eef2f7;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.community-user-check.active {
+    background: #ffe5d9;
+    color: #f97316;
+}
+
+.community-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.community-modal-actions.two-buttons {
+    justify-content: space-between;
+}
+
+.community-secondary-btn,
+.community-primary-btn {
+    border: none;
+    border-radius: 14px;
+    padding: 12px 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.community-secondary-btn {
+    background: #e2e8f0;
+    color: #3b5b85;
+}
+
+.community-primary-btn {
+    background: #ffcfb8;
+    color: #ffffff;
 }

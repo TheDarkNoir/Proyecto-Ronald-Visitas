@@ -386,6 +386,45 @@ app.put('/perfil/:userId', async (req, res) => {
     }
 });
 
+// Endpoint para listar usuarios en comunidad
+app.get('/usuarios', async (req, res) => {
+    try {
+        const search = String(req.query?.search || '').trim();
+        const excludeUserId = String(req.query?.excludeUserId || '').trim();
+
+        let query = supabase
+            .from('Usuarios')
+            .select('id, nombre, email, foto, rol')
+            .eq('rol', 'cliente')
+            .order('nombre', { ascending: true })
+            .limit(80);
+
+        if (excludeUserId) {
+            query = query.neq('id', excludeUserId);
+        }
+
+        if (search) {
+            query = query.or(`nombre.ilike.%${search}%,email.ilike.%${search}%`);
+        }
+
+        const { data, error } = await query;
+        if (error) {
+            console.error('Error obteniendo usuarios:', error);
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json((data || []).map((u) => ({
+            id: u.id,
+            nombre: u.nombre,
+            email: u.email,
+            foto: u.foto || null
+        })));
+    } catch (error) {
+        console.error('Server error en /usuarios:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
 });
