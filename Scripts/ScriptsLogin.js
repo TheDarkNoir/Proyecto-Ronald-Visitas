@@ -1,4 +1,4 @@
-// Script para la página de login: valida credenciales contra servidor Node
+// Script para la página de login: valida credenciales contra el servidor Node
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
@@ -9,17 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        console.log('Submit del formulario capturado');
 
         const email = (document.getElementById('username')?.value || '').trim().toLowerCase();
-        const pass = (document.getElementById('Contrasena')?.value || '');
+        const pass = document.getElementById('Contrasena')?.value || '';
 
         if (!email || !pass) {
             alert('Ingrese correo y contraseña.');
             return;
         }
-
-        console.log('Intentando login con:', email);
 
         try {
             const response = await fetch('/login', {
@@ -28,39 +25,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ email, password: pass })
             });
 
-            console.log('Response status:', response.status);
             const result = await response.json();
-            console.log('Response:', result);
-
             if (!response.ok) {
                 throw new Error(result.error || 'Login fallido');
             }
 
-            const isAdmin = (result.rol || '').toLowerCase() === 'admin';
+            const normalizedRole = String(result.rol || 'cliente').toLowerCase();
+            const isAdmin = normalizedRole === 'admin';
             const redirectUrl = isAdmin ? 'HtmlPrin/InicioAdmin.html' : 'HtmlPrin/Inicio.html';
+            const userId = result.userId || result.id || null;
 
-            localStorage.setItem('authToken', result.token);
+            localStorage.setItem('authToken', result.token || '');
             localStorage.setItem('loggedUser', JSON.stringify({
-                id: result.userId,
-                email,
+                id: userId,
+                userId,
+                email: result.email || email,
                 username: result.username || email,
-                rol: result.rol || 'cliente',
-                isAdmin: result.rol === 'admin',
+                rol: normalizedRole,
+                isAdmin,
                 loggedAt: new Date().toISOString()
             }));
 
-            console.log('Login exitoso, rol:', result.rol);
-            alert('Acceso concedido. ¡Bienvenido a Tropical Travel!');
-            
-            // Redirigir basado en el rol
-            if (result.rol === 'admin') {
-                window.location.href = 'HtmlPrin/InicioAdmin.html';
-            } else {
-                window.location.href = 'HtmlPrin/Inicio.html';
-            }
+            window.location.href = redirectUrl;
         } catch (err) {
             console.error('Error de login:', err);
-            alert('Credenciales incorrectas o servidor no disponible.');
+            alert(err.message || 'Credenciales incorrectas o servidor no disponible.');
         }
     });
 });
