@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        console.log('Submit del formulario capturado');
 
         const email = (document.getElementById('username')?.value || '').trim().toLowerCase();
         const pass = document.getElementById('Contrasena')?.value || '';
@@ -18,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        console.log('Intentando login con:', email);
+
         try {
             const response = await fetch('/login', {
                 method: 'POST',
@@ -26,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const result = await response.json();
+            console.log('Response:', result);
+
             if (!response.ok) {
                 throw new Error(result.error || 'Login fallido');
             }

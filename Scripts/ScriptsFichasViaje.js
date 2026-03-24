@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rating: 4.5,
             description: 'Naturaleza, senderos y playas para una experiencia tropical completa.'
         }
-    ];
+    }
 
     function normalizeStatus(status) {
         const normalized = String(status || '').trim().toLowerCase();
