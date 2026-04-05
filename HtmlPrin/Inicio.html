@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="../Css/ClienteStyle.css">
     <link rel="icon" href="../Imagenes/Icon_tropicals_T.png" type="image/png">
     <link rel="apple-touch-icon" href="../Imagenes/Icon_tropicals_T.png">
-    <!-- include modal styles used by viajes pages -->
     <link rel="stylesheet" href="../Css/MisViajes.css">
+    <link rel="stylesheet" href="../Css/InicioViajes.css">
 </head>
 <body>
+
     <!-- HEADER SUPERIOR -->
     <header class="top-header">
         <div class="header-container">
@@ -26,14 +27,15 @@
                 <button class="btn-iachat" onclick="location.href='IAChat.html'">💬 IA Chat</button>
             </nav>
 
-                     <div class="header-actions">
+            <div class="header-actions">
                 <div class="notification-wrapper">
                     <button class="notification-btn" id="notificationBtn">🔔</button>
                     <div class="notification-badge" id="notificationBadge">3</div>
                 </div>
                 <div class="user-avatar" id="userInitials" onclick="location.href='Perfil.html'" title="Mi perfil">JA</div>
             </div>
-            <!-- NOTIFICATION POPUP -->
+
+            <!-- NOTIFICACION POPUP -->
             <div class="notification-popup" id="notificationPopup">
                 <div class="popup-header">
                     <h3>Notificaciones</h3>
@@ -48,6 +50,7 @@
                             <span class="notification-time">Hace 2 horas</span>
                         </div>
                     </div>
+
                     <div class="notification-item unread">
                         <div class="notification-icon">⭐</div>
                         <div class="notification-content">
@@ -56,6 +59,7 @@
                             <span class="notification-time">Hace 1 día</span>
                         </div>
                     </div>
+
                     <div class="notification-item unread">
                         <div class="notification-icon">💰</div>
                         <div class="notification-content">
@@ -70,64 +74,45 @@
         </div>
     </header>
 
-    <!-- SECCIÓN HERO Y BÚSQUEDA -->
+    <!-- HERO -->
     <section class="explorer-section">
         <div class="explorer-content">
             <h1 class="hero-title">Tu Escape Exótico <span>Te Espera</span></h1>
             <p id="userGreeting" class="hero-subtitle">Bienvenido/a viajero.</p>
-            <p class="hero-subtitle">Vive experiencias vibrantes, acogedoras y exóticas diseñadas por nuestros expertos locales de IA.</p>
+            <p class="hero-subtitle">Vive experiencias vibrantes, acogedoras y exóticas diseñadas por nuestros expertos locales.</p>
 
             <div class="search-box">
                 <div style="position:relative;flex:1;">
                     <span class="search-input-icon">🔍</span>
-                    <input 
-                        type="text" 
-                        class="search-input" 
-                        placeholder="¿A dónde quieres ir?"
-                        id="searchInput"
-                    >
+                    <input type="text" class="search-input" placeholder="¿A dónde quieres ir?" id="searchInput">
                 </div>
                 <button class="btn-explore">Explorar Ahora</button>
             </div>
         </div>
     </section>
 
-    <!-- GRID DE DESTINOS -->
+    <!-- DESTINOS -->
     <section class="destinations-section">
         <div class="section-container">
-            <div class="destinations-grid" id="destinationsGrid">
-                <!-- Las tarjetas se cargarán dinámicamente desde la base de datos -->
-            </div>
+            <div class="destinations-grid" id="destinationsGrid"></div>
         </div>
     </section>
 
-    <!-- SECCIÓN DE ESTADÍSTICAS -->
+    <!-- STATS -->
     <section class="stats-section">
         <div class="stats-container">
-            <div class="stat-item">
-                <h3>50+</h3>
-                <p>Paraísos tropicales</p>
-            </div>
-            <div class="stat-item">
-                <h3>12k</h3>
-                <p>Viajeros felices</p>
-            </div>
-            <div class="stat-item">
-                <h3>4.9</h3>
-                <p>Calificación media</p>
-            </div>
-            <div class="stat-item">
-                <h3>24/7</h3>
-                <p>Soporte IA</p>
-            </div>
+            <div class="stat-item"><h3>50+</h3><p>Paraísos tropicales</p></div>
+            <div class="stat-item"><h3>12k</h3><p>Viajeros felices</p></div>
+            <div class="stat-item"><h3>4.9</h3><p>Calificación media</p></div>
+            <div class="stat-item"><h3>24/7</h3><p>Soporte IA</p></div>
         </div>
     </section>
 
-    <!-- CTA A UNIRSE A LA COMUNIDAD -->
+    <!-- CTA -->
     <section class="cta-section">
         <div class="cta-card">
             <h2>¿Listo para tu próxima aventura?</h2>
-            <p>Únete a Tropical Travel hoy y empieza a planificar tu itinerario grupal con colaboración en tiempo real.</p>
+            <p>Únete a Tropical Travel hoy y empieza a planificar tu itinerario grupal.</p>
             <button class="btn-community" onclick="location.href='Comunidad.html'">Unirse a la Comunidad</button>
         </div>
     </section>
@@ -139,51 +124,101 @@
                 <div class="logo-icon" style="background-image: url('../Imagenes/Icon_tropicals_T.png');"></div>
                 <span class="logo-text">Tropical Travel</span>
             </div>
+
             <nav class="footer-nav">
                 <a href="#">Privacidad</a>
                 <a href="#">Términos</a>
                 <a href="#">Soporte</a>
                 <a href="#">Destinos</a>
             </nav>
+
             <div class="footer-contact">
                 <p>Contáctanos:</p>
                 <a href="mailto:contacto@tropicaltravel.app">contacto@tropicaltravel.app</a>
             </div>
         </div>
+
         <div class="footer-copy">
-            &copy; 2026 Tropical Travel. Todos los derechos reservados.
+            &copy; 2026 Tropical Travel
         </div>
     </footer>
 
-    <!-- Botón flotante de ayuda -->
+    <!-- BOTÓN AYUDA -->
     <button class="floating-help">?</button>
 
-    <!-- modal para detalles de destino -->
+    <!-- 🔥 MODAL MEJORADO -->
     <div class="modal" id="destinationModal" aria-hidden="true">
-        <div class="modal-content">
+        <div class="modal-content destination-modal">
+
             <button class="close-modal" id="closeDestinationModal">×</button>
-            <div id="destinationModalBody"></div>
+
+            <div class="destination-detail">
+
+                <!-- Imagen -->
+                <div class="destination-image" id="modalImage"></div>
+
+                <!-- Info -->
+                <div class="destination-info">
+
+                    <h2 id="modalTitle">Destino</h2>
+                    <p class="location" id="modalLocation">Ubicación</p>
+
+                    <p class="description" id="modalDescription">
+                        Descripción del destino
+                    </p>
+
+                    <div class="destination-meta">
+                        <div class="meta-item">
+                            <span>📅</span>
+                            <p id="modalDuration">Duración</p>
+                        </div>
+
+                        <div class="meta-item">
+                            <span>💰</span>
+                            <p id="modalPrice">Precio</p>
+                        </div>
+
+                        <div class="meta-item">
+                            <span>⭐</span>
+                            <p id="modalRating">4.8</p>
+                        </div>
+                    </div>
+
+                    <div class="destination-actions">
+                        <button class="btn-primary" id="btnReservar">Reservar ahora</button>
+                        <!--<button class="btn-secondary" id="btnFavorito">❤️ Guardar</button>-->
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- SCRIPTS -->
     <script src="../Scripts/ScriptsInicio.js" defer></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
-            
+
             if (!loggedUser) {
                 window.location.href = '../index.html';
                 return;
             }
 
-            // Actualizar avatar con iniciales del usuario
             const username = loggedUser.username || 'Usuario';
             const initials = username.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
             document.getElementById('userInitials').textContent = initials;
+
             const greeting = document.getElementById('userGreeting');
-            if (greeting) greeting.textContent = `Hola ${username}, estos destinos son para ti.`;
+            if (greeting) {
+                greeting.textContent = `Hola ${username}, estos destinos son para ti.`;
+            }
         });
     </script>
+
     <script src="../Scripts/ScriptsNotificacion.js" defer></script>
+
 </body>
 </html>

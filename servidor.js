@@ -517,6 +517,56 @@ app.get('/reservas/:userId', async (req, res) => {
     }
 });
 
+app.put('/reservas/:reservationId/cancel', async (req, res) => {
+    try {
+        const reservationId = String(req.params?.reservationId || '').trim();
+        const userId = String(req.body?.userId || '').trim();
+
+        if (!isUuid(reservationId) || !isUuid(userId)) {
+            return res.status(400).json({ error: 'Datos inválidos.' });
+        }
+
+        // Verificar que la reserva pertenece al usuario
+        const { data: reserva, error: findError } = await supabase
+            .from('Reservaciones')
+            .select('id, user_id, estado')
+            .eq('id', reservationId)
+            .maybeSingle();
+
+        if (findError || !reserva) {
+            return res.status(404).json({ error: 'Reserva no encontrada.' });
+        }
+
+        if (reserva.user_id !== userId) {
+            return res.status(403).json({ error: 'No puedes cancelar esta reserva.' });
+        }
+
+        // No cancelar si ya está cancelada
+        if (normalizeReservationStatus(reserva.estado) === 'cancelled') {
+            return res.status(400).json({ error: 'La reserva ya está cancelada.' });
+        }
+
+        // Actualizar estado
+        const { error: updateError } = await supabase
+            .from('Reservaciones')
+            .update({
+                estado: 'Cancelada',
+                updated_en: new Date().toISOString()
+            })
+            .eq('id', reservationId);
+
+        if (updateError) {
+            return res.status(500).json({ error: updateError.message });
+        }
+
+        res.json({ message: 'Reserva cancelada correctamente.' });
+
+    } catch (error) {
+        console.error('Error cancelando reserva:', error);
+        res.status(500).json({ error: 'Error del servidor.' });
+    }
+});
+
 // Endpoint para obtener el perfil del usuario
 app.get('/perfil/:userId', async (req, res) => {
     try {
