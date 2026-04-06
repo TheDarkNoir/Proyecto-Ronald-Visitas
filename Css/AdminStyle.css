@@ -365,6 +365,48 @@ body {
 
 .inventory-metrics{ margin-bottom:18px }
 
+.admin-filters-bar{
+    display:grid;
+    grid-template-columns:minmax(280px, 1.8fr) minmax(200px, 0.9fr);
+    gap:14px;
+    margin:0 0 18px;
+}
+
+.admin-search-field,
+.admin-select-field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.admin-search-field span,
+.admin-select-field span{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--text-light);
+}
+
+.admin-search-field input,
+.admin-select-field select{
+    width:100%;
+    background:white;
+    border:1px solid var(--border-color);
+    border-radius:12px;
+    padding:12px 14px;
+    color:var(--text-dark);
+    font-size:14px;
+    box-shadow:0 6px 16px rgba(15,23,42,0.03);
+}
+
+.admin-search-field input:focus,
+.admin-select-field select:focus{
+    outline:none;
+    border-color:#93c5fd;
+    box-shadow:0 0 0 4px rgba(59,130,246,0.12);
+}
+
 .inventory-table{ margin-top:6px }
 .table-head{ display:grid; grid-template-columns: 3fr 1fr 1fr 1fr 1fr 0.8fr; gap:12px; color:var(--text-light); padding:14px 18px }
 .table-head .col{ font-size:12px; text-transform:uppercase; letter-spacing:0.6px }
@@ -382,6 +424,7 @@ body {
 
 @media(max-width:1024px){
     .table-head, .table-row{ grid-template-columns: 2fr 1fr 1fr 1fr 1fr 0.6fr }
+    .admin-filters-bar{ grid-template-columns:1fr }
 }
 
 /* ===============================

@@ -117,6 +117,22 @@
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">⚠️</div><div class="metric-text"><p>ALTA DEMANDA</p><h3 id="inventoryFullCount">0</h3></div></div></div>
                 </section>
 
+                <div class="admin-filters-bar">
+                    <label class="admin-search-field" for="inventorySearchInput">
+                        <span>Buscar</span>
+                        <input id="inventorySearchInput" type="search" placeholder="Destino, ciudad, país o categoría">
+                    </label>
+                    <label class="admin-select-field" for="inventoryStatusFilter">
+                        <span>Filtrar por estado</span>
+                        <select id="inventoryStatusFilter">
+                            <option value="all">Todos</option>
+                            <option value="active">Activos</option>
+                            <option value="draft">Inactivos</option>
+                            <option value="full">Alta demanda</option>
+                        </select>
+                    </label>
+                </div>
+
                 <div class="inventory-table">
                     <div class="table-head">
                         <div class="col destino">DESTINO</div>
@@ -149,6 +165,21 @@
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">🛡️</div><div class="metric-text"><p>ADMINS</p><h3 id="usersAdminsCount">0</h3></div></div></div>
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">✅</div><div class="metric-text"><p>ACTIVOS</p><h3 id="usersActiveCount">0</h3></div></div></div>
                 </section>
+
+                <div class="admin-filters-bar">
+                    <label class="admin-search-field" for="usersSearchInput">
+                        <span>Buscar</span>
+                        <input id="usersSearchInput" type="search" placeholder="Nombre, correo o ciudad">
+                    </label>
+                    <label class="admin-select-field" for="usersRoleFilter">
+                        <span>Filtrar por rol</span>
+                        <select id="usersRoleFilter">
+                            <option value="all">Todos</option>
+                            <option value="cliente">Clientes</option>
+                            <option value="admin">Admins</option>
+                        </select>
+                    </label>
+                </div>
 
                 <div class="users-table">
                     <div class="table-head">
@@ -183,6 +214,22 @@
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">❌</div><div class="metric-text"><p>CANCELADAS</p><h3 id="operationsCancelledCount">0</h3></div></div></div>
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">👥</div><div class="metric-text"><p>TOTAL VIAJEROS</p><h3 id="operationsTravelersCount">0</h3></div></div></div>
                 </section>
+
+                <div class="admin-filters-bar">
+                    <label class="admin-search-field" for="operationsSearchInput">
+                        <span>Buscar</span>
+                        <input id="operationsSearchInput" type="search" placeholder="Reserva, cliente, correo o destino">
+                    </label>
+                    <label class="admin-select-field" for="operationsStatusFilter">
+                        <span>Filtrar por estado</span>
+                        <select id="operationsStatusFilter">
+                            <option value="all">Todos</option>
+                            <option value="pending">Pendientes</option>
+                            <option value="confirmed">Confirmadas</option>
+                            <option value="cancelled">Canceladas</option>
+                        </select>
+                    </label>
+                </div>
 
                 <div class="ops-table">
                     <div class="table-head">
