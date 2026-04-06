@@ -450,17 +450,31 @@ app.get('/destinos', async (req, res) => {
     }
 });
 
-// Endpoint para obtener reservas del usuario
+//  Helper: validar UUID
+function isUuid(value) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
+
+// Normalizar estado
+function normalizeReservationStatus(status) {
+    const s = String(status || '').toLowerCase();
+
+    if (['confirmada', 'confirmed'].includes(s)) return 'confirmed';
+    if (['cancelada', 'cancelled'].includes(s)) return 'cancelled';
+
+    return 'pending';
+}
+
+
+// ===============================
+// GET RESERVAS DEL USUARIO
+// ===============================
 app.get('/reservas/:userId', async (req, res) => {
     try {
-        const userId = String(req.params?.userId || '').trim();
-        if (!userId) {
-            return res.status(400).json({ error: 'El identificador del usuario es requerido.' });
-        }
+        const userId = String(req.params.userId || '').trim();
 
-        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
-        if (!isUuid) {
-            return res.status(400).json({ error: 'El identificador del usuario no tiene un formato válido.' });
+        if (!isUuid(userId)) {
+            return res.status(400).json({ error: 'ID de usuario inválido' });
         }
 
         const { data, error } = await supabase
@@ -479,54 +493,60 @@ app.get('/reservas/:userId', async (req, res) => {
             return res.status(500).json({ error: error.message });
         }
 
+        // Obtener imágenes
         const destinationIds = (data || [])
-            .map((reserva) => {
-                const destino = Array.isArray(reserva.Destinos) ? reserva.Destinos[0] : reserva.Destinos;
-                return destino?.id || null;
+            .map(r => {
+                const d = Array.isArray(r.Destinos) ? r.Destinos[0] : r.Destinos;
+                return d?.id;
             })
             .filter(Boolean);
 
         const imageByDestinationId = await getDestinationUiImageMap(destinationIds);
 
-        const reservasFormateadas = (data || []).map((reserva) => {
-            const destino = Array.isArray(reserva.Destinos) ? reserva.Destinos[0] : reserva.Destinos;
-            const nombreDestino = destino?.nombre || 'Destino pendiente';
-            const ciudad = destino?.ciudad || 'Ubicación';
-            const pais = destino?.pais || 'Por confirmar';
-            const dbPrice = Number(destino?.precio);
-            const price = Number.isFinite(dbPrice) ? dbPrice : 0;
-            const image = (destino?.id && imageByDestinationId[destino.id]) || getDestinationImage(nombreDestino);
+        // Formatear respuesta
+        const reservas = (data || []).map(r => {
+            const destino = Array.isArray(r.Destinos) ? r.Destinos[0] : r.Destinos;
+
+            const nombre = destino?.nombre || 'Destino';
+            const ciudad = destino?.ciudad || '';
+            const pais = destino?.pais || '';
+            const precio = Number(destino?.precio) || 0;
 
             return {
-                id: reserva.id,
-                title: nombreDestino,
+                id: r.id,
+                title: nombre,
                 location: `${ciudad}, ${pais}`,
-                date: reserva.fecha_reserva || 'Fecha por confirmar',
-                status: normalizeReservationStatus(reserva.estado),
-                price,
-                image,
+                date: r.fecha_reserva || 'Por confirmar',
+                status: normalizeReservationStatus(r.estado),
+                price: precio,
+                image: imageByDestinationId[destino?.id] || getDestinationImage(nombre),
                 rating: 4.5,
-                description: destino?.descripcion || 'Sin descripción disponible.'
+                description: destino?.descripcion || 'Sin descripción disponible'
             };
         });
 
-        res.json(reservasFormateadas);
+        res.json(reservas);
+
     } catch (error) {
-        console.error('Server error en /reservas:', error);
+        console.error('Error servidor:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
+
+// ===============================
+// CANCELAR RESERVA
+// ===============================
 app.put('/reservas/:reservationId/cancel', async (req, res) => {
     try {
-        const reservationId = String(req.params?.reservationId || '').trim();
-        const userId = String(req.body?.userId || '').trim();
+        const reservationId = String(req.params.reservationId || '').trim();
+        const userId = String(req.body.userId || '').trim();
 
         if (!isUuid(reservationId) || !isUuid(userId)) {
-            return res.status(400).json({ error: 'Datos inválidos.' });
+            return res.status(400).json({ error: 'Datos inválidos' });
         }
 
-        // Verificar que la reserva pertenece al usuario
+        // Verificar que la reserva existe y pertenece al usuario
         const { data: reserva, error: findError } = await supabase
             .from('Reservaciones')
             .select('id, user_id, estado')
@@ -534,19 +554,18 @@ app.put('/reservas/:reservationId/cancel', async (req, res) => {
             .maybeSingle();
 
         if (findError || !reserva) {
-            return res.status(404).json({ error: 'Reserva no encontrada.' });
+            return res.status(404).json({ error: 'Reserva no encontrada' });
         }
 
         if (reserva.user_id !== userId) {
-            return res.status(403).json({ error: 'No puedes cancelar esta reserva.' });
+            return res.status(403).json({ error: 'No autorizado' });
         }
 
-        // No cancelar si ya está cancelada
         if (normalizeReservationStatus(reserva.estado) === 'cancelled') {
-            return res.status(400).json({ error: 'La reserva ya está cancelada.' });
+            return res.status(400).json({ error: 'Ya está cancelada' });
         }
 
-        // Actualizar estado
+        // PAL UPDATE
         const { error: updateError } = await supabase
             .from('Reservaciones')
             .update({
@@ -556,14 +575,15 @@ app.put('/reservas/:reservationId/cancel', async (req, res) => {
             .eq('id', reservationId);
 
         if (updateError) {
-            return res.status(500).json({ error: updateError.message });
+            console.error(updateError);
+            return res.status(500).json({ error: 'Error actualizando' });
         }
 
-        res.json({ message: 'Reserva cancelada correctamente.' });
+        res.json({ message: 'Reserva cancelada correctamente' });
 
     } catch (error) {
-        console.error('Error cancelando reserva:', error);
-        res.status(500).json({ error: 'Error del servidor.' });
+        console.error('Error cancelando:', error);
+        res.status(500).json({ error: 'Error del servidor' });
     }
 });
 
