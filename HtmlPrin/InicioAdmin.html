@@ -45,7 +45,7 @@
         <header class="admin-header">
             <div>
                 <h1 id="adminHeaderTitle">Panel de Control Regional</h1>
-                <p id="adminHeaderSubtitle">Operación conectada a Tropical Travel Colombia.</p>
+                <p id="adminHeaderSubtitle">Resumen general de la operación y gestión diaria.</p>
             </div>
 
             <div class="header-right">
@@ -103,7 +103,7 @@
                 <div class="inventory-header">
                     <div>
                         <h2>Gestión de Inventario</h2>
-                        <p class="subtitle">Destinos, precios e imágenes sincronizados con la base de datos.</p>
+                        <p class="subtitle">Administra destinos, precios, imágenes y disponibilidad del catálogo.</p>
                     </div>
 
                     <div class="inventory-actions">
@@ -116,6 +116,22 @@
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">⏳</div><div class="metric-text"><p>INACTIVOS</p><h3 id="inventoryDraftCount">0</h3></div></div></div>
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">⚠️</div><div class="metric-text"><p>ALTA DEMANDA</p><h3 id="inventoryFullCount">0</h3></div></div></div>
                 </section>
+
+                <div class="admin-filters-bar">
+                    <label class="admin-search-field" for="inventorySearchInput">
+                        <span>Buscar</span>
+                        <input id="inventorySearchInput" type="search" placeholder="Destino, ciudad, país o categoría">
+                    </label>
+                    <label class="admin-select-field" for="inventoryStatusFilter">
+                        <span>Filtrar por estado</span>
+                        <select id="inventoryStatusFilter">
+                            <option value="all">Todos</option>
+                            <option value="active">Activos</option>
+                            <option value="draft">Inactivos</option>
+                            <option value="full">Alta demanda</option>
+                        </select>
+                    </label>
+                </div>
 
                 <div class="inventory-table">
                     <div class="table-head">
@@ -135,7 +151,7 @@
                 <div class="users-header">
                     <div>
                         <h2>Gestión de Usuarios</h2>
-                        <p class="subtitle">Usuarios reales de Tropical Travel y su actividad en reservas.</p>
+                        <p class="subtitle">Consulta usuarios, roles y actividad reciente en reservas.</p>
                     </div>
 
                     <div class="inventory-actions">
@@ -149,6 +165,21 @@
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">🛡️</div><div class="metric-text"><p>ADMINS</p><h3 id="usersAdminsCount">0</h3></div></div></div>
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">✅</div><div class="metric-text"><p>ACTIVOS</p><h3 id="usersActiveCount">0</h3></div></div></div>
                 </section>
+
+                <div class="admin-filters-bar">
+                    <label class="admin-search-field" for="usersSearchInput">
+                        <span>Buscar</span>
+                        <input id="usersSearchInput" type="search" placeholder="Nombre, correo o ciudad">
+                    </label>
+                    <label class="admin-select-field" for="usersRoleFilter">
+                        <span>Filtrar por rol</span>
+                        <select id="usersRoleFilter">
+                            <option value="all">Todos</option>
+                            <option value="cliente">Clientes</option>
+                            <option value="admin">Admins</option>
+                        </select>
+                    </label>
+                </div>
 
                 <div class="users-table">
                     <div class="table-head">
@@ -169,7 +200,7 @@
                 <div class="operations-header">
                     <div>
                         <h2>Gestión de Operaciones</h2>
-                        <p class="subtitle">Reserva, estado y seguimiento operativo directamente desde la BD.</p>
+                        <p class="subtitle">Revisa reservas, confirma estados y organiza la operación del día.</p>
                     </div>
 
                     <div class="inventory-actions">
@@ -183,6 +214,22 @@
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">❌</div><div class="metric-text"><p>CANCELADAS</p><h3 id="operationsCancelledCount">0</h3></div></div></div>
                     <div class="metric-card"><div class="metric-left"><div class="metric-icon">👥</div><div class="metric-text"><p>TOTAL VIAJEROS</p><h3 id="operationsTravelersCount">0</h3></div></div></div>
                 </section>
+
+                <div class="admin-filters-bar">
+                    <label class="admin-search-field" for="operationsSearchInput">
+                        <span>Buscar</span>
+                        <input id="operationsSearchInput" type="search" placeholder="Reserva, cliente, correo o destino">
+                    </label>
+                    <label class="admin-select-field" for="operationsStatusFilter">
+                        <span>Filtrar por estado</span>
+                        <select id="operationsStatusFilter">
+                            <option value="all">Todos</option>
+                            <option value="pending">Pendientes</option>
+                            <option value="confirmed">Confirmadas</option>
+                            <option value="cancelled">Canceladas</option>
+                        </select>
+                    </label>
+                </div>
 
                 <div class="ops-table">
                     <div class="table-head">
@@ -204,7 +251,7 @@
                 <div class="finance-header">
                     <div>
                         <h2>Gestión Financiera</h2>
-                        <p class="subtitle">Ingresos reales por reservas y flujo mensual calculado desde operaciones.</p>
+                        <p class="subtitle">Visualiza ingresos, gastos y movimiento mensual de reservas.</p>
                     </div>
 
                     <div class="finance-actions">
@@ -248,7 +295,6 @@
                         <select id="filterDest" class="filter-select">
                             <option value="all">Todos los destinos</option>
                         </select>
-                        <button id="analyzeBtn" class="btn-new-dest">Ver Análisis</button>
                     </div>
                 </div>
 

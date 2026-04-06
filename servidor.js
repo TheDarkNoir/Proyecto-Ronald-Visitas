@@ -450,6 +450,101 @@ app.get('/destinos', async (req, res) => {
     }
 });
 
+app.post('/reservas', async (req, res) => {
+    try {
+        const userId = String(req.body?.userId || '').trim();
+        const destinationId = String(req.body?.destinationId || '').trim();
+        const requestedDate = String(req.body?.fecha_reserva || '').trim();
+
+        if (!isUuid(userId) || !isUuid(destinationId)) {
+            return res.status(400).json({ error: 'Usuario o destino no válido.' });
+        }
+
+        const [{ data: user, error: userError }, { data: destination, error: destinationError }] = await Promise.all([
+            supabase
+                .from('Usuarios')
+                .select('id, rol')
+                .eq('id', userId)
+                .maybeSingle(),
+            supabase
+                .from('Destinos')
+                .select('id, nombre, ciudad, pais, descripcion, precio, activo')
+                .eq('id', destinationId)
+                .maybeSingle()
+        ]);
+
+        if (userError || !user) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        if (String(user.rol || '').toLowerCase() !== 'cliente') {
+            return res.status(403).json({ error: 'Solo los clientes pueden crear reservas.' });
+        }
+
+        if (destinationError || !destination || destination.activo === false) {
+            return res.status(404).json({ error: 'Destino no disponible.' });
+        }
+
+        const { data: existingReservation, error: existingReservationError } = await supabase
+            .from('Reservaciones')
+            .select('id, estado')
+            .eq('user_id', userId)
+            .eq('destination_id', destinationId)
+            .order('creado_en', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+        if (existingReservationError) {
+            console.error('Error validando reserva existente:', existingReservationError);
+            return res.status(500).json({ error: 'No se pudo validar la reserva existente.' });
+        }
+
+        if (existingReservation && normalizeReservationStatus(existingReservation.estado) !== 'cancelled') {
+            return res.status(400).json({ error: 'Ya tienes una reserva activa para este destino.' });
+        }
+
+        const reservationDate = requestedDate || (() => {
+            const date = new Date();
+            date.setDate(date.getDate() + 7);
+            return date.toISOString().slice(0, 10);
+        })();
+
+        const { data: createdReservation, error: createError } = await supabase
+            .from('Reservaciones')
+            .insert({
+                user_id: userId,
+                destination_id: destinationId,
+                estado: 'Pendiente',
+                fecha_reserva: reservationDate,
+                creado_en: new Date().toISOString()
+            })
+            .select('id, estado, fecha_reserva, creado_en')
+            .single();
+
+        if (createError) {
+            console.error('Error creando reserva:', createError);
+            return res.status(500).json({ error: createError.message });
+        }
+
+        res.status(201).json({
+            message: 'Reserva creada correctamente.',
+            reservation: {
+                id: createdReservation.id,
+                title: destination.nombre,
+                location: `${destination.ciudad || ''}, ${destination.pais || ''}`.replace(/^,\s*/, ''),
+                date: createdReservation.fecha_reserva,
+                status: normalizeReservationStatus(createdReservation.estado),
+                price: toNumber(destination.precio, 0),
+                image: getDestinationImage(destination.nombre),
+                description: destination.descripcion || 'Sin descripción disponible.'
+            }
+        });
+    } catch (error) {
+        console.error('Server error en /reservas POST:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+});
+
 //  Helper: validar UUID
 function isUuid(value) {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
@@ -530,6 +625,56 @@ app.get('/reservas/:userId', async (req, res) => {
     } catch (error) {
         console.error('Error servidor:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+app.put('/reservas/:reservationId/status', async (req, res) => {
+    try {
+        const reservationId = String(req.params.reservationId || '').trim();
+        const userId = String(req.body?.userId || '').trim();
+        const normalizedStatus = normalizeReservationStatus(req.body?.status);
+
+        if (!isUuid(reservationId) || !isUuid(userId)) {
+            return res.status(400).json({ error: 'Datos inválidos' });
+        }
+
+        const { data: reserva, error: findError } = await supabase
+            .from('Reservaciones')
+            .select('id, user_id, estado')
+            .eq('id', reservationId)
+            .maybeSingle();
+
+        if (findError || !reserva) {
+            return res.status(404).json({ error: 'Reserva no encontrada' });
+        }
+
+        if (reserva.user_id !== userId) {
+            return res.status(403).json({ error: 'No autorizado' });
+        }
+
+        const statusMap = {
+            pending: 'Pendiente',
+            confirmed: 'Confirmada',
+            cancelled: 'Cancelada'
+        };
+
+        const { error: updateError } = await supabase
+            .from('Reservaciones')
+            .update({
+                estado: statusMap[normalizedStatus],
+                updated_en: new Date().toISOString()
+            })
+            .eq('id', reservationId);
+
+        if (updateError) {
+            console.error('Error actualizando reserva:', updateError);
+            return res.status(500).json({ error: 'Error actualizando la reserva' });
+        }
+
+        res.json({ message: 'Reserva actualizada correctamente.' });
+    } catch (error) {
+        console.error('Server error en /reservas status:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
     }
 });
 

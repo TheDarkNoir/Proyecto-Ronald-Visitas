@@ -1,9 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+    if (!loggedUser) {
+        window.location.href = '../index.html';
+        return;
+    }
 
     let tripsData = [];
 
     const modal = document.getElementById('destinationModal');
     const closeModal = document.getElementById('closeDestinationModal');
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.querySelector('.btn-explore');
+    const grid = document.getElementById('destinationsGrid');
 
     // 🔥 REFERENCIAS NUEVAS (IMPORTANTE)
     const modalTitle = document.getElementById('modalTitle');
@@ -14,6 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalRating = document.getElementById('modalRating');
     const modalImage = document.getElementById('modalImage');
     const btnReservar = document.getElementById('btnReservar');
+
+    function getUserId() {
+        return loggedUser.userId || loggedUser.id || '';
+    }
+
+    function formatPrice(value) {
+        return value > 0
+            ? '$' + Number(value).toLocaleString('es-CO') + ' COP'
+            : 'Consultar precio';
+    }
 
     // ============================
     // CARGAR DESTINOS
@@ -54,11 +72,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     // RENDER TARJETAS
     // ============================
-    function renderDestinations() {
-        const grid = document.getElementById('destinationsGrid');
+    function renderDestinations(list = tripsData) {
         grid.innerHTML = '';
 
-        tripsData.forEach(trip => {
+        if (!list.length) {
+            grid.innerHTML = '<div class="empty-message">No encontramos destinos para esa búsqueda.</div>';
+            return;
+        }
+
+        list.forEach(trip => {
 
             const card = document.createElement('div');
             card.className = 'destination-card';
@@ -97,6 +119,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function runSearch() {
+        const query = String(searchInput?.value || '').trim().toLowerCase();
+
+        if (!query) {
+            renderDestinations();
+            document.querySelector('.destinations-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+
+        const filteredTrips = tripsData.filter((trip) => {
+            return [trip.title, trip.location, trip.description, trip.duration]
+                .filter(Boolean)
+                .some((value) => String(value).toLowerCase().includes(query));
+        });
+
+        renderDestinations(filteredTrips);
+        document.querySelector('.destinations-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function createReservation(trip) {
+        const response = await fetch('/reservas', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: getUserId(),
+                destinationId: trip.id
+            })
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.error || 'No se pudo crear la reserva.');
+        }
+
+        return result;
+    }
+
     // ============================
     // MOSTRAR DETALLE 
     // ============================
@@ -107,20 +166,28 @@ document.addEventListener('DOMContentLoaded', () => {
         modalDescription.textContent = trip.description;
         modalDuration.textContent = trip.duration;
         modalRating.textContent = trip.rating;
-
-        modalPrice.textContent =
-            trip.price > 0
-                ? '$' + trip.price.toLocaleString('es-CO') + ' COP'
-                : 'Consultar precio';
+        modalPrice.textContent = formatPrice(trip.price);
 
         modalImage.style.backgroundImage = `url('${trip.image}')`;
 
         modal.setAttribute('aria-hidden', 'false');
 
         // BOTÓN RESERVAR
-        btnReservar.onclick = () => {
-            alert(`Reserva confirmada para ${trip.title} 🎉`);
-            modal.setAttribute('aria-hidden', 'true');
+        btnReservar.onclick = async () => {
+            btnReservar.disabled = true;
+            btnReservar.textContent = 'Procesando...';
+
+            try {
+                await createReservation(trip);
+                alert(`Reserva creada para ${trip.title}. La verás en Mis Viajes.`);
+                modal.setAttribute('aria-hidden', 'true');
+                window.location.href = 'MisViajes.html';
+            } catch (error) {
+                alert(error.message || 'No se pudo completar la reserva.');
+            } finally {
+                btnReservar.disabled = false;
+                btnReservar.textContent = 'Reservar ahora';
+            }
         };
     }
 
@@ -134,6 +201,14 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.setAttribute('aria-hidden', 'true');
+        }
+    });
+
+    searchButton?.addEventListener('click', runSearch);
+    searchInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            runSearch();
         }
     });
 

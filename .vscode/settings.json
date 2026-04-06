@@ -8,6 +8,10 @@
         "/^cd /workspaces/Proyecto-Ronald-Visitas && node - <<'NODE'\nrequire\\('dotenv'\\)\\.config\\(\\);\nconst \\{ createClient \\} = require\\('@supabase/supabase-js'\\);\nconst supabase = createClient\\(process\\.env\\.SUPABASE_URL, process\\.env\\.SUPABASE_ANON_KEY\\);\n\\(async \\(\\) => \\{\n  for \\(const table of \\['Usuarios','Destinos','Reservaciones','Destino_ui'\\]\\) \\{\n    const \\{ data, error \\} = await supabase\\.from\\(table\\)\\.select\\('\\*'\\)\\.limit\\(1\\);\n    if \\(error\\) \\{\n      console\\.log\\('TABLE', table, 'ERROR', error\\.message\\);\n      continue;\n    \\}\n    console\\.log\\('TABLE', table, 'COLUMNS', Object\\.keys\\(\\(data && data\\[0\\]\\) \\|\\| \\{\\}\\)\\);\n    console\\.log\\('ROW', JSON\\.stringify\\(\\(data && data\\[0\\]\\) \\|\\| \\{\\}, null, 2\\)\\);\n  \\}\n\\}\\)\\(\\);\nNODE$/": {
             "approve": true,
             "matchCommandLine": true
+        },
+        "/^cd /workspaces/Proyecto-Ronald-Visitas/Movil/travel_tropic_flutter/lib && \\\\\nmv config configuracion && \\\\\nmv models modelos && \\\\\nmv services servicios && \\\\\nmv screens pantallas && \\\\\nmv widgets componentes && \\\\\nfind \\. -type d \\| sort$/": {
+            "approve": true,
+            "matchCommandLine": true
         }
     }
 }

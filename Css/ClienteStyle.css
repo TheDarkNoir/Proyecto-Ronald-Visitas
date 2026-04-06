@@ -83,12 +83,18 @@ body {
 .nav-btn {
     background: none;
     border: none;
-    padding: 8px 16px;
+    padding: 0;
     font-size: 0.95em;
     color: var(--text-light);
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 0;
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
 }
 
 .nav-btn.active {
@@ -97,12 +103,24 @@ body {
 }
 
 .btn-iachat {
-    background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+    background: transparent;
     color: var(--white);
-    padding: 8px 18px;
-    border-radius: 20px;
+    padding: 0;
+    border-radius: 0;
     font-weight: 600;
     margin-left: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+}
+
+.btn-iachat.active {
+    box-shadow: none;
 }
 
 .btn-iachat:hover {
@@ -110,14 +128,79 @@ body {
 }
 
 .nav-btn:hover {
-    background: var(--bg-light);
+    background: transparent;
     color: var(--text-dark);
 }
 
 .nav-btn.active {
-    background: var(--bg-light);
+    background: transparent;
     color: var(--primary-blue);
     font-weight: 600;
+}
+
+.nav-btn-icon {
+    width: 86px;
+    height: auto;
+    max-height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+    filter: drop-shadow(0 6px 12px rgba(15, 23, 42, 0.12));
+}
+
+.button-with-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.button-icon {
+    width: 86px;
+    height: auto;
+    max-height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+}
+
+.image-button-only {
+    padding: 0;
+    background: transparent;
+    border: none;
+    min-width: 0;
+    min-height: 0;
+    box-shadow: none;
+}
+
+.image-button-only .button-icon,
+.image-button-only .nav-btn-icon {
+    width: 86px;
+    height: auto;
+    max-height: 44px;
+}
+
+.image-button-only:hover .button-icon,
+.image-button-only:hover .nav-btn-icon {
+    transform: translateY(-1px) scale(1.02);
+}
+
+.top-nav {
+    gap: 18px;
+}
+
+@media (max-width: 900px) {
+    .top-nav {
+        gap: 12px;
+    }
+
+    .nav-btn-icon,
+    .button-icon,
+    .image-button-only .button-icon,
+    .image-button-only .nav-btn-icon {
+        width: 72px;
+        max-height: 38px;
+    }
 }
 
 /* HEADER ACTIONS */
