@@ -30,35 +30,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let tripsData = [];
 
-    // NORMALIZADORES
+    //  NORMALIZAR ESTADOs
     function normalizeStatus(status) {
         const s = String(status || '').toLowerCase();
 
-        if (['confirmed', 'confirmada'].includes(s)) return 'confirmed';
-        if (['cancelled', 'cancelada'].includes(s)) return 'cancelled';
+        if (['confirmado', 'confirmed'].includes(s)) return 'confirmado';
+        if (['cancelado', 'cancelled'].includes(s)) return 'cancelado';
 
-        return 'pending';
+        return 'pendiente';
     }
 
     function formatPrice(value) {
         return '$' + Number(value || 0).toLocaleString('es-CO') + ' COP';
     }
 
-    // CARGAR DESDE BACKEND
+    // CARGAR RESERVAS
     async function loadReservations() {
         try {
             const response = await fetch(`${API_URL}/reservas/${userId}`);
 
-            if (!response.ok) {
-                throw new Error('Error al obtener reservas');
-            }
+            if (!response.ok) throw new Error('Error al obtener reservas');
 
             const data = await response.json();
 
             tripsData = Array.isArray(data)
                 ? data.map(t => ({
                     ...t,
-                    id: t.id || t._id, 
+                    id: t.id || t._id,
                     status: normalizeStatus(t.status)
                 }))
                 : [];
@@ -66,12 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTrips();
 
         } catch (error) {
-            console.error('Error cargando reservas:', error);
+            console.error('Error:', error);
 
             grid.innerHTML = `
                 <div class="empty-message">
                     Error al cargar tus viajes 😥 <br>
-                    Verifica que el backend esté corriendo
+                    Verifica el servidor
                 </div>
             `;
         }
@@ -97,8 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'trip-card';
 
             const statusText =
-                trip.status === 'confirmed' ? 'Confirmado' :
-                trip.status === 'cancelled' ? 'Cancelado' :
+                trip.status === 'confirmado' ? 'Confirmado' :
+                trip.status === 'cancelado' ? 'Cancelado' :
                 'Pendiente';
 
             card.innerHTML = `
@@ -114,15 +112,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>${trip.date || 'Sin fecha'}</p>
                     <p>${formatPrice(trip.price)}</p>
 
-                    <div class="trip-actions">
-                        <button class="view-btn">Ver</button>
-                        ${trip.status === 'pending' ? '<button class="pay-btn">Pagar</button>' : ''}
-                        ${trip.status !== 'cancelled' ? '<button class="cancel-btn">Cancelar</button>' : ''}
+                    <div class="trip-footer">
+                        <button class="btn-action view-btn">Ver</button>
+
+                        ${trip.status === 'pendiente'
+                            ? '<button class="btn-action pay-btn">Pagar</button>'
+                            : ''}
+
+                        ${trip.status !== 'cancelado'
+                            ? '<button class="btn-secondary cancel-btn">Cancelar</button>'
+                            : ''}
                     </div>
                 </div>
             `;
 
-            // VER DETALLE
+            // VER
             card.querySelector('.view-btn')
                 .addEventListener('click', () => showDetails(trip));
 
@@ -131,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (payBtn) {
                 payBtn.addEventListener('click', () => {
                     if (confirm('¿Confirmar pago de esta reserva?')) {
-                        updateStatus(trip.id, 'confirmed');
+                        updateStatus(trip.id, 'confirmado');
                     }
                 });
             }
@@ -141,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cancelBtn) {
                 cancelBtn.addEventListener('click', () => {
                     if (confirm('¿Seguro que deseas cancelar esta reserva?')) {
-                        updateStatus(trip.id, 'cancelled');
+                        updateStatus(trip.id, 'cancelado');
                     }
                 });
             }
@@ -150,14 +154,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // MODAL DETALLE
+    // MODAL
     function showDetails(trip) {
         modalBody.innerHTML = `
-            <h2>${trip.title || 'Viaje'}</h2>
-            <p>${trip.description || 'Sin descripción'}</p>
-            <p><strong>Fecha:</strong> ${trip.date || 'Sin fecha'}</p>
-            <p><strong>Precio:</strong> ${formatPrice(trip.price)}</p>
-            <p><strong>Estado:</strong> ${trip.status}</p>
+            <div class="trip-detail-body">
+                <h2>${trip.title || 'Viaje'}</h2>
+                <p>${trip.description || 'Sin descripción'}</p>
+                <p><strong>Fecha:</strong> ${trip.date || 'Sin fecha'}</p>
+                <p><strong>Precio:</strong> ${formatPrice(trip.price)}</p>
+                <p><strong>Estado:</strong> ${trip.status}</p>
+            </div>
         `;
 
         modal.setAttribute('aria-hidden', 'false');
@@ -165,17 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ACTUALIZAR ESTADO
     async function updateStatus(id, status) {
-
         try {
-            const adminId = loggedUser.userId || loggedUser.id;
 
-            const response = await fetch(`${API_URL}/admin/reservas/${id}/status`, {
+            const response = await fetch(`${API_URL}/reservas/${id}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    adminId,
+                    userId,
                     status
                 })
             });
@@ -183,14 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Error actualizando');
+                throw new Error(data.error || 'Error');
             }
 
             loadReservations();
 
         } catch (error) {
-            console.error('Error actualizando:', error);
-            alert('Error al actualizar la reserva');
+            console.error(error);
+            alert('No se pudo actualizar la reserva');
         }
     }
 
