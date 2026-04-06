@@ -89,6 +89,10 @@ body {
     cursor: pointer;
     border-radius: 6px;
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .nav-btn.active {
@@ -103,6 +107,16 @@ body {
     border-radius: 20px;
     font-weight: 600;
     margin-left: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-iachat.active {
+    box-shadow: 0 8px 18px rgba(255, 131, 95, 0.28);
 }
 
 .btn-iachat:hover {
@@ -118,6 +132,27 @@ body {
     background: var(--bg-light);
     color: var(--primary-blue);
     font-weight: 600;
+}
+
+.nav-btn-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.button-with-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.button-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 /* HEADER ACTIONS */

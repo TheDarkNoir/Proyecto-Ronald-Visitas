@@ -468,8 +468,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setText('adminSidebarName', admin.nombre || loggedUser.username || 'Administrador');
         setText('adminSidebarRole', String(admin.rol || 'admin').toUpperCase());
         setText('adminSidebarAvatar', (admin.nombre || admin.email || 'AD').slice(0, 2).toUpperCase());
-        setText('adminHeaderTitle', `Panel de Control ${admin.pais || 'Regional'}`);
-        setText('adminHeaderSubtitle', `Operación conectada a Tropical Travel ${admin.pais || 'Colombia'}.`);
+        setText('adminHeaderTitle', `Panel de Control ${admin.pais || 'General'}`);
+        setText('adminHeaderSubtitle', `Estado general de reservas, usuarios y destinos en ${admin.pais || 'Colombia'}.`);
         setText('adminHubLabel', `${admin.ciudad || 'Hub'} · ${admin.pais || 'Colombia'}`);
 
         const adminName = document.getElementById('adminName');
@@ -648,8 +648,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const keys = Object.keys(grouped).sort();
 
         openModal(`
-            <h3>Calendario Operativo</h3>
-            <div class="calendar-grid">
+            <div class="modal-headline">
+                <h3>Calendario Operativo</h3>
+                <p>Reservas agrupadas por fecha para revisar la carga de trabajo.</p>
+            </div>
+            <div class="calendar-grid admin-calendar-grid">
                 ${keys.length ? keys.map((key) => `
                     <div class="calendar-cell">
                         <span class="date-badge">${escapeHtml(formatDate(key))}</span>
@@ -664,11 +667,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function openReportModal() {
         const finance = state.panel?.finance?.metrics || {};
         openModal(`
-            <h3>Reporte Financiero</h3>
-            <p><strong>Ingresos:</strong> ${formatCurrency(finance.income)}</p>
-            <p><strong>Gastos:</strong> ${formatCurrency(finance.expenses)}</p>
-            <p><strong>Beneficio:</strong> ${formatCurrency(finance.benefit)}</p>
-            <p><strong>Reportes generados:</strong> ${finance.reports || 0}</p>
+            <div class="modal-headline">
+                <h3>Reporte Financiero</h3>
+                <p>Resumen rápido del rendimiento económico actual.</p>
+            </div>
+            <div class="report-summary-grid">
+                <article class="report-summary-card">
+                    <span class="report-label">Ingresos</span>
+                    <strong>${formatCurrency(finance.income)}</strong>
+                </article>
+                <article class="report-summary-card">
+                    <span class="report-label">Gastos</span>
+                    <strong>${formatCurrency(finance.expenses)}</strong>
+                </article>
+                <article class="report-summary-card">
+                    <span class="report-label">Beneficio</span>
+                    <strong>${formatCurrency(finance.benefit)}</strong>
+                </article>
+                <article class="report-summary-card">
+                    <span class="report-label">Reportes generados</span>
+                    <strong>${finance.reports || 0}</strong>
+                </article>
+            </div>
             <div class="actions"><button type="button" class="btn btn-cancel" data-close-modal>Cerrar</button></div>
         `);
     }
@@ -727,7 +747,6 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.newUserBtn?.addEventListener('click', () => openUserModal());
         elements.viewCalendarBtn?.addEventListener('click', openCalendarModal);
         elements.genReportBtn?.addEventListener('click', openReportModal);
-        elements.analyzeBtn?.addEventListener('click', renderExperienceItems);
         elements.filterDest?.addEventListener('change', (event) => {
             state.currentExperienceFilter = event.target.value;
             renderExperienceItems();
