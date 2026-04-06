@@ -94,8 +94,28 @@
 .btn-edit-profile .button-icon,
 .btn-save .button-icon,
 .btn-logout .button-icon {
-    width: 18px;
-    height: 18px;
+    width: 92px;
+    height: auto;
+    max-height: 46px;
+}
+
+.btn-edit-profile.image-button-only,
+.btn-save.image-button-only,
+.btn-logout.image-button-only {
+    width: auto;
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.btn-edit-profile.image-button-only:hover,
+.btn-save.image-button-only:hover,
+.btn-logout.image-button-only:hover {
+    filter: none;
+    transform: none;
+    box-shadow: none;
 }
 
 .btn-edit-profile:hover {
