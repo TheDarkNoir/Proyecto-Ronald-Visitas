@@ -26,8 +26,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscure2 = true;
 
   final _paises = [
-    'Colombia', 'México', 'Argentina', 'Chile', 'Perú',
-    'Ecuador', 'Venezuela', 'Brasil', 'España', 'Estados Unidos',
+    'Colombia',
+    'México',
+    'Argentina',
+    'Chile',
+    'Perú',
+    'Ecuador',
+    'Venezuela',
+    'Brasil',
+    'España',
+    'Estados Unidos',
   ];
 
   @override
@@ -81,7 +89,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } on ApiException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message), backgroundColor: AppTheme.dangerColor),
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: AppTheme.dangerColor,
+        ),
       );
     } catch (e) {
       if (!mounted) return;
@@ -107,7 +118,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             key: _formKey,
             child: Column(
               children: [
-                const Icon(Icons.person_add, size: 56, color: AppTheme.primaryColor),
+                const Icon(
+                  Icons.person_add,
+                  size: 56,
+                  color: AppTheme.primaryColor,
+                ),
                 const SizedBox(height: 8),
                 const Text(
                   'Únete a Tropical Travel',
@@ -127,8 +142,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     labelText: 'Nombre completo',
                     prefixIcon: Icon(Icons.person_outlined),
                   ),
-                  validator: (v) =>
-                      v == null || v.trim().isEmpty ? 'Ingresa tu nombre' : null,
+                  validator: (v) => v == null || v.trim().isEmpty
+                      ? 'Ingresa tu nombre'
+                      : null,
                 ),
                 const SizedBox(height: 14),
 
@@ -142,7 +158,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     prefixIcon: Icon(Icons.email_outlined),
                   ),
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Ingresa tu correo';
+                    if (v == null || v.trim().isEmpty)
+                      return 'Ingresa tu correo';
                     if (!RegExp(r'^[\w.-]+@[\w.-]+\.\w+$').hasMatch(v.trim())) {
                       return 'Correo inválido';
                     }
@@ -160,7 +177,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     labelText: 'Contraseña',
                     prefixIcon: const Icon(Icons.lock_outlined),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscure1 ? Icons.visibility_off : Icons.visibility),
+                      icon: Icon(
+                        _obscure1 ? Icons.visibility_off : Icons.visibility,
+                      ),
                       onPressed: () => setState(() => _obscure1 = !_obscure1),
                     ),
                   ),
@@ -181,12 +200,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     labelText: 'Confirmar contraseña',
                     prefixIcon: const Icon(Icons.lock_outlined),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscure2 ? Icons.visibility_off : Icons.visibility),
+                      icon: Icon(
+                        _obscure2 ? Icons.visibility_off : Icons.visibility,
+                      ),
                       onPressed: () => setState(() => _obscure2 = !_obscure2),
                     ),
                   ),
                   validator: (v) {
-                    if (v != _passCtrl.text) return 'Las contraseñas no coinciden';
+                    if (v != _passCtrl.text)
+                      return 'Las contraseñas no coinciden';
                     return null;
                   },
                 ),
@@ -206,7 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 // País
                 DropdownButtonFormField<String>(
-                  value: _pais,
+                  initialValue: _pais,
                   decoration: const InputDecoration(
                     labelText: 'País',
                     prefixIcon: Icon(Icons.public),

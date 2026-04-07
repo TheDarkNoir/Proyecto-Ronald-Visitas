@@ -118,8 +118,9 @@ class _ClientShellState extends State<ClientShell> {
                             title: Text(
                               item.label,
                               style: TextStyle(
-                                fontWeight:
-                                    isActive ? FontWeight.w700 : FontWeight.w500,
+                                fontWeight: isActive
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
                                 color: isActive
                                     ? AppTheme.primaryColor
                                     : AppTheme.textPrimary,
@@ -163,7 +164,7 @@ class _ClientShellState extends State<ClientShell> {
         top: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-          child: Material(
+          child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(22),
@@ -175,84 +176,91 @@ class _ClientShellState extends State<ClientShell> {
                 ),
               ],
             ),
-            borderRadius: BorderRadius.circular(22),
-            child: InkWell(
-              onTap: _openNavigationMenu,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 42,
-                      height: 42,
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withAlpha(22),
-                        borderRadius: BorderRadius.circular(14),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(22),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(22),
+                onTap: _openNavigationMenu,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withAlpha(22),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Icon(
+                          currentItem.selectedIcon,
+                          color: AppTheme.primaryColor,
+                        ),
                       ),
-                      child: Icon(
-                        currentItem.selectedIcon,
-                        color: AppTheme.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Menú',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppTheme.textSecondary,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Menú',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppTheme.textSecondary,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            currentItem.label,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: AppTheme.textPrimary,
+                            const SizedBox(height: 2),
+                            Text(
+                              currentItem.label,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppTheme.textPrimary,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppTheme.secondaryColor.withAlpha(18),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Abrir',
-                            style: TextStyle(
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppTheme.secondaryColor.withAlpha(18),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Abrir',
+                              style: TextStyle(
+                                color: AppTheme.secondaryColor,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(width: 6),
+                            Icon(
+                              Icons.keyboard_arrow_up_rounded,
                               color: AppTheme.secondaryColor,
-                              fontWeight: FontWeight.w700,
                             ),
-                          ),
-                          SizedBox(width: 6),
-                          Icon(
-                            Icons.keyboard_arrow_up_rounded,
-                            color: AppTheme.secondaryColor,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
+          ), // closes Container
+        ), // closes Padding (fromLTRB)
+      ), // closes SafeArea
     );
   }
 }

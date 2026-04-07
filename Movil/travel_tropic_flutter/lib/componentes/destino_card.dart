@@ -25,15 +25,16 @@ class DestinoCard extends StatelessWidget {
           children: [
             // Imagen
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: destino.imageUrl.isNotEmpty
                   ? Image.network(
                       destino.imageUrl,
                       height: 160,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _placeholder(),
+                      errorBuilder: (_, _, _) => _placeholder(),
                     )
                   : _placeholder(),
             ),
@@ -58,8 +59,11 @@ class DestinoCard extends StatelessWidget {
                   if (destino.ciudad != null || destino.pais != null)
                     Row(
                       children: [
-                        const Icon(Icons.location_on,
-                            size: 14, color: AppTheme.textSecondary),
+                        const Icon(
+                          Icons.location_on,
+                          size: 14,
+                          color: AppTheme.textSecondary,
+                        ),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
@@ -92,8 +96,11 @@ class DestinoCard extends StatelessWidget {
                       if (destino.rating != null)
                         Row(
                           children: [
-                            const Icon(Icons.star,
-                                size: 16, color: AppTheme.warningColor),
+                            const Icon(
+                              Icons.star,
+                              size: 16,
+                              color: AppTheme.warningColor,
+                            ),
                             const SizedBox(width: 2),
                             Text(
                               destino.rating!.toStringAsFixed(1),

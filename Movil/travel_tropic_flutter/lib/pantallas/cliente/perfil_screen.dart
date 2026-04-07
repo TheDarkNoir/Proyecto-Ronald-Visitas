@@ -31,8 +31,16 @@ class _PerfilScreenState extends State<PerfilScreen>
   bool _changingPassword = false;
 
   final _paises = [
-    'Colombia', 'México', 'Argentina', 'Chile', 'Perú',
-    'Ecuador', 'Venezuela', 'Brasil', 'España', 'Estados Unidos',
+    'Colombia',
+    'México',
+    'Argentina',
+    'Chile',
+    'Perú',
+    'Ecuador',
+    'Venezuela',
+    'Brasil',
+    'España',
+    'Estados Unidos',
   ];
 
   @override
@@ -125,7 +133,10 @@ class _PerfilScreenState extends State<PerfilScreen>
     } on ApiException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message), backgroundColor: AppTheme.dangerColor),
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: AppTheme.dangerColor,
+        ),
       );
     } finally {
       if (mounted) setState(() => _saving = false);
@@ -139,13 +150,17 @@ class _PerfilScreenState extends State<PerfilScreen>
 
     if (current.isEmpty || newPass.isEmpty || confirm.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completa todos los campos de contraseña')),
+        const SnackBar(
+          content: Text('Completa todos los campos de contraseña'),
+        ),
       );
       return;
     }
     if (newPass.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('La nueva contraseña debe tener al menos 8 caracteres')),
+        const SnackBar(
+          content: Text('La nueva contraseña debe tener al menos 8 caracteres'),
+        ),
       );
       return;
     }
@@ -176,7 +191,10 @@ class _PerfilScreenState extends State<PerfilScreen>
     } on ApiException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message), backgroundColor: AppTheme.dangerColor),
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: AppTheme.dangerColor,
+        ),
       );
     } finally {
       if (mounted) setState(() => _changingPassword = false);
@@ -184,6 +202,7 @@ class _PerfilScreenState extends State<PerfilScreen>
   }
 
   Future<void> _logout() async {
+    final authService = context.read<AuthService>();
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -202,7 +221,7 @@ class _PerfilScreenState extends State<PerfilScreen>
       ),
     );
     if (confirm == true) {
-      await context.read<AuthService>().logout();
+      await authService.logout();
     }
   }
 
@@ -298,16 +317,18 @@ class _PerfilScreenState extends State<PerfilScreen>
                       ),
                       const SizedBox(height: 14),
                       DropdownButtonFormField<String>(
-                        value: _pais,
+                        initialValue: _pais,
                         decoration: const InputDecoration(
                           labelText: 'País',
                           prefixIcon: Icon(Icons.public),
                         ),
                         items: _paises
-                            .map((p) =>
-                                DropdownMenuItem(value: p, child: Text(p)))
+                            .map(
+                              (p) => DropdownMenuItem(value: p, child: Text(p)),
+                            )
                             .toList(),
-                        onChanged: (v) => setState(() => _pais = v ?? 'Colombia'),
+                        onChanged: (v) =>
+                            setState(() => _pais = v ?? 'Colombia'),
                       ),
                       const SizedBox(height: 14),
                       TextFormField(
@@ -338,7 +359,9 @@ class _PerfilScreenState extends State<PerfilScreen>
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(
-                                      strokeWidth: 2, color: Colors.white),
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
                                 )
                               : const Text('Guardar Cambios'),
                         ),
@@ -383,7 +406,9 @@ class _PerfilScreenState extends State<PerfilScreen>
                       ListTile(
                         leading: const Icon(Icons.calendar_month),
                         title: const Text('Miembro desde'),
-                        subtitle: Text(user?.createdAt?.substring(0, 10) ?? '-'),
+                        subtitle: Text(
+                          user?.createdAt?.substring(0, 10) ?? '-',
+                        ),
                       ),
                     ],
                   ),
@@ -448,7 +473,9 @@ class _PerfilScreenState extends State<PerfilScreen>
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(
-                                      strokeWidth: 2, color: Colors.white),
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
                                 )
                               : const Text('Actualizar Contraseña'),
                         ),
@@ -467,7 +494,10 @@ class _PerfilScreenState extends State<PerfilScreen>
                       const SizedBox(height: 8),
                       const Text(
                         'Eliminar tu cuenta es irreversible. Se programará la eliminación para 7 días.',
-                        style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppTheme.textSecondary,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       SizedBox(
@@ -478,18 +508,23 @@ class _PerfilScreenState extends State<PerfilScreen>
                             side: const BorderSide(color: AppTheme.dangerColor),
                           ),
                           onPressed: () async {
+                            final messenger = ScaffoldMessenger.of(context);
                             final ok = await showDialog<bool>(
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Eliminar cuenta'),
-                                content: const Text('¿Estás seguro? Esta acción programará la eliminación de tu cuenta.'),
+                                content: const Text(
+                                  '¿Estás seguro? Esta acción programará la eliminación de tu cuenta.',
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, false),
                                     child: const Text('Cancelar'),
                                   ),
                                   ElevatedButton(
-                                    style: ElevatedButton.styleFrom(backgroundColor: AppTheme.dangerColor),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppTheme.dangerColor,
+                                    ),
                                     onPressed: () => Navigator.pop(ctx, true),
                                     child: const Text('Eliminar'),
                                   ),
@@ -497,8 +532,12 @@ class _PerfilScreenState extends State<PerfilScreen>
                               ),
                             );
                             if (ok == true && mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Cuenta programada para eliminarse en 7 días')),
+                              messenger.showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Cuenta programada para eliminarse en 7 días',
+                                  ),
+                                ),
                               );
                             }
                           },
@@ -518,7 +557,7 @@ class _PerfilScreenState extends State<PerfilScreen>
       secondary: Icon(icon, color: AppTheme.primaryColor),
       title: Text(label),
       value: true,
-      activeColor: AppTheme.primaryColor,
+      activeThumbColor: AppTheme.primaryColor,
       onChanged: (_) {},
     );
   }

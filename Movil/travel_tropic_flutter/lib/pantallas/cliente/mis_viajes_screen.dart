@@ -58,7 +58,9 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Cancelar reserva'),
-        content: Text('¿Deseas cancelar tu reserva a ${reserva.destinoNombre}?'),
+        content: Text(
+          '¿Deseas cancelar tu reserva a ${reserva.destinoNombre}?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -66,7 +68,9 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.dangerColor),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.dangerColor,
+            ),
             child: const Text('Sí, cancelar'),
           ),
         ],
@@ -88,7 +92,10 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
     } on ApiException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message), backgroundColor: AppTheme.dangerColor),
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: AppTheme.dangerColor,
+        ),
       );
     }
   }
@@ -131,61 +138,63 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _error != null
-                    ? Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(_error!),
-                            const SizedBox(height: 12),
-                            ElevatedButton(
-                              onPressed: _load,
-                              child: const Text('Reintentar'),
-                            ),
-                          ],
+                ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(_error!),
+                        const SizedBox(height: 12),
+                        ElevatedButton(
+                          onPressed: _load,
+                          child: const Text('Reintentar'),
                         ),
-                      )
-                    : _filtradas.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.luggage_outlined,
-                                    size: 64, color: Colors.grey[400]),
-                                const SizedBox(height: 12),
-                                const Text(
-                                  'No tienes viajes aún',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppTheme.textSecondary,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  'Explora destinos y reserva tu próxima aventura',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: AppTheme.textSecondary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : RefreshIndicator(
-                            onRefresh: _load,
-                            child: ListView.separated(
-                              padding: const EdgeInsets.all(16),
-                              itemCount: _filtradas.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(height: 10),
-                              itemBuilder: (_, i) {
-                                final r = _filtradas[i];
-                                return ReservaCard(
-                                  reserva: r,
-                                  onCancelar: () => _cancelar(r),
-                                );
-                              },
-                            ),
+                      ],
+                    ),
+                  )
+                : _filtradas.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.luggage_outlined,
+                          size: 64,
+                          color: Colors.grey[400],
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'No tienes viajes aún',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppTheme.textSecondary,
                           ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Explora destinos y reserva tu próxima aventura',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppTheme.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _load,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _filtradas.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 10),
+                      itemBuilder: (_, i) {
+                        final r = _filtradas[i];
+                        return ReservaCard(
+                          reserva: r,
+                          onCancelar: () => _cancelar(r),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),

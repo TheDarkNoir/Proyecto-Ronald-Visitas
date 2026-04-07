@@ -78,8 +78,9 @@ class _OperacionesScreenState extends State<OperacionesScreen> {
       _load();
     } on ApiException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
@@ -105,8 +106,9 @@ class _OperacionesScreenState extends State<OperacionesScreen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              children: ['Todos', 'Pendiente', 'Confirmada', 'Cancelada']
-                  .map((f) {
+              children: ['Todos', 'Pendiente', 'Confirmada', 'Cancelada'].map((
+                f,
+              ) {
                 final active = f == _filtroEstado;
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -127,117 +129,112 @@ class _OperacionesScreenState extends State<OperacionesScreen> {
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _filtrados.isEmpty
-                    ? const Center(child: Text('No hay operaciones'))
-                    : RefreshIndicator(
-                        onRefresh: _load,
-                        child: ListView.separated(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: _filtrados.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 8),
-                          itemBuilder: (_, i) {
-                            final o = _filtrados[i];
-                            final usuario =
-                                o['Usuarios'] ?? o['usuario'] ?? {};
-                            final destino =
-                                o['Destinos'] ?? o['destino'] ?? {};
-                            final estado =
-                                (o['estado'] ?? 'Pendiente').toString();
+                ? const Center(child: Text('No hay operaciones'))
+                : RefreshIndicator(
+                    onRefresh: _load,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _filtrados.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      itemBuilder: (_, i) {
+                        final o = _filtrados[i];
+                        final usuario = o['Usuarios'] ?? o['usuario'] ?? {};
+                        final destino = o['Destinos'] ?? o['destino'] ?? {};
+                        final estado = (o['estado'] ?? 'Pendiente').toString();
 
-                            return Card(
-                              child: ExpansionTile(
-                                leading: Container(
-                                  width: 10,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: _statusColor(estado),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
+                        return Card(
+                          child: ExpansionTile(
+                            leading: Container(
+                              width: 10,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: _statusColor(estado),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            title: Text(
+                              destino['nombre'] ?? 'Reserva',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              '${usuario['nombre'] ?? 'Usuario'} • ${_statusLabel(estado)}',
+                              style: TextStyle(
+                                color: _statusColor(estado),
+                                fontSize: 12,
+                              ),
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  16,
+                                  0,
+                                  16,
+                                  12,
                                 ),
-                                title: Text(
-                                  destino['nombre'] ?? 'Reserva',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                subtitle: Text(
-                                  '${usuario['nombre'] ?? 'Usuario'} • ${_statusLabel(estado)}',
-                                  style: TextStyle(
-                                    color: _statusColor(estado),
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        16, 0, 16, 12),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Email: ${usuario['email'] ?? '-'}'),
+                                    Text(
+                                      'Fecha: ${o['fecha_reserva'] ?? o['creado_en'] ?? '-'}',
+                                    ),
+                                    Text(
+                                      'Precio: \$${destino['precio'] ?? '-'}',
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Row(
                                       children: [
-                                        Text(
-                                            'Email: ${usuario['email'] ?? '-'}'),
-                                        Text(
-                                            'Fecha: ${o['fecha_reserva'] ?? o['creado_en'] ?? '-'}'),
-                                        Text(
-                                            'Precio: \$${destino['precio'] ?? '-'}'),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          children: [
-                                            if (!estado
-                                                .toLowerCase()
-                                                .contains('confirm'))
-                                              Expanded(
-                                                child: ElevatedButton(
-                                                  onPressed: () =>
-                                                      _changeStatus(
-                                                          o, 'confirmed'),
-                                                  style: ElevatedButton
-                                                      .styleFrom(
-                                                    backgroundColor: AppTheme
-                                                        .successColor,
-                                                  ),
-                                                  child: const Text(
-                                                      'Confirmar'),
+                                        if (!estado.toLowerCase().contains(
+                                          'confirm',
+                                        ))
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              onPressed: () =>
+                                                  _changeStatus(o, 'confirmed'),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    AppTheme.successColor,
+                                              ),
+                                              child: const Text('Confirmar'),
+                                            ),
+                                          ),
+                                        if (!estado.toLowerCase().contains(
+                                              'confirm',
+                                            ) &&
+                                            !estado.toLowerCase().contains(
+                                              'cancel',
+                                            ))
+                                          const SizedBox(width: 8),
+                                        if (!estado.toLowerCase().contains(
+                                          'cancel',
+                                        ))
+                                          Expanded(
+                                            child: OutlinedButton(
+                                              onPressed: () =>
+                                                  _changeStatus(o, 'cancelled'),
+                                              style: OutlinedButton.styleFrom(
+                                                foregroundColor:
+                                                    AppTheme.dangerColor,
+                                                side: const BorderSide(
+                                                  color: AppTheme.dangerColor,
                                                 ),
                                               ),
-                                            if (!estado
-                                                    .toLowerCase()
-                                                    .contains('confirm') &&
-                                                !estado
-                                                    .toLowerCase()
-                                                    .contains('cancel'))
-                                              const SizedBox(width: 8),
-                                            if (!estado
-                                                .toLowerCase()
-                                                .contains('cancel'))
-                                              Expanded(
-                                                child: OutlinedButton(
-                                                  onPressed: () =>
-                                                      _changeStatus(
-                                                          o, 'cancelled'),
-                                                  style: OutlinedButton
-                                                      .styleFrom(
-                                                    foregroundColor:
-                                                        AppTheme.dangerColor,
-                                                    side: const BorderSide(
-                                                        color: AppTheme
-                                                            .dangerColor),
-                                                  ),
-                                                  child:
-                                                      const Text('Cancelar'),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
+                                              child: const Text('Cancelar'),
+                                            ),
+                                          ),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),
