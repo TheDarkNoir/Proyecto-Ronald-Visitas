@@ -29,49 +29,10 @@
             </nav>
 
             <div class="header-actions">
-                <div class="notification-wrapper">
-                    <button class="notification-btn" id="notificationBtn">🔔</button>
-                    <div class="notification-badge" id="notificationBadge">3</div>
-                </div>
                 <div class="user-avatar" id="userInitials" onclick="location.href='Perfil.html'" title="Mi perfil">JA</div>
             </div>
         </div>
     </header>
-
-    <!-- NOTIFICATION POPUP -->
-    <div class="notification-popup" id="notificationPopup">
-        <div class="popup-header">
-            <h3>Notificaciones</h3>
-            <button class="close-popup" id="closeNotifications">✕</button>
-        </div>
-        <div class="notifications-list" id="notificationsList">
-            <div class="notification-item unread">
-                <div class="notification-icon">✈️</div>
-                <div class="notification-content">
-                    <p class="notification-title">Reserva Confirmada</p>
-                    <p class="notification-text">Tu viaje a Cartagena ha sido confirmado para el 25 de febrero</p>
-                    <span class="notification-time">Hace 2 horas</span>
-                </div>
-            </div>
-            <div class="notification-item unread">
-                <div class="notification-icon">⭐</div>
-                <div class="notification-content">
-                    <p class="notification-title">Califica tu experiencia</p>
-                    <p class="notification-text">¿Cómo fue tu viaje a Valle de Cocora?</p>
-                    <span class="notification-time">Hace 1 día</span>
-                </div>
-            </div>
-            <div class="notification-item unread">
-                <div class="notification-icon">💰</div>
-                <div class="notification-content">
-                    <p class="notification-title">Oferta Especial</p>
-                    <p class="notification-text">Descuento del 20% en Parque Tayrona esta semana</p>
-                    <span class="notification-time">Hace 3 días</span>
-                </div>
-            </div>
-        </div>
-        <button class="btn-mark-read">Marcar todas como leídas</button>
-    </div>
 
     <!-- PROFILE SECTION -->
     <section class="profile-section">
@@ -112,7 +73,6 @@
                 <button class="tab-btn active" data-tab="general">ℹ️ Información General</button>
                 <button class="tab-btn" data-tab="settings">❤️ Preferencias</button>
                 <button class="tab-btn" data-tab="security">🔒 Seguridad</button>
-                <button class="tab-btn" data-tab="preferences">⚙️ Configuración</button>
             </div>
 
             <!-- TAB CONTENTS -->
@@ -214,94 +174,43 @@
             <div class="tab-content" id="security">
                 <div class="form-group">
                     <h3>Seguridad de la Cuenta</h3>
-                    
+
                     <div class="security-item">
                         <div class="item-header">
                             <p class="item-title">Contraseña</p>
-                            <p class="item-desc">Última actualización hace 3 meses</p>
+                            <p class="item-desc">Actualiza tu contraseña para proteger tu cuenta</p>
                         </div>
-                        <button class="btn-action">Cambiar Contraseña</button>
                     </div>
 
-                    <div class="security-item">
-                        <div class="item-header">
-                            <p class="item-title">Autenticación de Dos Factores</p>
-                            <p class="item-desc">Aumenta la seguridad de tu cuenta</p>
+                    <div class="password-form">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="currentPasswordInput">Contraseña actual</label>
+                                <input type="password" id="currentPasswordInput" placeholder="Ingresa tu contraseña actual">
+                            </div>
+                            <div class="form-field">
+                                <label for="newPasswordInput">Nueva contraseña</label>
+                                <input type="password" id="newPasswordInput" placeholder="Mínimo 8 caracteres">
+                            </div>
                         </div>
-                        <label class="toggle" for="twoFactorToggle">
-                            <input type="checkbox" id="twoFactorToggle" aria-label="Autenticación de Dos Factores">
-                            <span class="toggle-switch"></span>
-                        </label>
-                    </div>
 
-                    <div class="security-item">
-                        <div class="item-header">
-                            <p class="item-title">Sesiones Activas</p>
-                            <p class="item-desc">Administra tus dispositivos conectados</p>
+                        <div class="form-row single-column">
+                            <div class="form-field">
+                                <label for="confirmPasswordInput">Confirmar nueva contraseña</label>
+                                <input type="password" id="confirmPasswordInput" placeholder="Repite la nueva contraseña">
+                            </div>
                         </div>
-                        <button class="btn-action">Ver Sesiones</button>
+
+                        <button class="btn-action" id="changePasswordBtn">Actualizar contraseña</button>
                     </div>
 
                     <div class="security-item danger">
                         <div class="item-header">
                             <p class="item-title">Eliminar Cuenta</p>
-                            <p class="item-desc">Esta acción es permanente</p>
+                            <p class="item-desc">Esta acción requiere confirmación y se programará para dentro de 7 días</p>
                         </div>
-                        <button class="btn-action danger">Eliminar Cuenta</button>
+                        <button class="btn-action danger" id="deleteAccountBtn">Eliminar Cuenta</button>
                     </div>
-                </div>
-            </div>
-
-            <!-- PREFERENCES TAB -->
-            <div class="tab-content" id="preferences">
-                <div class="form-group">
-                    <h3>Notificaciones</h3>
-                    
-                    <div class="pref-item">
-                        <label class="toggle">
-                            <input type="checkbox" checked aria-label="Confirmación de Reservas">
-                            <span class="toggle-switch"></span>
-                        </label>
-                        <div>
-                            <p class="pref-title">Confirmación de Reservas</p>
-                            <p class="pref-desc">Recibe confirmación cuando reservas un viaje</p>
-                        </div>
-                    </div>
-
-                    <div class="pref-item">
-                        <label class="toggle">
-                            <input type="checkbox" checked aria-label="Ofertas y Promociones">
-                            <span class="toggle-switch"></span>
-                        </label>
-                        <div>
-                            <p class="pref-title">Ofertas y Promociones</p>
-                            <p class="pref-desc">Recibe notificaciones de descuentos especiales</p>
-                        </div>
-                    </div>
-
-                    <div class="pref-item">
-                        <label class="toggle">
-                            <input type="checkbox" aria-label="Recomendaciones Personalizadas">
-                            <span class="toggle-switch"></span>
-                        </label>
-                        <div>
-                            <p class="pref-title">Recomendaciones Personalizadas</p>
-                            <p class="pref-desc">Destinos sugeridos según tus preferencias</p>
-                        </div>
-                    </div>
-
-                    <div class="pref-item">
-                        <label class="toggle">
-                            <input type="checkbox" checked aria-label="Newsletter Semanal">
-                            <span class="toggle-switch"></span>
-                        </label>
-                        <div>
-                            <p class="pref-title">Newsletter Semanal</p>
-                            <p class="pref-desc">Recibe un resumen semanal de destinos</p>
-                        </div>
-                    </div>
-
-                    <button class="btn-save image-button-only" aria-label="Guardar notificaciones" title="Guardar notificaciones"><img class="button-icon" src="../Imagenes/Botones_Iconos/Guardar.png" alt="" aria-hidden="true"></button>
                 </div>
             </div>
 
@@ -313,6 +222,5 @@
     </section>
 
     <script src="../Scripts/ScriptsCliente.js" defer></script>
-    <script src="../Scripts/ScriptsNotificacion.js" defer></script>
 </body>
 </html>

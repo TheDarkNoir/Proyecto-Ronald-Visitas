@@ -60,6 +60,47 @@ document.addEventListener('DOMContentLoaded', async () => {
 		});
 	});
 
+	async function changePassword() {
+		const currentPassword = document.getElementById('currentPasswordInput')?.value || '';
+		const newPassword = document.getElementById('newPasswordInput')?.value || '';
+		const confirmPassword = document.getElementById('confirmPasswordInput')?.value || '';
+
+		if (!currentPassword || !newPassword || !confirmPassword) {
+			alert('Completa todos los campos de contraseña.');
+			return;
+		}
+
+		if (newPassword.length < 8) {
+			alert('La nueva contraseña debe tener al menos 8 caracteres.');
+			return;
+		}
+
+		if (newPassword !== confirmPassword) {
+			alert('La confirmación de la contraseña no coincide.');
+			return;
+		}
+
+		try {
+			const resp = await fetch(`/perfil/${userId}/password`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ currentPassword, newPassword })
+			});
+
+			const result = await resp.json();
+			if (!resp.ok) {
+				throw new Error(result.error || 'No se pudo actualizar la contraseña.');
+			}
+
+			document.getElementById('currentPasswordInput').value = '';
+			document.getElementById('newPasswordInput').value = '';
+			document.getElementById('confirmPasswordInput').value = '';
+			alert('Contraseña actualizada correctamente.');
+		} catch (err) {
+			alert('Error al actualizar la contraseña: ' + err.message);
+		}
+	}
+
 	document.getElementById('savePersonalBtn').addEventListener('click', async () => {
 		const nombre = document.getElementById('nameInput').value.trim();
 		const telefono = document.getElementById('phoneInput').value.trim();
@@ -97,6 +138,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 	document.querySelectorAll('.btn-save:not(#savePersonalBtn)').forEach(btn => {
 		btn.addEventListener('click', () => alert('Cambios guardados correctamente'));
 	});
+
+	const changePasswordBtn = document.getElementById('changePasswordBtn');
+	if (changePasswordBtn) {
+		changePasswordBtn.addEventListener('click', changePassword);
+	}
+
+	const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+	if (deleteAccountBtn) {
+		deleteAccountBtn.addEventListener('click', () => {
+			const confirmed = confirm('¿Seguro que deseas eliminar tu cuenta? Esta acción programará la eliminación y no se puede deshacer desde esta pantalla.');
+			if (!confirmed) {
+				return;
+			}
+
+			alert('Tu cuenta quedó programada para eliminarse en 7 días. Si cambias de opinión, comunícate con soporte antes de que venza ese plazo.');
+		});
+	}
 
 	document.querySelector('.btn-edit-profile').addEventListener('click', () => {
 		document.getElementById('nameInput').focus();
