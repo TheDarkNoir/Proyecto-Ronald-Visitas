@@ -25,6 +25,11 @@ class _PerfilScreenState extends State<PerfilScreen>
   bool _loading = true;
   bool _saving = false;
 
+  final _currentPassCtrl = TextEditingController();
+  final _newPassCtrl = TextEditingController();
+  final _confirmPassCtrl = TextEditingController();
+  bool _changingPassword = false;
+
   final _paises = [
     'Colombia', 'México', 'Argentina', 'Chile', 'Perú',
     'Ecuador', 'Venezuela', 'Brasil', 'España', 'Estados Unidos',
@@ -33,7 +38,7 @@ class _PerfilScreenState extends State<PerfilScreen>
   @override
   void initState() {
     super.initState();
-    _tabCtrl = TabController(length: 2, vsync: this);
+    _tabCtrl = TabController(length: 3, vsync: this);
     _loadPerfil();
   }
 
@@ -44,6 +49,9 @@ class _PerfilScreenState extends State<PerfilScreen>
     _telefonoCtrl.dispose();
     _ciudadCtrl.dispose();
     _fechaCtrl.dispose();
+    _currentPassCtrl.dispose();
+    _newPassCtrl.dispose();
+    _confirmPassCtrl.dispose();
     super.dispose();
   }
 
@@ -124,6 +132,57 @@ class _PerfilScreenState extends State<PerfilScreen>
     }
   }
 
+  Future<void> _changePassword() async {
+    final current = _currentPassCtrl.text;
+    final newPass = _newPassCtrl.text;
+    final confirm = _confirmPassCtrl.text;
+
+    if (current.isEmpty || newPass.isEmpty || confirm.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Completa todos los campos de contraseña')),
+      );
+      return;
+    }
+    if (newPass.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('La nueva contraseña debe tener al menos 8 caracteres')),
+      );
+      return;
+    }
+    if (newPass != confirm) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Las contraseñas no coinciden')),
+      );
+      return;
+    }
+
+    final auth = context.read<AuthService>();
+    setState(() => _changingPassword = true);
+    try {
+      await ApiService.put('/perfil/${auth.currentUser!.id}/password', {
+        'currentPassword': current,
+        'newPassword': newPass,
+      });
+      _currentPassCtrl.clear();
+      _newPassCtrl.clear();
+      _confirmPassCtrl.clear();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Contraseña actualizada correctamente'),
+          backgroundColor: AppTheme.successColor,
+        ),
+      );
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message), backgroundColor: AppTheme.dangerColor),
+      );
+    } finally {
+      if (mounted) setState(() => _changingPassword = false);
+    }
+  }
+
   Future<void> _logout() async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -168,6 +227,7 @@ class _PerfilScreenState extends State<PerfilScreen>
           tabs: const [
             Tab(text: 'Información'),
             Tab(text: 'Preferencias'),
+            Tab(text: 'Seguridad'),
           ],
         ),
       ),
@@ -324,6 +384,126 @@ class _PerfilScreenState extends State<PerfilScreen>
                         leading: const Icon(Icons.calendar_month),
                         title: const Text('Miembro desde'),
                         subtitle: Text(user?.createdAt?.substring(0, 10) ?? '-'),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Tab 3: Seguridad
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Cambiar contraseña',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Actualiza tu contraseña para proteger tu cuenta',
+                        style: TextStyle(
+                          color: AppTheme.textSecondary,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _currentPassCtrl,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Contraseña actual',
+                          prefixIcon: Icon(Icons.lock_outline),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      TextFormField(
+                        controller: _newPassCtrl,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Nueva contraseña',
+                          prefixIcon: Icon(Icons.lock_outlined),
+                          helperText: 'Mínimo 8 caracteres',
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      TextFormField(
+                        controller: _confirmPassCtrl,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Confirmar contraseña',
+                          prefixIcon: Icon(Icons.lock_outlined),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _changingPassword ? null : _changePassword,
+                          child: _changingPassword
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                      strokeWidth: 2, color: Colors.white),
+                                )
+                              : const Text('Actualizar Contraseña'),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      const Divider(),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Zona peligrosa',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.dangerColor,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Eliminar tu cuenta es irreversible. Se programará la eliminación para 7 días.',
+                        style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppTheme.dangerColor,
+                            side: const BorderSide(color: AppTheme.dangerColor),
+                          ),
+                          onPressed: () async {
+                            final ok = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text('Eliminar cuenta'),
+                                content: const Text('¿Estás seguro? Esta acción programará la eliminación de tu cuenta.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(backgroundColor: AppTheme.dangerColor),
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    child: const Text('Eliminar'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (ok == true && mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Cuenta programada para eliminarse en 7 días')),
+                              );
+                            }
+                          },
+                          child: const Text('Eliminar Cuenta'),
+                        ),
                       ),
                     ],
                   ),

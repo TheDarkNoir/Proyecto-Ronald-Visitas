@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	function setInitials(name) {
 		const initials = (name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-		document.getElementById('userInitials').textContent = initials;
+		const ui = document.getElementById('userInitials');
+		if (ui) ui.textContent = initials;
 		document.getElementById('profileAvatar').textContent = initials;
 	}
 
@@ -156,16 +157,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 		});
 	}
 
-	document.querySelector('.btn-edit-profile').addEventListener('click', () => {
-		document.getElementById('nameInput').focus();
-	});
+	const editProfileBtn = document.querySelector('.btn-edit-profile');
+	if (editProfileBtn) {
+		editProfileBtn.addEventListener('click', () => {
+			document.getElementById('nameInput').focus();
+		});
+	}
 
-	document.getElementById('logoutBtn').addEventListener('click', () => {
-		if (confirm('Deseas cerrar sesion?')) {
-			localStorage.removeItem('loggedUser');
-			window.location.href = '../index.html';
-		}
-	});
+	const logoutBtn = document.getElementById('logoutBtn');
+	if (logoutBtn) {
+		logoutBtn.addEventListener('click', () => {
+			if (confirm('Deseas cerrar sesion?')) {
+				localStorage.removeItem('loggedUser');
+				window.location.href = '../index.html';
+			}
+		});
+	}
 
 	document.querySelectorAll('.tag').forEach(tag => {
 		tag.addEventListener('click', () => tag.classList.toggle('active'));

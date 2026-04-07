@@ -12,6 +12,10 @@
         "/^cd /workspaces/Proyecto-Ronald-Visitas/Movil/travel_tropic_flutter/lib && \\\\\nmv config configuracion && \\\\\nmv models modelos && \\\\\nmv services servicios && \\\\\nmv screens pantallas && \\\\\nmv widgets componentes && \\\\\nfind \\. -type d \\| sort$/": {
             "approve": true,
             "matchCommandLine": true
+        },
+        "/^ss -ltnp \\| grep -E ':5501\\|:5502' \\|\\| true$/": {
+            "approve": true,
+            "matchCommandLine": true
         }
     }
 }
