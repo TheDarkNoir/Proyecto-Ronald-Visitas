@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBody = document.getElementById('modalBody');
     const closeModal = document.getElementById('closeModal');
 
-    const API_URL = 'http://localhost:5501';
+    const API_URL = window.location.origin;
 
     const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
 
@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function normalizeStatus(status) {
         const s = String(status || '').toLowerCase();
 
-        if (['confirmado', 'confirmed'].includes(s)) return 'confirmado';
-        if (['cancelado', 'cancelled'].includes(s)) return 'cancelado';
+        if (['confirmado', 'confirmed'].includes(s)) return 'confirmed';
+        if (['cancelado', 'cancelled'].includes(s)) return 'cancelled';
 
-        return 'pendiente';
+        return 'pending';
     }
 
     function formatPrice(value) {
@@ -95,8 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'trip-card';
 
             const statusText =
-                trip.status === 'confirmado' ? 'Confirmado' :
-                trip.status === 'cancelado' ? 'Cancelado' :
+                trip.status === 'confirmed' ? 'Confirmado' :
+                trip.status === 'cancelled' ? 'Cancelado' :
                 'Pendiente';
 
             card.innerHTML = `
@@ -115,11 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="trip-footer">
                         <button class="btn-action view-btn">Ver</button>
 
-                        ${trip.status === 'pendiente'
+                        ${trip.status === 'pending'
                             ? '<button class="btn-action pay-btn">Pagar</button>'
                             : ''}
 
-                        ${trip.status !== 'cancelado'
+                        ${trip.status !== 'cancelled'
                             ? '<button class="btn-secondary cancel-btn">Cancelar</button>'
                             : ''}
                     </div>
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (payBtn) {
                 payBtn.addEventListener('click', () => {
                     if (confirm('¿Confirmar pago de esta reserva?')) {
-                        updateStatus(trip.id, 'confirmado');
+                        updateStatus(trip.id, 'confirmed');
                     }
                 });
             }
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cancelBtn) {
                 cancelBtn.addEventListener('click', () => {
                     if (confirm('¿Seguro que deseas cancelar esta reserva?')) {
-                        updateStatus(trip.id, 'cancelado');
+                        updateStatus(trip.id, 'cancelled');
                     }
                 });
             }

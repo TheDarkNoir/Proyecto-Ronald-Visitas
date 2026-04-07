@@ -28,6 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
         inventoryTableBody: document.getElementById('inventoryTableBody'),
         usersTableBody: document.getElementById('usersTableBody'),
         operationsTableBody: document.getElementById('operationsTableBody'),
+        inventorySearchInput: document.getElementById('inventorySearchInput'),
+        inventoryStatusFilter: document.getElementById('inventoryStatusFilter'),
+        usersSearchInput: document.getElementById('usersSearchInput'),
+        usersRoleFilter: document.getElementById('usersRoleFilter'),
+        operationsSearchInput: document.getElementById('operationsSearchInput'),
+        operationsStatusFilter: document.getElementById('operationsStatusFilter'),
         transactionsList: document.getElementById('transactionsList'),
         ratingDist: document.getElementById('ratingDist'),
         reviewsList: document.getElementById('reviewsList'),
@@ -51,8 +57,59 @@ document.addEventListener('DOMContentLoaded', () => {
         panel: null,
         salesChart: null,
         cashChart: null,
-        currentExperienceFilter: 'all'
+        currentExperienceFilter: 'all',
+        filters: {
+            inventoryQuery: '',
+            inventoryStatus: 'all',
+            usersQuery: '',
+            usersRole: 'all',
+            operationsQuery: '',
+            operationsStatus: 'all'
+        }
     };
+
+    function normalizeText(value) {
+        return String(value || '').trim().toLowerCase();
+    }
+
+    function getFilteredInventoryRows() {
+        const rows = state.panel?.inventory?.destinations || [];
+        const query = normalizeText(state.filters.inventoryQuery);
+        const status = state.filters.inventoryStatus;
+
+        return rows.filter((row) => {
+            const matchesStatus = status === 'all' || row.status === status;
+            const haystack = [row.name, row.location, row.category, row.city, row.country].map(normalizeText).join(' ');
+            const matchesQuery = !query || haystack.includes(query);
+            return matchesStatus && matchesQuery;
+        });
+    }
+
+    function getFilteredUserRows() {
+        const rows = state.panel?.users?.records || [];
+        const query = normalizeText(state.filters.usersQuery);
+        const role = state.filters.usersRole;
+
+        return rows.filter((row) => {
+            const matchesRole = role === 'all' || row.role === role;
+            const haystack = [row.name, row.email, row.city, row.country, row.status].map(normalizeText).join(' ');
+            const matchesQuery = !query || haystack.includes(query);
+            return matchesRole && matchesQuery;
+        });
+    }
+
+    function getFilteredOperationRows() {
+        const rows = state.panel?.operations?.reservations || [];
+        const query = normalizeText(state.filters.operationsQuery);
+        const status = state.filters.operationsStatus;
+
+        return rows.filter((row) => {
+            const matchesStatus = status === 'all' || row.status === status;
+            const haystack = [row.id, row.customer, row.customerEmail, row.destination, row.date].map(normalizeText).join(' ');
+            const matchesQuery = !query || haystack.includes(query);
+            return matchesStatus && matchesQuery;
+        });
+    }
 
     function getApiBaseCandidates() {
         const candidates = [];
@@ -245,6 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderInventory() {
         if (!state.panel || !elements.inventoryTableBody) return;
         const inventory = state.panel.inventory;
+        const rows = getFilteredInventoryRows();
         setText('inventoryActiveCount', String(inventory.metrics.active || 0));
         setText('inventoryDraftCount', String(inventory.metrics.drafts || 0));
         setText('inventoryFullCount', String(inventory.metrics.full || 0));
@@ -254,7 +312,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        elements.inventoryTableBody.innerHTML = inventory.destinations.map((row) => `
+        if (!rows.length) {
+            elements.inventoryTableBody.innerHTML = renderEmptyPanel('Sin coincidencias', 'No encontramos destinos con ese criterio de búsqueda o filtro.');
+            return;
+        }
+
+        elements.inventoryTableBody.innerHTML = rows.map((row) => `
             <div class="table-row">
                 <div class="col destino usuario">
                     <img class="thumb" src="${escapeHtml(row.image)}" alt="${escapeHtml(row.name)}">
@@ -278,6 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderUsers() {
         if (!state.panel || !elements.usersTableBody) return;
         const users = state.panel.users;
+        const rows = getFilteredUserRows();
         setText('usersTotalCount', String(users.metrics.total || 0));
         setText('usersClientsCount', String(users.metrics.clients || 0));
         setText('usersAdminsCount', String(users.metrics.admins || 0));
@@ -288,7 +352,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        elements.usersTableBody.innerHTML = users.records.map((row) => `
+        if (!rows.length) {
+            elements.usersTableBody.innerHTML = renderEmptyPanel('Sin coincidencias', 'No encontramos usuarios con ese criterio de búsqueda o filtro.');
+            return;
+        }
+
+        elements.usersTableBody.innerHTML = rows.map((row) => `
             <div class="table-row">
                 <div class="col usuario">
                     <span class="user-avatar">${escapeHtml(row.initials)}</span>
@@ -313,6 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderOperations() {
         if (!state.panel || !elements.operationsTableBody) return;
         const operations = state.panel.operations;
+        const rows = getFilteredOperationRows();
         setText('operationsConfirmedCount', String(operations.metrics.confirmed || 0));
         setText('operationsPendingCount', String(operations.metrics.pending || 0));
         setText('operationsCancelledCount', String(operations.metrics.cancelled || 0));
@@ -323,7 +393,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        elements.operationsTableBody.innerHTML = operations.reservations.map((row) => `
+        if (!rows.length) {
+            elements.operationsTableBody.innerHTML = renderEmptyPanel('Sin coincidencias', 'No encontramos reservas con ese criterio de búsqueda o filtro.');
+            return;
+        }
+
+        elements.operationsTableBody.innerHTML = rows.map((row) => `
             <div class="table-row">
                 <div class="col id">${escapeHtml(row.id.slice(0, 8))}</div>
                 <div class="col cliente">
@@ -468,8 +543,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setText('adminSidebarName', admin.nombre || loggedUser.username || 'Administrador');
         setText('adminSidebarRole', String(admin.rol || 'admin').toUpperCase());
         setText('adminSidebarAvatar', (admin.nombre || admin.email || 'AD').slice(0, 2).toUpperCase());
-        setText('adminHeaderTitle', `Panel de Control ${admin.pais || 'Regional'}`);
-        setText('adminHeaderSubtitle', `Operación conectada a Tropical Travel ${admin.pais || 'Colombia'}.`);
+        setText('adminHeaderTitle', `Panel de Control ${admin.pais || 'General'}`);
+        setText('adminHeaderSubtitle', `Estado general de reservas, usuarios y destinos en ${admin.pais || 'Colombia'}.`);
         setText('adminHubLabel', `${admin.ciudad || 'Hub'} · ${admin.pais || 'Colombia'}`);
 
         const adminName = document.getElementById('adminName');
@@ -648,8 +723,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const keys = Object.keys(grouped).sort();
 
         openModal(`
-            <h3>Calendario Operativo</h3>
-            <div class="calendar-grid">
+            <div class="modal-headline">
+                <h3>Calendario Operativo</h3>
+                <p>Reservas agrupadas por fecha para revisar la carga de trabajo.</p>
+            </div>
+            <div class="calendar-grid admin-calendar-grid">
                 ${keys.length ? keys.map((key) => `
                     <div class="calendar-cell">
                         <span class="date-badge">${escapeHtml(formatDate(key))}</span>
@@ -664,11 +742,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function openReportModal() {
         const finance = state.panel?.finance?.metrics || {};
         openModal(`
-            <h3>Reporte Financiero</h3>
-            <p><strong>Ingresos:</strong> ${formatCurrency(finance.income)}</p>
-            <p><strong>Gastos:</strong> ${formatCurrency(finance.expenses)}</p>
-            <p><strong>Beneficio:</strong> ${formatCurrency(finance.benefit)}</p>
-            <p><strong>Reportes generados:</strong> ${finance.reports || 0}</p>
+            <div class="modal-headline">
+                <h3>Reporte Financiero</h3>
+                <p>Resumen rápido del rendimiento económico actual.</p>
+            </div>
+            <div class="report-summary-grid">
+                <article class="report-summary-card">
+                    <span class="report-label">Ingresos</span>
+                    <strong>${formatCurrency(finance.income)}</strong>
+                </article>
+                <article class="report-summary-card">
+                    <span class="report-label">Gastos</span>
+                    <strong>${formatCurrency(finance.expenses)}</strong>
+                </article>
+                <article class="report-summary-card">
+                    <span class="report-label">Beneficio</span>
+                    <strong>${formatCurrency(finance.benefit)}</strong>
+                </article>
+                <article class="report-summary-card">
+                    <span class="report-label">Reportes generados</span>
+                    <strong>${finance.reports || 0}</strong>
+                </article>
+            </div>
             <div class="actions"><button type="button" class="btn btn-cancel" data-close-modal>Cerrar</button></div>
         `);
     }
@@ -727,11 +822,38 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.newUserBtn?.addEventListener('click', () => openUserModal());
         elements.viewCalendarBtn?.addEventListener('click', openCalendarModal);
         elements.genReportBtn?.addEventListener('click', openReportModal);
-        elements.analyzeBtn?.addEventListener('click', renderExperienceItems);
         elements.filterDest?.addEventListener('change', (event) => {
             state.currentExperienceFilter = event.target.value;
             renderExperienceItems();
         });
+
+        elements.inventorySearchInput?.addEventListener('input', (event) => {
+            state.filters.inventoryQuery = event.target.value;
+            renderInventory();
+        });
+        elements.inventoryStatusFilter?.addEventListener('change', (event) => {
+            state.filters.inventoryStatus = event.target.value;
+            renderInventory();
+        });
+
+        elements.usersSearchInput?.addEventListener('input', (event) => {
+            state.filters.usersQuery = event.target.value;
+            renderUsers();
+        });
+        elements.usersRoleFilter?.addEventListener('change', (event) => {
+            state.filters.usersRole = event.target.value;
+            renderUsers();
+        });
+
+        elements.operationsSearchInput?.addEventListener('input', (event) => {
+            state.filters.operationsQuery = event.target.value;
+            renderOperations();
+        });
+        elements.operationsStatusFilter?.addEventListener('change', (event) => {
+            state.filters.operationsStatus = event.target.value;
+            renderOperations();
+        });
+
         elements.saveSettingsBtn?.addEventListener('click', () => {
             saveAdminSettings().catch((error) => showToast(error.message, 'warn'));
         });

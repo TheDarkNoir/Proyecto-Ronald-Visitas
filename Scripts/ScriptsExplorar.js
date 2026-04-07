@@ -32,23 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		return '$' + normalizePrice(value).toLocaleString('es-CO') + ' COP';
 	}
 
-	function getTripsKey() {
-		const userId = loggedUser.userId || loggedUser.id;
-		return `userTrips_${userId || loggedUser.email}`;
-	}
-
-	function getStoredTrips() {
-		const stored = localStorage.getItem(getTripsKey());
-		if (!stored) return [];
-		try {
-			return JSON.parse(stored);
-		} catch {
-			return [];
-		}
-	}
-
-	function saveStoredTrips(list) {
-		localStorage.setItem(getTripsKey(), JSON.stringify(list));
+	function getUserId() {
+		return loggedUser.userId || loggedUser.id || '';
 	}
 
 	function ensureModal() {
@@ -79,34 +64,22 @@ document.addEventListener('DOMContentLoaded', () => {
 		destinationModal.setAttribute('aria-hidden', 'true');
 	}
 
-	function addToMyTrips(destination) {
-		const currentTrips = getStoredTrips();
-		const alreadyExists = currentTrips.some((trip) => trip.sourceDestinationId === destination.id && trip.status === 'pending');
+	async function addToMyTrips(destination) {
+		const response = await fetch('/reservas', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				userId: getUserId(),
+				destinationId: destination.id
+			})
+		});
 
-		if (alreadyExists) {
-			alert('Este destino ya esta en Mis Viajes como pendiente.');
-			return;
+		const result = await response.json();
+		if (!response.ok) {
+			throw new Error(result.error || 'No se pudo agregar el destino.');
 		}
 
-		const departureDate = new Date();
-		departureDate.setDate(departureDate.getDate() + 7);
-
-		const pendingTrip = {
-			id: `RES-${Date.now()}`,
-			sourceDestinationId: destination.id,
-			title: destination.title,
-			location: destination.location,
-			date: departureDate.toISOString().slice(0, 10),
-			status: 'pending',
-			price: normalizePrice(destination.price),
-			image: destination.image,
-			rating: destination.rating || 4.5,
-			description: destination.description || 'Sin descripcion disponible.'
-		};
-
-		currentTrips.unshift(pendingTrip);
-		saveStoredTrips(currentTrips);
-		alert('Destino agregado a Mis Viajes en estado pendiente.');
+		alert('Destino agregado a Mis Viajes.');
 	}
 
 	function openDestinationDetails(destination) {
@@ -130,9 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		destinationModal.setAttribute('aria-hidden', 'false');
 		document.getElementById('exploreCloseBtn').addEventListener('click', closeModal);
-		document.getElementById('exploreAddTripBtn').addEventListener('click', () => {
-			addToMyTrips(destination);
-			closeModal();
+		document.getElementById('exploreAddTripBtn').addEventListener('click', async () => {
+			try {
+				await addToMyTrips(destination);
+				closeModal();
+			} catch (error) {
+				alert(error.message || 'No se pudo agregar el destino.');
+			}
 		});
 	}
 
