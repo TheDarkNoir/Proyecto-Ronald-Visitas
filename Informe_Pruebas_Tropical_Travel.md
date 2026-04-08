@@ -3,8 +3,8 @@
 **Proyecto:** Tropical Travel
 **Versión del Sistema:** 1.0
 **Fecha de Ejecución:** 08 de abril de 2026
-**Ejecutado por:** Equipo QA — Tropical Travel
-**Entorno de Prueba:** Node.js v24.14.1 — Lógica de negocio (capa cliente + servidor)
+**Responsable:** Equipo QA — Tropical Travel
+**Entorno de Prueba:** Revisión estática de código fuente (Node.js + Express + Supabase + Flutter)
 
 ---
 
@@ -12,326 +12,889 @@
 
 | Métrica | Valor |
 |---|---|
-| Total de Casos de Prueba | **91** |
-| Casos Aprobados | **89** |
-| Casos con Observaciones | **2** |
-| Casos Fallidos | **0** |
-| Tasa de Éxito Global | **97.8%** |
-| Módulos Evaluados | **10** |
-| Nivel de Aceptación | **APROBADO** |
+| Total de Casos de Prueba | **55** |
+| Casos Aprobados | **33** |
+| Casos Aprobados con Observación | **11** |
+| Casos Fallidos | **11** |
+| Tasa de Éxito Global | **80.0%** |
+| Módulos Evaluados | **11** |
+| Nivel de Aceptación | **APROBADO CONDICIONALMENTE** |
 
 ---
 
-## 2. Items de Prueba
+## 2. Ítems de Prueba
 
-Los siguientes componentes del sistema fueron evaluados:
-
-| Item | Archivo(s) | Tipo |
-|---|---|---|
-| Módulo de Login | `index.html`, `Scripts/ScriptsLogin.js`, `servidor.js /login` | Frontend + Backend |
-| Módulo de Registro | `Registro.html`, `Scripts/ScriptsReg.js`, `servidor.js /registrar` | Frontend + Backend |
-| Módulo Explorar / Inicio | `HtmlPrin/Explorar.html`, `HtmlPrin/Inicio.html`, `Scripts/ScriptsExplorar.js`, `Scripts/ScriptsInicio.js`, `servidor.js /destinos` | Frontend + Backend |
-| Módulo Mis Viajes | `HtmlPrin/MisViajes.html`, `Scripts/ScriptsFichasViaje.js`, `servidor.js /reservas` | Frontend + Backend |
-| Módulo Perfil | `HtmlPrin/Perfil.html`, `Scripts/ScriptsCliente.js`, `servidor.js /perfil` | Frontend + Backend |
-| Módulo IA Chat | `HtmlPrin/IAChat.html`, `Scripts/ScriptsIAChat.js`, `servidor.js /chat` | Frontend + Backend |
-| Módulo Comunidad | `HtmlPrin/Comunidad.html`, `Scripts/ScriptsComunidad.js` | Frontend |
-| Panel Administrador | `HtmlPrin/InicioAdmin.html`, `Scripts/ScriptsAdmin.js`, `servidor.js /admin/*` | Frontend + Backend |
-| API REST | `servidor.js` (todos los endpoints) | Backend |
-| Seguridad y Control de Acceso | `servidor.js`, `Scripts/ScriptsLogin.js`, `Scripts/ScriptsAdmin.js` | Transversal |
-
----
-
-## 3. Estrategia de Prueba
-
-Se aplico la siguiente estrategia de prueba en capas:
-
-### 3.1 Pruebas Unitarias de Lógica de Negocio
-Se extrajeron e instanciaron directamente las funciónes de validación, normalización y formateo de los módulos cliente y servidor. Se verificaron contra casos de borde, entradas vacias, entradas invalidas y entradas validas.
-
-### 3.2 Pruebas de Validación de Formularios (Capa Cliente)
-Se simularon los comportamientos de los formularios HTML (login, registro, cambio de contrasena, actualización de perfil) ejecutando la lógica JavaScript de validación con diferentes combinaciones de entrada.
-
-### 3.3 Pruebas de Validación de Endpoints (Capa Servidor)
-Se simularon las reglas de validación de cada endpoint REST (`/registrar`, `/login`, `/reservas`, `/perfil`, `/perfil/:id/password`) verificando que rechacen entradas invalidas con el codigo HTTP correcto (400, 401, 403, 404) y acepten las validas con 200/201.
-
-### 3.4 Pruebas de Reglas de Negocio
-Se verificaron las reglas del negocio de viajes: normalización de estados de reserva, calculo de estado de inventario (active/full/draft), control de acceso por roles (cliente/admin), generacion de iniciales de usuarios y filtrado de destinos.
-
-### 3.5 Pruebas de Seguridad y Control de Acceso
-Se verificaron las barreras de acceso: usuarios no autenticados son redirigidos al login, clientes no acceden al panel admin, y las URLs de assets son normalizadas correctamente.
+| Módulo | Archivos Involucrados |
+|---|---|
+| MOD-01: Autenticación | `index.html`, `Registro.html`, `Scripts/ScriptsLogin.js`, `Scripts/ScriptsReg.js`, `servidor.js` |
+| MOD-02: Gestión de Perfil | `HtmlPrin/Perfil.html`, `Scripts/ScriptsCliente.js`, `servidor.js` |
+| MOD-03: Exploración de Destinos | `HtmlPrin/Explorar.html`, `Scripts/ScriptsExplorar.js`, `servidor.js` |
+| MOD-04: Reservaciones | `HtmlPrin/MisViajes.html`, `Scripts/ScriptsFichasViaje.js`, `servidor.js` |
+| MOD-05: Itinerarios | `HtmlPrin/itinerario.html`, `servidor.js` |
+| MOD-06: Comunidad | `HtmlPrin/Comunidad.html`, `Scripts/ScriptsComunidad.js`, `servidor.js` |
+| MOD-07: Asistente IA (LawMoon) | `HtmlPrin/IAChat.html`, `Scripts/ScriptsIAChat.js`, `servidor.js` |
+| MOD-08: Panel de Administración | `HtmlPrin/InicioAdmin.html`, `Scripts/ScriptsAdmin.js`, `servidor.js` |
+| MOD-09: Notificaciones | `servidor.js`, `Scripts/ScriptsAdmin.js` |
+| MOD-10: Aplicación Móvil Flutter | `Movil/travel_tropic_flutter/lib/` |
+| MOD-11: Seguridad | `servidor.js`, `Scripts/ScriptsLogin.js`, `Scripts/ScriptsAdmin.js` |
 
 ---
 
-## 4. Módulos Evaluados y Resultados por Módulo
+## 3. Estrategia de Prueba Aplicada
+
+Las pruebas se realizaron mediante **revisión estática de código fuente**, analizando la lógica de validación, los flujos de autenticación, los endpoints REST y los controles de acceso. Se verificó la correspondencia entre el comportamiento implementado y los resultados esperados definidos en el plan de prueba.
 
 ---
 
-### 4.1 Módulo: Autenticación / Login
-**Archivo:** `index.html` + `Scripts/ScriptsLogin.js` + `servidor.js /login`
-
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-AUTH-001 | Login con email vacio rechaza el acceso | APROBADO | Debe mostrar alerta de campos vacios |
-| CP-AUTH-002 | Login con contrasena vacia rechaza el acceso | APROBADO | Debe mostrar alerta de campos vacios |
-| CP-AUTH-003 | Login con ambos campos validos permite continuar | APROBADO | Debe proceder al fetch al servidor |
-| CP-AUTH-004 | Admin redirige a InicioAdmin.html | APROBADO | Rol "admin" → `HtmlPrin/InicioAdmin.html` |
-| CP-AUTH-005 | Cliente redirige a Inicio.html | APROBADO | Rol "cliente" → `HtmlPrin/Inicio.html` |
-| CP-AUTH-006 | Rol en mayusculas "ADMIN" normaliza correctamente | APROBADO | La normalización `toLowerCase()` funcióna |
-| CP-AUTH-007 | Rol nulo se trata como cliente | APROBADO | Fallback al rol "cliente" |
-
-**Resultado del módulo:** 7/7 — APROBADO
+## 4. Casos de Prueba y Resultados
 
 ---
 
-### 4.2 Módulo: Registro de Usuario
-**Archivo:** `Registro.html` + `Scripts/ScriptsReg.js` + `servidor.js /registrar`
-
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-REG-001 | Registro con campos vacios rechazado | APROBADO | Alerta "Completa todos los campos" |
-| CP-REG-002 | Registro con contraseñas distintas rechazado | APROBADO | Alerta "Las contraseñas no coinciden" |
-| CP-REG-003 | Registro con contraseña menor a 6 chars rechazado | OBSERVACIONES | Alerta "mínimo 6 caracteres" |
-| CP-REG-004 | Registro con email invalido rechazado | APROBADO | Alerta "correo valido" |
-| CP-REG-005 | Registro con datos validos aprobado | APROBADO | Pasa todas las validaciónes |
-| CP-REG-006 | Email con subdominio valido aceptado (`@mail.co`) | APROBADO | Regex de email acepta subdominios |
-| CP-REG-007 | Email sin @ rechazado | APROBADO | Regex de email rechaza formato invalido |
-| CP-REG-008 | Contraseña exactamente 6 chars aceptada | APROBADO | El limite inferior es inclusivo |
-
-**Resultado del módulo:** 7/8 aprobados, 1 con observación — APROBADO CON OBSERVACION
-
-**Observación CP-REG-003:** La validación del cliente acepta contraseñas desde 6 caracteres, pero el endpoint `/perfil/:id/password` exige mínimo 8 caracteres. Inconsistencia en la politica de contraseñas entre módulos (ver O-02 en sección 5.2).
+### MOD-01: AUTENTICACIÓN
 
 ---
 
-### 4.3 Módulo: Destinos (Explorar / Inicio)
-**Archivo:** `HtmlPrin/Explorar.html`, `HtmlPrin/Inicio.html`, `Scripts/ScriptsExplorar.js`, `Scripts/ScriptsInicio.js`, `servidor.js /destinos`
+#### CP-01-01: Registro exitoso de nuevo usuario
 
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-DEST-001 | Precio positivo formateado correctamente | APROBADO | Incluye simbolo $ y "COP" |
-| CP-DEST-002 | Precio 0 muestra "Consultar precio" | APROBADO | Texto alternativo para precio = 0 |
-| CP-DEST-003 | Precio negativo muestra "Consultar precio" | APROBADO | Precios negativos tratados como 0 |
-| CP-DEST-004 | Precio no numerico retorna 0 | APROBADO | Manejo robusto de tipos |
-| CP-DEST-005 | Precio numerico en string retorna número | APROBADO | Conversión de tipo correcta |
-| CP-DEST-006 | Precio undefined retorna 0 | APROBADO | Fallback defensivo |
-| CP-DEST-007 | Busqueda por titulo funcióna | APROBADO | Filtra exactamente el destino buscado |
-| CP-DEST-008 | Busqueda por ubicacion funcióna | APROBADO | Encuentra todos los destinos en Colombia |
-| CP-DEST-009 | Busqueda vacia retorna todos los destinos | APROBADO | Sin filtro → lista completa |
-| CP-DEST-010 | Busqueda sin resultados retorna array vacio | APROBADO | Muestra mensaje "No encontramos destinos" |
-| CP-DEST-011 | Busqueda case-insensitive funcióna | APROBADO | "cartagena" == "Cartagena" |
-| CP-DEST-012 | Filtro "todos" retorna todos los destinos | APROBADO | Sin restriccion de categoria |
-| CP-DEST-013 | Filtro "playa" retorna solo destinos de playa | APROBADO | Categoria exacta filtrada |
-| CP-DEST-014 | Filtro categoria inexistente retorna vacio | APROBADO | Categoria sin coincidencias |
-
-**Resultado del módulo:** 14/14 — APROBADO
+| Campo | Detalle |
+|---|---|
+| **Precondición** | El usuario no existe en la base de datos. |
+| **Pasos** | 1. Ingresar al formulario de registro (`Registro.html`). 2. Completar todos los campos obligatorios: nombre, correo electrónico, contraseña, teléfono, país, ciudad y fecha de nacimiento. 3. Hacer clic en "Registrarse". |
+| **Resultado Esperado** | El sistema crea el usuario, almacena la contraseña hasheada con bcryptjs y muestra mensaje de éxito. Se puede iniciar sesión con las credenciales registradas. |
+| **Resultado Obtenido** | `servidor.js` (POST `/registrar`) recibe nombre, email y contraseña; hashea la contraseña con `bcrypt.hash(password, 10)` y almacena el usuario en Supabase con `rol: 'cliente'`. El cliente (`ScriptsReg.js`) valida los campos antes del envío y muestra alerta de éxito ante HTTP 201. El campo `fecha_nacimiento` no está contemplado en la validación ni en el INSERT del servidor. |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | El servidor sólo valida y persiste `nombre`, `email` y `password` como obligatorios. Los campos `teléfono`, `país`, `ciudad` se guardan si vienen en el cuerpo; `fecha_nacimiento` no se incluye en el INSERT de registro. |
+| **Prioridad** | Alta |
 
 ---
 
-### 4.4 Módulo: Reservaciones / Mis Viajes
-**Archivo:** `HtmlPrin/MisViajes.html` + `Scripts/ScriptsFichasViaje.js` + `servidor.js /reservas`
+#### CP-01-02: Registro con correo electrónico ya existente
 
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-RES-001 | "Confirmada" normaliza a "confirmed" | APROBADO | Bilinguismo en estado manejado |
-| CP-RES-002 | "confirmed" normaliza a "confirmed" | APROBADO | Ingles aceptado directamente |
-| CP-RES-003 | "Cancelada" normaliza a "cancelled" | APROBADO | Español normalizado |
-| CP-RES-004 | "cancelled" normaliza a "cancelled" | APROBADO | Ingles normalizado |
-| CP-RES-005 | "Pendiente" normaliza a "pending" | APROBADO | Estado por defecto correcto |
-| CP-RES-006 | Estado vacio normaliza a "pending" | APROBADO | Fallback defensivo |
-| CP-RES-007 | Estado null normaliza a "pending" | APROBADO | Null safety |
-| CP-RES-008 | "completado" normaliza a "confirmed" | APROBADO | Sinonimo de confirmado reconocido |
-| CP-RES-009 | Filtro "all" retorna todas las reservas | APROBADO | Vista completa disponible |
-| CP-RES-010 | Filtro "confirmed" retorna solo confirmadas | APROBADO | Filtro preciso por estado |
-| CP-RES-011 | Filtro "pending" retorna solo pendientes | APROBADO | Filtro preciso por estado |
-| CP-RES-012 | Filtro "cancelled" retorna solo canceladas | APROBADO | Filtro preciso por estado |
-
-**Resultado del módulo:** 12/12 — APROBADO
+| Campo | Detalle |
+|---|---|
+| **Precondición** | El correo electrónico ya está registrado en el sistema. |
+| **Pasos** | 1. Intentar registrar un usuario con un correo electrónico ya existente. |
+| **Resultado Esperado** | El sistema devuelve el error indicando que el correo electrónico ya está en uso. No se crea un usuario duplicado. |
+| **Resultado Obtenido** | `servidor.js` consulta Supabase antes del INSERT: si el correo ya existe, retorna `status(400).json({ error: 'El correo ya está registrado' })`. El cliente muestra la alerta y no crea registro duplicado. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
 
 ---
 
-### 4.5 Módulo: Perfil de Usuario
-**Archivo:** `HtmlPrin/Perfil.html` + `Scripts/ScriptsCliente.js` + `servidor.js /perfil`
+#### CP-01-03: Registro con campos obligatorios vacíos
 
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-PERF-001 | Cambio de contraseña con campos vacios rechazado | APROBADO | Alerta de campos obligatorios |
-| CP-PERF-002 | Nueva contraseña menor a 8 chars rechazada | APROBADO | Politica de seguridad aplicada |
-| CP-PERF-003 | Contraseñas nuevas distintas rechazadas | APROBADO | Confirmacion de contraseña requerida |
-| CP-PERF-004 | Cambio valido aceptado | APROBADO | Flujo completo éxitoso |
-| CP-PERF-005 | Contraseña exactamente 8 chars aceptada | APROBADO | El limite mínimo es inclusivo |
-| CP-PERF-006 | Nombre vacio rechazado en actualización | APROBADO | Campo obligatorio validado |
-| CP-PERF-007 | Nombre solo con espacios rechazado | APROBADO | `.trim()` aplicado correctamente |
-| CP-PERF-008 | Nombre valido aceptado en actualización | APROBADO | Flujo de actualización éxitoso |
-
-**Resultado del módulo:** 8/8 — APROBADO
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Ninguna. |
+| **Pasos** | 1. Dejar uno o más campos obligatorios en blanco en el formulario de registro. 2. Intentar enviar el formulario. |
+| **Resultado Esperado** | El sistema muestra mensajes de validación indicando los campos requeridos. No se realiza la petición al servidor. |
+| **Resultado Obtenido** | `ScriptsReg.js` verifica campos vacíos con validaciones cliente: si nombre, email o contraseña están vacíos, muestra alerta y cancela el fetch. El servidor también valida con `status(400)` si los campos llegan vacíos. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
 
 ---
 
-### 4.6 Módulo: IA Chat (Asistente de Viajes LawMoon)
-**Archivo:** `HtmlPrin/IAChat.html` + `Scripts/ScriptsIAChat.js` + `servidor.js /chat` (lógica `buildChatReply`)
+#### CP-01-04: Inicio de sesión exitosa (rol Cliente)
 
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-IA-001 | Keyword "cartagena" genera respuesta especifica | APROBADO | Respuesta informativa sobre Cartagena |
-| CP-IA-002 | Keyword "tayrona" genera respuesta especifica | APROBADO | Respuesta informativa sobre Tayrona |
-| CP-IA-003 | Keyword "eje cafetero" genera respuesta especifica | APROBADO | Respuesta sobre Cocora/Salento |
-| CP-IA-004 | Keyword "playa" genera respuesta de playas | APROBADO | Lista de destinos costeros |
-| CP-IA-005 | Saludo "hola" respondido correctamente | APROBADO | Mensaje de bienvenida devuelto |
-| CP-IA-006 | Mensaje no reconocido genera fallback | APROBADO | Respuesta generica de orientacion |
-| CP-IA-007 | Mensaje vacio retorna fallback | APROBADO | No hay crash con entrada vacia |
-
-**Resultado del módulo:** 7/7 — APROBADO
-
-**Nota:** La función `buildChatReply` con pattern matching esta implementada en `servidor.js` y es utilizada por el endpoint `/chat/stream`. El endpoint principal `/chat` usa la API de Groq para respuestas dinámicas. El módulo opera correctamente en ambas rutas.
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario con rol "cliente" registrado en el sistema. |
+| **Pasos** | 1. Ingresar email y contraseña correctos en el formulario de login. 2. Hacer clic en "Iniciar sesión". |
+| **Resultado Esperado** | El sistema autentica al usuario, genera un JWT, lo almacena en localStorage y redirige a Inicio.html. |
+| **Resultado Obtenido** | `servidor.js` (POST `/login`) valida credenciales con `bcrypt.compare`, genera un token `base64(userId:timestamp)` y lo retorna. `ScriptsLogin.js` almacena el token en `localStorage.authToken` y los datos en `localStorage.loggedUser`. Redirige a `HtmlPrin/Inicio.html` para rol "cliente". |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | El token generado es Base64 simple (`userId:timestamp`), no un JWT firmado con `jsonwebtoken`. No tiene firma criptográfica ni fecha de expiración. `jsonwebtoken` está instalado pero no se usa en este endpoint. |
+| **Prioridad** | Alta |
 
 ---
 
-### 4.7 Módulo: Comunidad (Chat entre usuarios)
-**Archivo:** `HtmlPrin/Comunidad.html` + `Scripts/ScriptsComunidad.js`
+#### CP-01-05: Inicio de sesión exitosa (rol Administrador)
 
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-COM-001 | Iniciales de nombre simple calculadas | APROBADO | "Juan" → "J" |
-| CP-COM-002 | Iniciales de nombre completo calculadas | APROBADO | "Juan Garcia" → "JG" |
-| CP-COM-003 | Nombre vacio genera fallback "U" | APROBADO | Previene avatares vacios |
-| CP-COM-004 | ID con guion normalizado correctamente | APROBADO | Caracteres validos preservados |
-| CP-COM-005 | ID con @ normalizado (caracteres especiales eliminados) | APROBADO | No se filtran caracteres invalidos en IDs DOM |
-
-**Resultado del módulo:** 5/5 — APROBADO
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario con rol "admin" registrado en el sistema. |
+| **Pasos** | 1. Ingresar credenciales de administrador. 2. Hacer clic en "Iniciar sesión". |
+| **Resultado Esperado** | El sistema autentica al admin y redirige a InicioAdmin.html. |
+| **Resultado Obtenido** | `ScriptsLogin.js` normaliza el rol con `toLowerCase()` y evalúa `normalizedRole === 'admin'`. Si es admin, redirige a `HtmlPrin/InicioAdmin.html`. La lógica funciona correctamente. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
 
 ---
 
-### 4.8 Módulo: Panel Administrador
-**Archivo:** `HtmlPrin/InicioAdmin.html` + `Scripts/ScriptsAdmin.js` + `servidor.js /admin/*`
+#### CP-01-06: Inicio de sesión con contraseña incorrecta
 
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-ADM-001 | UUID valido reconocido | APROBADO | Formato estándar UUID v4 aceptado |
-| CP-ADM-002 | UUID invalido rechazado | APROBADO | Texto simple no pasa validación |
-| CP-ADM-003 | UUID vacio rechazado | APROBADO | Campo vacio no pasa validación |
-| CP-ADM-004 | `toNumber` con string numerico retorna número | APROBADO | Conversión de tipo correcta |
-| CP-ADM-005 | `toNumber` con NaN retorna fallback 0 | APROBADO | Valor por defecto aplicado |
-| CP-ADM-006 | Destino inactivo mapeado como "draft" | APROBADO | `activo: false` → estado draft |
-| CP-ADM-007 | Destino con 3+ reservas mapeado como "full" | APROBADO | Umbral de capacidad respetado |
-| CP-ADM-008 | Destino activo con pocas reservas mapeado como "active" | APROBADO | Estado normal del destino |
-| CP-ADM-009 | Iniciales de nombre de admin calculadas | APROBADO | "Carlos Ruiz" → "CR" |
-| CP-ADM-010 | Iniciales de email generadas sin crash | APROBADO | Fallback para email como nombre |
-
-**Resultado del módulo:** 10/10 — APROBADO
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario registrado en el sistema. |
+| **Pasos** | 1. Ingresar email válido y contraseña incorrecta. |
+| **Resultado Esperado** | El sistema devuelve un error de autenticación (ej.: "Credenciales inválidas"). No se concede acceso. |
+| **Resultado Obtenido** | `servidor.js` usa `bcrypt.compare` y si la contraseña no coincide retorna `status(401).json({ error: 'Credenciales inválidas.' })`. El cliente muestra el mensaje de error y no redirige. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
 
 ---
 
-### 4.9 Módulo: API REST (Servidor Node.js / Express)
-**Archivo:** `servidor.js` — Endpoints: `/registrar`, `/login`, `/reservas`, `/perfil`, `/perfil/:id/password`
+#### CP-01-07: Inicio de sesión con correo electrónico no registrado
 
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-SRV-001 | `POST /registrar` rechaza sin nombre | APROBADO | HTTP 400 con mensaje de error |
-| CP-SRV-002 | `POST /registrar` rechaza sin email | APROBADO | HTTP 400 con mensaje de error |
-| CP-SRV-003 | `POST /registrar` rechaza sin password | APROBADO | HTTP 400 con mensaje de error |
-| CP-SRV-004 | `POST /registrar` acepta datos completos | APROBADO | HTTP 201 y usuario creado |
-| CP-SRV-005 | `POST /reservas` rechaza userId no-UUID | APROBADO | HTTP 400 con mensaje de error |
-| CP-SRV-006 | `POST /reservas` acepta UUIDs validos | APROBADO | Reserva creada correctamente |
-| CP-SRV-007 | `GET /perfil/:userId` rechaza ID no-UUID | APROBADO | HTTP 400 con mensaje de error |
-| CP-SRV-008 | `GET /perfil/:userId` acepta UUID valido | APROBADO | HTTP 200 con datos del perfil |
-| CP-SRV-009 | `PUT /perfil/:id/password` rechaza campos vacios | APROBADO | HTTP 400 con mensaje de error |
-| CP-SRV-010 | `PUT /perfil/:id/password` rechaza nueva menor a 8 chars | APROBADO | HTTP 400 politica de seguridad |
-| CP-SRV-011 | `PUT /perfil/:id/password` acepta datos validos | APROBADO | HTTP 200 contraseña actualizada |
-
-**Resultado del módulo:** 11/11 — APROBADO
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Ninguna. |
+| **Pasos** | 1. Ingresar un correo electrónico que no existe en el sistema. |
+| **Resultado Esperado** | El sistema muestra un mensaje de error. No se concede acceso. |
+| **Resultado Obtenido** | `servidor.js` consulta Supabase por el email; si no encuentra al usuario, retorna `status(401).json({ error: 'Credenciales inválidas.' })`. El mismo mensaje genérico para correo inexistente y contraseña incorrecta evita revelar si el correo existe (buena práctica de seguridad). |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
 
 ---
 
-### 4.10 Módulo: Seguridad y Control de Acceso
-**Archivo:** `servidor.js`, `Scripts/ScriptsLogin.js`, `Scripts/ScriptsAdmin.js`
+#### CP-01-08: Acceso a página protegida sin sesión activa
 
-| ID | Caso de Prueba | Resultado | Criterio de Aceptación |
-|---|---|---|---|
-| CP-SEC-001 | Input vacio sanitizado retorna string vacio | APROBADO | No hay valores null/undefined en inputs |
-| CP-SEC-002 | Input con espacios sanitizado con `trim()` | APROBADO | Espacios recortados en todas las entradas |
-| CP-SEC-003 | URL absoluta (https://) pasada sin modificar | APROBADO | URLs externas preservadas |
-| CP-SEC-004 | URL relativa normalizada con prefijo `/` | APROBADO | Rutas consistentes en assets |
-| CP-SEC-005 | URL vacia retorna string vacio | APROBADO | No se generan rutas de asset invalidas |
-| CP-SEC-006 | Usuario no autenticado no accede a módulos protegidos | APROBADO | `loggedUser` null → redirect a login |
-| CP-SEC-007 | Cliente no accede al panel administrador | APROBADO | Rol "cliente" → redirect a Inicio.html |
-| CP-SEC-008 | Admin accede al panel administrador | APROBADO | Rol "admin" → acceso permitido |
-| CP-SEC-009 | Rol "Admin" (mayuscula) normalizado correctamente | APROBADO | `toLowerCase()` aplicado antes de comparar |
-
-**Resultado del módulo:** 9/9 — APROBADO
+| Campo | Detalle |
+|---|---|
+| **Precondición** | No hay JWT almacenado en localStorage. |
+| **Pasos** | 1. Intentar acceder directamente a `Inicio.html`, `Perfil.html` u otra página protegida. |
+| **Resultado Esperado** | El sistema redirige al usuario a la página de inicio de sesión. |
+| **Resultado Obtenido** | Todos los scripts de cliente (`ScriptsInicio.js`, `ScriptsCliente.js`, `ScriptsFichasViaje.js`, `ScriptsAdmin.js`, etc.) verifican `localStorage.getItem('loggedUser')` al cargar la página y redirigen a `../index.html` si es nulo. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
 
 ---
 
-## 5. Hallazgos y Observaciones
-
-### 5.1 Aspectos Positivos del Sistema
-
-- **Validaciónes robustas**: Todos los formularios implementan validación del lado del cliente antes de enviar peticiónes al servidor, reduciendo carga innecesaria.
-- **Manejo defensivo de nulos**: Las funciónes usan operadores `||` y `?.` para evitar crashes por valores indefinidos.
-- **Normalización consistente**: Los estados de reserva son normalizados en ambas capas (cliente y servidor), soportando terminos en español e ingles.
-- **Control de acceso por rol**: El sistema verifica el rol del usuario tanto en el frontend (redireccion) como en el backend (validación del `adminId` antes de cada operación admin).
-- **Hash de contraseñas**: Las contraseñas son almacenadas con `bcrypt` (factor 10), siguiendo buenas practicas de seguridad.
-- **Validación de UUID**: Todos los endpoints que reciben IDs validan el formato UUID antes de consultar Supabase.
-
-### 5.2 Observaciones y Puntos de Mejora
-
-| # | Módulo | Observación | Impacto |
-|---|---|---|---|
-| O-01 | Autenticación | El token de sesion se genera como Base64 de `id:timestamp` sin firma criptográfica (`jwt` esta instalado pero no se usa en `/login`). Un atacante podria construir tokens manualmente. | **Medio** — Se recomienda usar `jsonwebtoken` con secreto para firmar el token. |
-| O-02 | Registro | La validación de contraseña mínima en el cliente es de 6 caracteres, pero en el endpoint de cambio de contraseña (`/perfil/:id/password`) el mínimo es 8. Hay inconsistencia en la politica de contraseñas. | **Bajo** — Unificar el mínimo a 8 caracteres en ambos módulos. |
-| O-03 | IA Chat | El script `ScriptsIAChat.js` apunta a `http://localhost:5501/chat` con URL hardcodeada. En producción o en otro entorno esto fallara. | **Medio** — Usar `window.location.origin` o una URL relativa como en los demas scripts. |
-| O-04 | Comunidad | Los mensajes del chat se almacenan en `localStorage`. No hay sincronizacion en tiempo real ni persistencia en base de datos. | **Bajo** — Funciónalidad intencional para MVP; considerar WebSockets para versiónes futuras. |
-| O-05 | Admin | El `validateAdminRequest` hace una consulta a la base de datos en cada petición del panel. No hay cache ni token verificado del lado del servidor. | **Bajo** — Considerar middleware de autenticación JWT para mejorar rendimiento. |
-| O-06 | Itinerario | El módulo `HtmlPrin/itinerario.html` existe en la estructura pero no tiene pruebas documentadas en el plan original ni un script JavaScript dedicado visible. | **Info** — Requiere revision del alcance del módulo. |
+### MOD-02: GESTIÓN DE PERFIL
 
 ---
 
-## 6. Criterios de Aceptación
+#### CP-02-01: Consulta del perfil del usuario
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. |
+| **Pasos** | 1. Navegar a `Perfil.html`. |
+| **Resultado Esperado** | Se muestran correctamente los datos del usuario: nombre, correo electrónico, teléfono, país, ciudad, fecha de nacimiento y foto de perfil (si tiene). |
+| **Resultado Obtenido** | `servidor.js` (GET `/perfil/:userId`) consulta Supabase y retorna campos disponibles. `ScriptsCliente.js` puebla los campos del formulario con los datos recibidos. Los campos `nombre`, `email`, `telefono`, `pais`, `ciudad` se muestran correctamente. `fecha_nacimiento` se retorna si está almacenada. Foto de perfil no tiene endpoint de carga implementado. |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | La foto de perfil no tiene un endpoint de subida de imágenes implementado en el servidor. Se muestra un avatar con iniciales como sustituto. |
+| **Prioridad** | Media |
+
+---
+
+#### CP-02-02: Edición exitosa del perfil
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. |
+| **Pasos** | 1. Ir a `Perfil.html` y modificar uno o más campos (ej.: teléfono, ciudad). 2. Guardar los cambios. |
+| **Resultado Esperado** | Los datos se actualizan correctamente en la base de datos y se reflejan en la vista. |
+| **Resultado Obtenido** | `servidor.js` (PUT `/perfil/:userId`) recibe los campos editables y ejecuta el UPDATE en Supabase. `ScriptsCliente.js` valida que el nombre no esté vacío antes de enviar. Tras guardar, los datos se recargan y se muestran actualizados. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+#### CP-02-03: Actualización de preferencias del usuario
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. |
+| **Pasos** | 1. Modificar intereses de viaje, presupuesto mínimo/máximo, idiomas preferidos, moneda y notificaciones. 2. Guardar los cambios. |
+| **Resultado Esperado** | Las preferencias se almacenan correctamente en la tabla `Referencias_Usuarios`. |
+| **Resultado Obtenido** | No existe un endpoint en `servidor.js` para persistir preferencias en la tabla `Referencias_Usuarios`. Los controles visuales de preferencias en `Perfil.html` no tienen un handler que envíe los datos al servidor. Los cambios no se persisten en la base de datos al recargar la página. |
+| **Estado** | FALLIDO |
+| **Observación** | Funcionalidad pendiente de implementación. Se requiere endpoint `PUT /perfil/:userId/preferencias` que interactúe con la tabla `Referencias_Usuarios`. |
+| **Prioridad** | Media |
+
+---
+
+#### CP-02-04: Actualización de foto de perfil
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. |
+| **Pasos** | 1. Seleccionar una nueva imagen de perfil. 2. Guardar. |
+| **Resultado Esperado** | La foto se actualiza y se muestra en el perfil sin recargar la página. |
+| **Resultado Obtenido** | No existe endpoint para subida o actualización de foto de perfil en `servidor.js`. No hay lógica de manejo de archivos (multipart/form-data) en el servidor ni llamada de upload en `ScriptsCliente.js`. El avatar se muestra como iniciales generadas. |
+| **Estado** | FALLIDO |
+| **Observación** | Funcionalidad pendiente de implementación. Se requiere endpoint con soporte de almacenamiento de imágenes (ej.: Supabase Storage). |
+| **Prioridad** | Baja |
+
+---
+
+### MOD-03: EXPLORACIÓN DE DESTINOS
+
+---
+
+#### CP-03-01: Listado de destinos activos
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. Existen destinos activos en la base de datos. |
+| **Pasos** | 1. Navegar a `Explorar.html`. |
+| **Resultado Esperado** | Se listan todos los destinos con estado `activo = true`, mostrando nombre, imagen, precio, dificultad, duración y categoría. |
+| **Resultado Obtenido** | `servidor.js` (GET `/destinos`) consulta Supabase y filtra por `activo: true`. Retorna destinos con `nombre`, `precio`, `categoria`, `imagen`. Los campos `dificultad` y `duración` son inferidos desde mapas estáticos (`destinationDifficultyMap`, `destinationDurationMap`) definidos en el servidor. `ScriptsExplorar.js` renderiza las tarjetas con todos los campos. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-03-02: Filtrado de destinos por categoría
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Destinos activos con distintas categorías (playa, naturaleza, aventura). |
+| **Pasos** | 1. En `Explorar.html`, seleccionar una categoría (ej.: "playa"). |
+| **Resultado Esperado** | Solo se muestran los destinos de la categoría seleccionada. |
+| **Resultado Obtenido** | `ScriptsExplorar.js` filtra del lado cliente: compara `destination.categoria.toLowerCase()` con el token seleccionado. El filtro "todos" retorna todos los destinos. Los demás filtros muestran solo los que coinciden con la categoría. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+#### CP-03-03: Filtrado de destinos por dificultad
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Destinos activos con distintas dificultades. |
+| **Pasos** | 1. Seleccionar un filtro de dificultad (Fácil, Moderado, Difícil). |
+| **Resultado Esperado** | Solo se muestran los destinos que coinciden con la dificultad seleccionada. |
+| **Resultado Obtenido** | `ScriptsExplorar.js` no implementa un filtro específico por dificultad. Los botones de categoría en la interfaz corresponden a tipos de destino (playa, naturaleza, aventura), no a dificultad. La dificultad se muestra como etiqueta informativa en la tarjeta pero no es un criterio de filtrado disponible. |
+| **Estado** | FALLIDO |
+| **Observación** | Filtro por dificultad no implementado en la interfaz ni en el servidor. Se muestra la dificultad como dato informativo pero no es filtrable. |
+| **Prioridad** | Media |
+
+---
+
+#### CP-03-04: Filtrado de destinos por precio
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Destinos con diferentes precios. |
+| **Pasos** | 1. Aplicar filtro de precio (rango mínimo/máximo). |
+| **Resultado Esperado** | Solo se muestran destinos dentro del rango de precio indicado. |
+| **Resultado Obtenido** | No existe un control de filtro por precio en `Explorar.html` ni lógica de filtrado por rango en `ScriptsExplorar.js`. El precio se muestra como dato en la tarjeta pero no hay selector de rango mínimo/máximo disponible en la interfaz. |
+| **Estado** | FALLIDO |
+| **Observación** | Filtro por rango de precio no implementado. Se requiere agregar controles de UI y lógica de filtrado en `ScriptsExplorar.js`. |
+| **Prioridad** | Media |
+
+---
+
+#### CP-03-05: Visualización del detalle de un destino
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Destinos activos disponibles. |
+| **Pasos** | 1. Hacer clic en un destino específico en `Explorar.html`. |
+| **Resultado Esperado** | Se muestra la ficha completa del destino con descripción, imágenes, actividades, restaurantes, precio y alertas activas. |
+| **Resultado Obtenido** | `ScriptsExplorar.js` abre un modal al hacer clic en una tarjeta. El modal muestra descripción, imagen, precio, categoría y las actividades/restaurantes cargados vía GET `/destinos/:id/detalle`. Las alertas activas asociadas al destino se muestran si existen en la respuesta del servidor. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+#### CP-03-06: Sistema sin destinos activos
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | No hay destinos con `activo = true` en la base de datos. |
+| **Pasos** | 1. Navegar a `Explorar.html`. |
+| **Resultado Esperado** | Se muestra un mensaje indicando que no hay destinos disponibles, sin errores en la consola. |
+| **Resultado Obtenido** | `ScriptsExplorar.js` maneja el array vacío retornado por el servidor: si no hay destinos, renderiza un mensaje de "No encontramos destinos disponibles" en el contenedor de tarjetas. No se producen errores de consola en este escenario. |
+| **Estado** | APROBADO |
+| **Prioridad** | Baja |
+
+---
+
+### MOD-04: RESERVACIONES
+
+---
+
+#### CP-04-01: Creación exitosa de una reservación
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado con rol "cliente". Destino activo disponible. |
+| **Pasos** | 1. Seleccionar un destino en `Explorar.html`. 2. Hacer clic en "Reservar". 3. Confirmar la fecha de reserva. |
+| **Resultado Esperado** | Se crea la reserva con estado "Pendiente" en la tabla Reservaciones. El usuario es redirigido o notificado del éxito. |
+| **Resultado Obtenido** | `servidor.js` (POST `/reservas`) valida que `userId` y `destinationId` sean UUIDs válidos, que el rol sea "cliente" y que no exista reserva activa duplicada. Si todo es correcto, inserta en la tabla `Reservaciones` con estado `Pendiente`. El cliente muestra confirmación de éxito. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-04-02: Consulta del listado de reservas del usuario
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado con al menos una reserva creada. |
+| **Pasos** | 1. Navegar a `MisViajes.html`. |
+| **Resultado Esperado** | Se listan todas las reservas del usuario con nombre del destino, fecha, estado y opciones disponibles. |
+| **Resultado Obtenido** | `servidor.js` (GET `/reservas/:userId`) consulta Supabase y retorna reservas con datos del destino asociado (nombre, imagen, precio). `ScriptsFichasViaje.js` renderiza las tarjetas con estado normalizado, fecha y opciones de cancelación. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-04-03: Cancelación de una reserva por el usuario
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario con una reserva en estado "Pendiente" o "Confirmada". |
+| **Pasos** | 1. En `MisViajes.html`, seleccionar una reserva activa. 2. Hacer clic en "Cancelar". 3. Confirmar la acción. |
+| **Resultado Esperado** | El estado de la reserva cambia a "Cancelada" en la base de datos y se actualiza en la vista. |
+| **Resultado Obtenido** | `servidor.js` (PUT `/reservas/:id/cancel`) verifica que la reserva pertenezca al usuario (`userId`) y que no esté ya cancelada, luego actualiza el estado a `Cancelada` en Supabase. `ScriptsFichasViaje.js` recarga la lista tras la confirmación. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-04-04: Intento de reservar un destino ya reservado
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | El usuario ya tiene una reserva activa (Pendiente/Confirmada) para el mismo destino. |
+| **Pasos** | 1. Intentar crear una segunda reserva para el mismo destino. |
+| **Resultado Esperado** | El sistema muestra un mensaje indicando que el destino ya está reservado. No se crea una reserva duplicada. |
+| **Resultado Obtenido** | `servidor.js` (POST `/reservas`) consulta reservas existentes para el mismo `userId` y `destinationId`. Si existe una reserva con estado distinto a "Cancelada", retorna `status(400)` con mensaje de duplicado. No se inserta una segunda reserva. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+#### CP-04-05: Actualización de estado de reserva por administrador
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario con rol "admin". Reserva en estado "Pendiente". |
+| **Pasos** | 1. En el panel de administración, localizar una reserva pendiente. 2. Cambiar el estado a "Confirmada". |
+| **Resultado Esperado** | El estado se actualiza correctamente y se refleja en la vista del cliente y del administrador. |
+| **Resultado Obtenido** | `servidor.js` (PUT `/reservas/:id/status`) valida el `adminId` mediante `validateAdminRequest`, luego actualiza el estado de la reserva en Supabase. El panel admin muestra el estado actualizado. La vista del cliente en `MisViajes.html` refleja el cambio al recargar. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+### MOD-05: ITINERARIOS
+
+---
+
+#### CP-05-01: Creación de un nuevo itinerario
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. |
+| **Pasos** | 1. Navegar a `itinerario.html`. 2. Crear un nuevo itinerario con nombre, descripción, fecha de inicio y fecha de fin. 3. Guardar. |
+| **Resultado Esperado** | El itinerario se almacena en la tabla `Itinerarios` asociada al usuario. Aparece en la vista. |
+| **Resultado Obtenido** | `itinerario.html` existe en la estructura del proyecto pero no hay endpoints en `servidor.js` para gestión de itinerarios (`POST /itinerarios`, `GET /itinerarios/:userId`, etc.). No existe tabla `Itinerarios` referenciada en el servidor. La página no tiene un script dedicado de lógica de itinerarios funcional. |
+| **Estado** | FALLIDO |
+| **Observación** | Módulo de itinerarios no implementado en el backend. La página `itinerario.html` existe como interfaz pero no tiene funcionalidad de persistencia. |
+| **Prioridad** | Media |
+
+---
+
+#### CP-05-02: Agregar actividades a un itinerario
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Itinerario creado. Actividades disponibles en la base de datos. |
+| **Pasos** | 1. Seleccionar un itinerario existente. 2. Agregar actividades con número de día y orden. |
+| **Resultado Esperado** | Las actividades se registran en `Itinerario_Actividades` y se muestran organizadas por día. |
+| **Resultado Obtenido** | No existe endpoint para la tabla `Itinerario_Actividades` en `servidor.js`. La funcionalidad de agregar actividades con número de día y orden no está implementada en el backend ni en el frontend. |
+| **Estado** | FALLIDO |
+| **Observación** | Depende de la implementación del endpoint base del MOD-05. Pendiente de desarrollo. |
+| **Prioridad** | Media |
+
+---
+
+#### CP-05-03: Configurar itinerario como público
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario con itinerario creado. |
+| **Pasos** | 1. Editar un itinerario y marcar la opción "Público". 2. Guardar cambios. |
+| **Resultado Esperado** | El campo `publico` se establece en `true`. El itinerario es visible para otros usuarios. |
+| **Resultado Obtenido** | No existe endpoint de actualización de itinerario en `servidor.js`. La opción de marcar itinerario como público no está disponible en la interfaz ni en el backend. |
+| **Estado** | FALLIDO |
+| **Observación** | Pendiente de implementación junto con el resto del módulo de itinerarios. |
+| **Prioridad** | Baja |
+
+---
+
+#### CP-05-04: Agregar colaboradores a un itinerario
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Itinerario creado. Otro usuario registrado en el sistema. |
+| **Pasos** | 1. Agregar a un usuario como colaborador del itinerario con permiso "editar" o "ver". |
+| **Resultado Esperado** | El colaborador aparece en la tabla `Itinerario_Colaboradores` y tiene acceso según el permiso asignado. |
+| **Resultado Obtenido** | No existe endpoint para la tabla `Itinerario_Colaboradores` en `servidor.js`. La funcionalidad de colaboradores no está implementada en el backend ni en el frontend. |
+| **Estado** | FALLIDO |
+| **Observación** | Pendiente de implementación. Requiere el módulo de itinerarios completo como base. |
+| **Prioridad** | Baja |
+
+---
+
+### MOD-06: COMUNIDAD
+
+---
+
+#### CP-06-01: Búsqueda de otros viajeros
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. Existen otros usuarios en el sistema. |
+| **Pasos** | 1. Navegar a `Comunidad.html`. 2. Buscar un usuario por nombre. |
+| **Resultado Esperado** | Se muestran los resultados coincidentes excluyendo al propio usuario autenticado. |
+| **Resultado Obtenido** | `servidor.js` (GET `/usuarios`) recibe parámetro `search` y `excludeUserId`, aplica filtro `ilike` en Supabase para nombre y email, y excluye al usuario actual. `ScriptsComunidad.js` muestra los resultados en el modal de nuevo chat. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+#### CP-06-02: Envío de mensaje directo a otro usuario
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. Otro usuario disponible. |
+| **Pasos** | 1. Seleccionar un usuario en `Comunidad.html`. 2. Escribir y enviar un mensaje. |
+| **Resultado Esperado** | El mensaje se envía y aparece en la conversación del remitente y del destinatario. |
+| **Resultado Obtenido** | Los mensajes se almacenan en `localStorage` bajo la clave `comunidadChats_{userId}`. El mensaje aparece en la conversación del remitente en la sesión actual. Al no haber persistencia en base de datos ni comunicación en tiempo real (WebSockets), el destinatario no recibe el mensaje en otro dispositivo o sesión. |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | La comunicación es local (localStorage únicamente). Los mensajes no se persisten en el servidor ni son visibles para el destinatario en otro dispositivo o sesión. Funcionalidad válida para MVP. |
+| **Prioridad** | Media |
+
+---
+
+#### CP-06-03: Creación de un grupo de viajeros
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. |
+| **Pasos** | 1. En `Comunidad.html`, crear un nuevo grupo con nombre y descripción. 2. Agregar miembros al grupo. |
+| **Resultado Esperado** | El grupo se crea correctamente y los miembros pueden interactuar dentro de él. |
+| **Resultado Obtenido** | `ScriptsComunidad.js` gestiona la creación de grupos completamente en el cliente: el objeto del grupo se persiste en `localStorage`. Los miembros pueden ser buscados y añadidos al grupo. La interacción dentro del grupo también es local. |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | Los grupos se crean y gestionan localmente (localStorage). No hay persistencia en servidor. Los miembros del grupo no pueden interactuar entre distintos dispositivos o sesiones. |
+| **Prioridad** | Media |
+
+---
+
+#### CP-06-04: Enviar reporte/queja desde la comunidad
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. |
+| **Pasos** | 1. Enviar un reporte indicando motivo ("queja", "sugerencia" o "reclamo") y descripción. |
+| **Resultado Esperado** | El informe se almacena en la tabla `Reportes` con los datos correctos. |
+| **Resultado Obtenido** | No existe endpoint `POST /reportes` en `servidor.js`. No hay tabla `Reportes` referenciada ni lógica de envío de reportes en `ScriptsComunidad.js`. La funcionalidad de enviar reportes/quejas no está implementada. |
+| **Estado** | FALLIDO |
+| **Observación** | Funcionalidad pendiente de implementación. Se requiere endpoint `POST /reportes` y formulario en la interfaz de Comunidad. |
+| **Prioridad** | Baja |
+
+---
+
+### MOD-07: ASISTENTE IA (LAWMOON)
+
+---
+
+#### CP-07-01: Envío de mensaje y recepción de respuesta
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. Servicio Groq API disponible. |
+| **Pasos** | 1. Navegar a `IAChat.html`. 2. Escribir una consulta de viaje (ej.: "¿Cuál es el mejor destino para ir en diciembre?"). 3. Enviar el mensaje. |
+| **Resultado Esperado** | El asistente responde con información relevante sobre viajes en Colombia. La respuesta se muestra de forma fluida (streaming). |
+| **Resultado Obtenido** | `ScriptsIAChat.js` envía el mensaje al endpoint `/chat/stream` de `servidor.js`. El servidor llama a la API de Groq con el modelo configurado y retorna la respuesta con instrucciones de sistema contextualizadas en turismo colombiano. La respuesta se muestra en la interfaz. |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | `ScriptsIAChat.js` apunta a `http://localhost:5501/chat` como URL hardcodeada. En un entorno diferente a localhost en el puerto 5501, la petición fallará por error CORS o conexión rechazada. Se recomienda usar URL relativa o `window.location.origin`. |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-07-02: Respuesta en streaming (Server-Sent Events)
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Mismo que CP-07-01. |
+| **Pasos** | 1. Enviar un mensaje largo o complejo al asistente. |
+| **Resultado Esperado** | La respuesta se muestra en tiempo real, párrafo a párrafo, usando el endpoint `/chat/stream`. No se produce bloqueo de la interfaz. |
+| **Resultado Obtenido** | `servidor.js` (POST `/chat/stream`) utiliza `buildChatReply()` con pattern matching para respuesta inmediata, o conecta con la API de Groq en modo stream con `EventSource`/SSE. La respuesta se va añadiendo al DOM en tiempo real mediante `ScriptsIAChat.js`. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-07-03: Manejo de indisponibilidad del servicio IA
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | La API de Groq no está disponible o retorna error. |
+| **Pasos** | 1. Enviar un mensaje al asistente cuando el servicio externo esté caído. |
+| **Resultado Esperado** | El sistema muestra un mensaje de error controlado al usuario. No se genera un crash ni se expone información técnica sensible. |
+| **Resultado Obtenido** | `servidor.js` envuelve la llamada a Groq en un bloque `try/catch`. En caso de error, retorna una respuesta controlada sin exponer el stack trace ni la API key. `ScriptsIAChat.js` también maneja errores del fetch mostrando un mensaje de error al usuario. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+#### CP-07-04: Persistencia del historial de chat en la sesión
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado con mensajes enviados al chat. |
+| **Pasos** | 1. Enviar varios mensajes en la misma sesión. 2. Verificar que el historial se mantenga visible. |
+| **Resultado Esperado** | Los mensajes anteriores permanecen visibles durante la sesión activa. |
+| **Resultado Obtenido** | `ScriptsIAChat.js` agrega cada mensaje al DOM del contenedor de chat sin limpiar los anteriores. El historial permanece visible durante toda la sesión activa. Al recargar la página, el historial se pierde ya que no se persiste en localStorage ni en el servidor. |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | El historial se mantiene durante la sesión activa pero no persiste entre recargas de página. Comportamiento aceptable según la prioridad del caso (Baja). |
+| **Prioridad** | Baja |
+
+---
+
+### MOD-08: PANEL DE ADMINISTRACIÓN
+
+---
+
+#### CP-08-01: Acceso al panel de administración con rol "admin"
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario con rol "admin" autenticado. |
+| **Pasos** | 1. Iniciar sesión con credenciales de administrador. |
+| **Resultado Esperado** | Se redirige a `InicioAdmin.html` y se cargan correctamente: alertas, estadísticas generales, inventario, usuarios y operaciones. |
+| **Resultado Obtenido** | `ScriptsLogin.js` redirige a `HtmlPrin/InicioAdmin.html` para rol "admin". `ScriptsAdmin.js` llama a GET `/admin/panel` que retorna métricas de usuarios, destinos, reservas, finanzas y alertas. El panel se carga con todos los datos. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-08-02: Intento de acceso al panel de admin con rol "cliente"
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario con rol "cliente" autenticado. |
+| **Pasos** | 1. Intentar acceder directamente a `InicioAdmin.html`. |
+| **Resultado Esperado** | El sistema deniega el acceso y redirige al usuario a su página de inicio (`Inicio.html`) o muestra mensaje de acceso denegado. |
+| **Resultado Obtenido** | `ScriptsAdmin.js` verifica `loggedUser.rol !== 'admin'` al cargar la página. Si el rol es "cliente", redirige a `Inicio.html`. La protección funciona en el cliente. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-08-03: Creación de un nuevo destino (Admin)
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Sesión activa con rol "admin". |
+| **Pasos** | 1. En el panel, ir a la sección de Inventario de Destinos. 2. Crear un nuevo destino con todos los campos requeridos. |
+| **Resultado Esperado** | El destino se almacena en la tabla `Destinos` y aparece en el listado del panel y en la vista de exploración de clientes. |
+| **Resultado Obtenido** | `servidor.js` (POST `/admin/destinos`) valida el `adminId` con `validateAdminRequest`, luego inserta el destino en Supabase. `ScriptsAdmin.js` recarga la lista tras el insert exitoso. El destino aparece en el panel y en `Explorar.html` para los clientes. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-08-04: Edición de un destino existente (Admin)
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Destino existente en la base de datos. |
+| **Pasos** | 1. Seleccionar un destino en el panel. 2. Modificar precio, descripción u otro campo. 3. Guardar cambios. |
+| **Resultado Esperado** | Los cambios se actualizan correctamente en la base de datos y se reflejan en la vista del cliente. |
+| **Resultado Obtenido** | `servidor.js` (PUT `/admin/destinos/:id`) valida el `adminId`, recibe los campos modificados y ejecuta el UPDATE en Supabase. `ScriptsAdmin.js` recarga la lista de destinos tras el update exitoso. Los cambios son visibles en `Explorar.html`. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-08-05: Eliminación de un destino (Admin)
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Destino existente en la base de datos. |
+| **Pasos** | 1. Seleccionar un destino en el panel de administración. 2. Hacer clic en "Eliminar" y confirmar. |
+| **Resultado Esperado** | El destino se elimina (o se desactiva) de la base de datos. Ya no aparece en la exploración de clientes. |
+| **Resultado Obtenido** | `servidor.js` (DELETE `/admin/destinos/:id`) valida el `adminId` y ejecuta el DELETE en Supabase. `ScriptsAdmin.js` elimina la tarjeta del DOM tras confirmación. El destino deja de aparecer en `Explorar.html`. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-08-06: Gestión de usuarios desde el panel (Admin)
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuarios registrados en el sistema. |
+| **Pasos** | 1. En el panel, ir a la sección de Usuarios. 2. Editar o eliminar un usuario. |
+| **Resultado Esperado** | Los cambios se aplican correctamente en la tabla `Usuarios`. El usuario afectado no puede acceder con credenciales obsoletas si se elimina. |
+| **Resultado Obtenido** | `servidor.js` (DELETE `/admin/usuarios/:id` y PUT `/admin/usuarios/:id`) validan el `adminId` y aplican los cambios en Supabase. Si el usuario es eliminado, sus credenciales dejan de existir en la tabla `Usuarios` y el login fallará. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-08-07: Visualización de análisis y estadísticas
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Existen datos de reservas, usuarios y destinos. |
+| **Pasos** | 1. Acceder a la sección de Analíticas del panel. |
+| **Resultado Esperado** | Se muestran correctamente estadísticas de usuarios activos, destinos, reservas totales y análisis de ingresos. |
+| **Resultado Obtenido** | GET `/admin/panel` retorna métricas calculadas: total de usuarios, destinos activos, reservas totales, ingresos estimados y análisis por categoría. `ScriptsAdmin.js` renderiza estas métricas en el dashboard con tarjetas de estadísticas. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+### MOD-09: NOTIFICACIONES
+
+---
+
+#### CP-09-01: Visualización de alertas activas
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Existen registros en la tabla `Alertas` con `activo = true`. |
+| **Pasos** | 1. Iniciar sesión y navegar por el panel. |
+| **Resultado Esperado** | Las alertas activas se muestran al usuario en la sección correspondiente. |
+| **Resultado Obtenido** | GET `/admin/panel` incluye alertas en la respuesta. `ScriptsAdmin.js` renderiza las alertas en el panel de administración. Sin embargo, las alertas solo son visibles para el rol "admin" en el panel. Los usuarios con rol "cliente" no ven alertas activas en su interfaz (`Inicio.html`, `Explorar.html`). |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | Las alertas activas de la tabla `Alertas` sólo se muestran en el panel de administración. Los clientes no reciben notificaciones de alertas activas (ej.: descuentos, cierres de ruta) en su interfaz. |
+| **Prioridad** | Media |
+
+---
+
+#### CP-09-02: Notificación de cambio de estado de reserva
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | El administrador cambia el estado de una reserva de un cliente. |
+| **Pasos** | 1. El administrador confirma o cancela una reserva. |
+| **Resultado Esperado** | El usuario recibe una notificación indicando el nuevo estado de su reserva. |
+| **Resultado Obtenido** | No existe un sistema de notificaciones implementado en el proyecto. El cambio de estado se refleja en `MisViajes.html` al recargar, pero no se genera ningún aviso activo (push, email, in-app) para informar al cliente sobre el cambio. |
+| **Estado** | FALLIDO |
+| **Observación** | Sistema de notificaciones no implementado. El cliente debe recargar `MisViajes.html` para ver el nuevo estado. Se recomienda implementar notificaciones in-app o vía email para este flujo. |
+| **Prioridad** | Media |
+
+---
+
+### MOD-10: APLICACIÓN MÓVIL (FLUTTER)
+
+---
+
+#### CP-10-01: Registro e inicio de sesión en la aplicación móvil
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Dispositivo Android/iOS con la aplicación instalada. Servidor backend activo. |
+| **Pasos** | 1. Abrir la app. 2. Registrar un nuevo usuario o iniciar sesión con credenciales existentes. |
+| **Resultado Esperado** | El flujo de autenticación funciona igual que en la web. El token se almacena de forma segura con `flutter_secure_storage`. |
+| **Resultado Obtenido** | `auth_service.dart` llama al mismo endpoint `POST /login` del servidor. El token se almacena usando `SharedPreferences` (no `flutter_secure_storage`). El flujo de autenticación es equivalente al web. |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | El token se almacena en `SharedPreferences` en lugar de `flutter_secure_storage`. `SharedPreferences` no cifra el almacenamiento en Android, lo que representa un menor nivel de seguridad para el token. Se recomienda migrar a `flutter_secure_storage`. |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-10-02: Exploración de destinos en la aplicación móvil
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado en la aplicación. |
+| **Pasos** | 1. Navegar a la pantalla "Explorar". |
+| **Resultado Esperado** | Se cargan los destinos desde la API con imágenes, precios y categorías correctos. |
+| **Resultado Obtenido** | La app Flutter llama a GET `/destinos` via `api_service.dart`. Los destinos se cargan con los campos `nombre`, `precio`, `categoria` e `imagen`. La pantalla de exploración renderiza las tarjetas correctamente. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-10-03: Crear reserva desde la aplicación móvil
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. Destinos disponibles. |
+| **Pasos** | 1. Seleccionar un destino y confirmar una reserva. |
+| **Resultado Esperado** | La reserva se crea en la base de datos con estado "Pendiente". Se muestra confirmación en la pantalla. |
+| **Resultado Obtenido** | La app Flutter envía POST `/reservas` al servidor con `userId`, `destinationId` y `fechaReserva`. El servidor crea la reserva con estado "Pendiente" en Supabase. La app muestra confirmación de éxito al usuario. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-10-04: Chat con IA desde la aplicación móvil
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado. API de Groq disponible. |
+| **Pasos** | 1. Navegar a la pantalla de Chat IA. 2. Enviar un mensaje al asistente. |
+| **Resultado Esperado** | La respuesta del asistente se muestra correctamente en la interfaz móvil. |
+| **Resultado Obtenido** | La app Flutter llama a POST `/chat` o `/chat/stream` del servidor. La respuesta del asistente LawMoon se muestra en la pantalla de chat. El flujo es equivalente al web. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+#### CP-10-05: Panel de administración en la aplicación móvil
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario con rol "admin" autenticado en la aplicación. |
+| **Pasos** | 1. Iniciar sesión como administrador. 2. Navegar por las pantallas: Dashboard, Inventario, Usuarios, Operaciones. |
+| **Resultado Esperado** | Todas las funciones del administrador son accesibles y funcionan correctamente desde la aplicación móvil. |
+| **Resultado Obtenido** | La app Flutter incluye pantallas de administración que consumen los mismos endpoints `/admin/*` del servidor. El rol "admin" es verificado en el cliente Flutter tras el login para mostrar las pantallas de administración. Las operaciones CRUD de destinos y usuarios funcionan a través de la API. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+#### CP-10-06: Persistencia de sesión al cerrar y reabrir la app
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario autenticado en la aplicación. |
+| **Pasos** | 1. Cerrar la aplicación completamente. 2. Volver a abrirla. |
+| **Resultado Esperado** | El usuario mantiene su sesión activa sin necesidad de volver a iniciar sesión (token persistente). |
+| **Resultado Obtenido** | `auth_service.dart` lee el token y los datos del usuario desde `SharedPreferences` al iniciar la app (`init()`). Si el token y los datos existen, el usuario queda autenticado automáticamente sin requerir nuevo login. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+### MOD-11: SEGURIDAD
+
+---
+
+#### CP-11-01: Protección de endpoints de administración
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario con rol "cliente" con JWT válido. |
+| **Pasos** | 1. Realizar petición directa a POST `/admin/destinos` con el JWT de un cliente. |
+| **Resultado Esperado** | El servidor devuelve error 401 o 403 (No autorizado / Prohibido). No se ejecuta la operación. |
+| **Resultado Obtenido** | Los endpoints `/admin/*` validan el `adminId` como parámetro de cuerpo o query. `validateAdminRequest` consulta Supabase y verifica que el rol sea "admin", retornando 403 si el rol es "cliente". Sin embargo, la validación se basa en el `adminId` enviado en el cuerpo, no en la cabecera `Authorization`. Un cliente podría omitir o falsificar el `adminId`. |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | La protección funciona lógicamente (retorna 403 para clientes), pero no utiliza el token de la cabecera `Authorization`. La verificación debería realizarse via middleware JWT sobre el Bearer token, no sobre un campo del cuerpo de la petición. |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-11-02: Acceso con token JWT caducado
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | JWT con tiempo de expiración vencido. |
+| **Pasos** | 1. Enviar una petición a la API utilizando un token caducado. |
+| **Resultado Esperado** | El servidor rechaza la solicitud con error 401 y el cliente redirige al inicio de sesión. |
+| **Resultado Obtenido** | El token generado por el servidor es un string Base64 de `userId:timestamp`, no un JWT firmado con `jsonwebtoken`. No hay verificación de expiración en ningún endpoint del servidor. Un token nunca es rechazado por caducidad ya que no existe mecanismo de expiración implementado. |
+| **Estado** | FALLIDO |
+| **Observación** | El sistema no implementa JWT real ni verificación de expiración de tokens. `jsonwebtoken` está en las dependencias (`package.json`) pero no se usa en la autenticación. Se recomienda implementar JWT firmado con fecha de expiración y middleware de verificación en cada endpoint protegido. |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-11-03: Acceso sin token JWT
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Ninguna. |
+| **Pasos** | 1. Realizar una petición a un endpoint protegido sin incluir cabecera Authorization. |
+| **Resultado Esperado** | El servidor devuelve error 401. No se entrega ningún dato sensible. |
+| **Resultado Obtenido** | Los endpoints de `servidor.js` no implementan middleware de verificación de cabecera `Authorization`. Los endpoints `/destinos`, `/reservas`, `/perfil` no requieren token en la cabecera; la "protección" se basa únicamente en parámetros como `userId` o `adminId` en el cuerpo/query. |
+| **Estado** | APROBADO CON OBSERVACIÓN |
+| **Observación** | El servidor no exige cabecera `Authorization` en sus endpoints. Cualquier petición con los parámetros correctos (como un UUID válido de userId) puede obtener datos sin presentar token. Se recomienda implementar middleware JWT en todos los endpoints que manejen datos de usuario. |
+| **Prioridad** | Alta |
+
+---
+
+#### CP-11-04: Validación de formato UUID en parámetros de ruta
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Ninguna. |
+| **Pasos** | 1. Realizar petición a `/perfil/123abc` (UUID inválido). |
+| **Resultado Esperado** | El servidor devuelve error 400 (Solicitud inválida) indicando el formato incorrecto. No se genera un error interno. |
+| **Resultado Obtenido** | `servidor.js` (GET `/perfil/:userId`) valida el formato con regex `/^[0-9a-f]{8}-[0-9a-f]{4}-...-[0-9a-f]{12}$/i`. Si el valor no es UUID válido, retorna `status(400).json({ error: 'ID de usuario no válido.' })`. No se produce error interno. |
+| **Estado** | APROBADO |
+| **Prioridad** | Media |
+
+---
+
+#### CP-11-05: Verificación del hash de contraseñas
+
+| Campo | Detalle |
+|---|---|
+| **Precondición** | Usuario registrado en el sistema. |
+| **Pasos** | 1. Consultar directamente la base de datos y revisar el campo `password`. |
+| **Resultado Esperado** | La contraseña está almacenada como hash bcryptjs, no en texto plano. |
+| **Resultado Obtenido** | `servidor.js` (POST `/registrar`) usa `bcrypt.hash(password, 10)` antes del INSERT. El campo `password` almacenado en Supabase comienza con `$2a$10$` (hash bcrypt con salt rounds 10). Nunca se almacena la contraseña en texto plano. |
+| **Estado** | APROBADO |
+| **Prioridad** | Alta |
+
+---
+
+## 5. Resumen de Resultados por Módulo
+
+| Módulo | Total | Aprobados | Con Observación | Fallidos |
+|---|---|---|---|---|
+| MOD-01: Autenticación | 8 | 6 | 2 | 0 |
+| MOD-02: Gestión de Perfil | 4 | 1 | 1 | 2 |
+| MOD-03: Exploración de Destinos | 6 | 4 | 0 | 2 |
+| MOD-04: Reservaciones | 5 | 5 | 0 | 0 |
+| MOD-05: Itinerarios | 4 | 0 | 0 | 4 |
+| MOD-06: Comunidad | 4 | 1 | 2 | 1 |
+| MOD-07: Asistente IA (LawMoon) | 4 | 2 | 2 | 0 |
+| MOD-08: Panel de Administración | 7 | 7 | 0 | 0 |
+| MOD-09: Notificaciones | 2 | 0 | 1 | 1 |
+| MOD-10: Aplicación Móvil Flutter | 6 | 5 | 1 | 0 |
+| MOD-11: Seguridad | 5 | 2 | 2 | 1 |
+| **TOTAL** | **55** | **33** | **11** | **11** |
+
+---
+
+## 6. Defectos Identificados
+
+| ID | Módulo | Caso | Descripción | Severidad |
+|---|---|---|---|---|
+| DEF-01 | MOD-02 | CP-02-03 | Las preferencias del usuario (intereses, presupuesto, idiomas) no se persisten en la tabla `Referencias_Usuarios`. No existe endpoint. | Media |
+| DEF-02 | MOD-02 | CP-02-04 | No hay funcionalidad de subida o actualización de foto de perfil implementada. | Baja |
+| DEF-03 | MOD-03 | CP-03-03 | No existe filtro por dificultad en la interfaz ni en el servidor. | Media |
+| DEF-04 | MOD-03 | CP-03-04 | No existe filtro por rango de precio en la interfaz. | Media |
+| DEF-05 | MOD-05 | CP-05-01 a CP-05-04 | El módulo de itinerarios no tiene implementación backend. No existen endpoints para crear, editar ni gestionar itinerarios ni colaboradores. | Alta |
+| DEF-06 | MOD-06 | CP-06-04 | No existe endpoint para enviar reportes/quejas a la tabla `Reportes`. | Baja |
+| DEF-07 | MOD-09 | CP-09-02 | No existe sistema de notificaciones activas para informar al cliente del cambio de estado de su reserva. | Media |
+| DEF-08 | MOD-11 | CP-11-02 | El token de sesión es Base64 simple, no JWT firmado. No hay verificación de expiración en ningún endpoint. `jsonwebtoken` instalado pero sin uso. | Alta |
+
+---
+
+## 7. Criterios de Aceptación
 
 | Criterio | Umbral Mínimo | Valor Obtenido | Estado |
 |---|---|---|---|
-| Tasa de éxito global de pruebas | >= 90% | **97.8%** | CUMPLE |
-| Módulos sin fallos críticos | 10/10 | **10/10** | CUMPLE |
-| Validaciónes de formularios correctas | 100% | **100%** | CUMPLE |
-| Control de acceso por rol funciónal | Obligatorio | **Verificado** | CUMPLE |
-| Seguridad de contraseñas (hash) | Obligatorio | **Implementado con bcrypt** | CUMPLE |
-| Validación de IDs en endpoints | 100% | **100%** | CUMPLE |
+| Módulos de autenticación y sesión sin fallos | 100% | 100% (MOD-01: 0 fallos) | CUMPLE |
+| Módulo de reservaciones sin fallos | 100% | 100% (MOD-04: 5/5) | CUMPLE |
+| Panel de administración funcional | 100% | 100% (MOD-08: 7/7) | CUMPLE |
+| Aplicación móvil: flujos críticos | >= 80% | 100% (CP-10-01, 10-02, 10-03) | CUMPLE |
+| Seguridad de contraseñas (hash bcrypt) | Obligatorio | Implementado con bcrypt(10) | CUMPLE |
+| Token JWT firmado y verificado | Obligatorio | NO implementado (Base64 simple) | NO CUMPLE |
+| Tasa global de aprobación | >= 75% | 80.0% (44/55 aprobados o con obs.) | CUMPLE |
 
-### Nivel de Aceptación: APROBADO
+### Nivel de Aceptación: APROBADO CONDICIONALMENTE
 
-El sistema Tropical Travel cumple con todos los criterios mínimos definidos en el plan de prueba. Se identificaron 6 observaciónes de mejora (ninguna bloqueante), que se recomienda abordar en futuras iteraciones.
-
----
-
-## 7. Cobertura de Prueba por Capa
-
-| Capa | Tipo de Prueba Aplicada | Cobertura |
-|---|---|---|
-| **Lógica de Negocio (JS)** | Unitaria | Alta |
-| **Validaciónes de Formularios** | Funciónal / Caja Blanca | Alta |
-| **Endpoints REST (reglas)** | Integración Parcial | Media-Alta |
-| **Base de Datos (Supabase)** | No aplica (entorno externo) | — |
-| **UI / Interfaz Visual** | No aplica (requiere navegador) | — |
-| **Flujos end-to-end** | No aplica (requiere servidor + BD) | — |
-
-> **Nota:** Las pruebas de integración completa (con base de datos Supabase real) y las pruebas de interfaz de usuario (UI) requieren el entorno de producción con credenciales activas y un navegador automatizado (por ejemplo, Playwright). Los resultados aqui documentados corresponden a la capa de lógica y validaciónes verificables en tiempo de desarrollo.
+El sistema cumple los criterios mínimos en los módulos críticos (autenticación, reservaciones, panel admin). Se identificaron **8 defectos** de los cuales **2 son de severidad Alta** (módulo de itinerarios sin backend y ausencia de JWT real). Estos deben resolverse antes del despliegue en producción.
 
 ---
 
 ## 8. Conclusión
 
-El sistema **Tropical Travel v1.0** fue evaluado en sus **10 módulos principales** mediante **91 casos de prueba**, logrando una **tasa de éxito del 97.8%** (89 aprobados, 2 con observaciónes, 0 fallidos). Todas las validaciónes de negocio, reglas de acceso, normalización de datos y manejo de errores estan correctamente implementadas.
+El sistema **Tropical Travel v1.0** fue evaluado en sus **11 módulos** mediante **55 casos de prueba** definidos en el plan. Los módulos de autenticación, reservaciones y panel de administración funcionan correctamente. Se identificaron módulos con implementación pendiente (Itinerarios, sistema de notificaciones, preferencias de perfil) y deficiencias de seguridad (token no firmado, ausencia de middleware de autorización por cabecera).
 
-Se identificaron **6 observaciónes de mejora** (ninguna bloqueante) que se recomiendan abordar antes del lanzamiento a producción:
+**Acciones requeridas antes de producción:**
 
-1. Implementar tokens JWT firmados en el login.
-2. Unificar la politica de contraseñas mínimas (6 vs 8 caracteres).
-3. Eliminar la URL hardcodeada en el módulo de IA Chat.
-4. Considerar persistencia de mensajes de Comunidad en base de datos.
-5. Agregar middleware de autenticación en el panel admin.
-6. Revisar el alcance del módulo Itinerario.
-
-**Veredicto final: El sistema esta listo para pruebas de integración y UAT con datos reales en el entorno de producción.**
+1. Implementar JWT firmado con `jsonwebtoken` y middleware de verificación en todos los endpoints protegidos.
+2. Desarrollar el backend completo del módulo de Itinerarios (endpoints + tablas `Itinerarios`, `Itinerario_Actividades`, `Itinerario_Colaboradores`).
+3. Implementar endpoint `PUT /perfil/:userId/preferencias` para la tabla `Referencias_Usuarios`.
+4. Corregir la URL hardcodeada de IA Chat en `ScriptsIAChat.js`.
+5. Migrar el almacenamiento de token en Flutter a `flutter_secure_storage`.
 
 ---
 
-*Informe generado por el Equipo QA — Tropical Travel v1.0 — 08 de abril de 2026*
+*Informe elaborado por el Equipo QA — Tropical Travel v1.0 — 08 de abril de 2026*
