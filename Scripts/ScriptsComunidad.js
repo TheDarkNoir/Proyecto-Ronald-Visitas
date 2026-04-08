@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loggedUserId = loggedUser.userId || loggedUser.id;
     const loggedName = loggedUser.username || 'Usuario';
     const currentInitials = loggedName.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
-    document.getElementById('userInitials').textContent = currentInitials;
+    const uiEl = document.getElementById('userInitials');
+    if (uiEl) uiEl.textContent = currentInitials;
     document.getElementById('currentUserAvatar').textContent = currentInitials;
 
     let activeChatId = null;

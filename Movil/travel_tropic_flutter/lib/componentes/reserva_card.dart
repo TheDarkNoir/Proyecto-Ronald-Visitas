@@ -36,16 +36,18 @@ class ReservaCard extends StatelessWidget {
           children: [
             // Imagen
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.horizontal(left: Radius.circular(16)),
-              child: reserva.destinoImagen != null &&
+              borderRadius: const BorderRadius.horizontal(
+                left: Radius.circular(16),
+              ),
+              child:
+                  reserva.destinoImagen != null &&
                       reserva.destinoImagen!.isNotEmpty
                   ? Image.network(
                       reserva.destinoImagen!,
                       width: 110,
                       height: 110,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _placeholder(),
+                      errorBuilder: (_, _, _) => _placeholder(),
                     )
                   : _placeholder(),
             ),
@@ -70,15 +72,20 @@ class ReservaCard extends StatelessWidget {
                     if (reserva.destinoPais != null)
                       Row(
                         children: [
-                          const Icon(Icons.location_on,
-                              size: 13, color: AppTheme.textSecondary),
+                          const Icon(
+                            Icons.location_on,
+                            size: 13,
+                            color: AppTheme.textSecondary,
+                          ),
                           const SizedBox(width: 3),
                           Text(
                             [reserva.destinoCiudad, reserva.destinoPais]
                                 .where((e) => e != null && e.isNotEmpty)
                                 .join(', '),
                             style: const TextStyle(
-                                fontSize: 12, color: AppTheme.textSecondary),
+                              fontSize: 12,
+                              color: AppTheme.textSecondary,
+                            ),
                           ),
                         ],
                       ),
@@ -86,7 +93,9 @@ class ReservaCard extends StatelessWidget {
                     // Estado
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: _statusColor.withAlpha(30),
                         borderRadius: BorderRadius.circular(8),

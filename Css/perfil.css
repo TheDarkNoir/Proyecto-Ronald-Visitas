@@ -155,62 +155,6 @@
 }
 
 
-/* notification-popup styles moved to ClienteStyle.css */
-
-.notifications-list {
-    max-height: 340px;
-    overflow-y: auto;
-}
-
-.notification-item {
-    display: flex;
-    gap: 12px;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--perfil-border);
-}
-
-.notification-item.unread {
-    background: #f8fafc;
-}
-
-.notification-icon {
-    font-size: 1.5em;
-    flex-shrink: 0;
-}
-
-.notification-content .notification-title {
-    font-weight: 600;
-    margin: 0 0 4px 0;
-}
-
-.notification-content .notification-text {
-    margin: 0;
-    font-size: 0.9em;
-    color: var(--perfil-text-muted);
-}
-
-.notification-time {
-    font-size: 0.75em;
-    color: #94a3b8;
-    margin-top: 6px;
-}
-
-.btn-mark-read {
-    width: 100%;
-    padding: 12px;
-    background: var(--perfil-surface);
-    border: none;
-    border-top: 1px solid var(--perfil-border);
-    color: var(--perfil-accent-strong);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-mark-read:hover {
-    background: #fff4f1;
-}
-
 /* Profile Tabs */
 .profile-tabs {
     display: flex;
@@ -336,6 +280,21 @@
 
 .settings-item:last-child {
     border-bottom: none;
+}
+
+.password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+    margin: 18px 0 28px;
+    background: linear-gradient(135deg, #fff8f6 0%, #fff 100%);
+    border: 1px solid #ffd8cf;
+    border-radius: 14px;
+}
+
+.form-row.single-column {
+    grid-template-columns: 1fr;
 }
 
 .setting-title {

@@ -797,6 +797,68 @@ app.put('/perfil/:userId', async (req, res) => {
     }
 });
 
+app.put('/perfil/:userId/password', async (req, res) => {
+    try {
+        const userId = String(req.params?.userId || '').trim();
+        if (!isUuid(userId)) {
+            return res.status(400).json({ error: 'ID de usuario no válido.' });
+        }
+
+        const currentPassword = String(req.body?.currentPassword || '');
+        const newPassword = String(req.body?.newPassword || '');
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: 'Debes enviar la contraseña actual y la nueva contraseña.' });
+        }
+
+        if (newPassword.length < 8) {
+            return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 8 caracteres.' });
+        }
+
+        const { data: user, error: userError } = await supabase
+            .from('Usuarios')
+            .select('id, password')
+            .eq('id', userId)
+            .maybeSingle();
+
+        if (userError) {
+            console.error('Error consultando contraseña actual:', userError);
+            return res.status(500).json({ error: 'No se pudo validar la contraseña actual.' });
+        }
+
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        let isPasswordValid = false;
+        if (user.password && user.password.startsWith('$2')) {
+            isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        } else {
+            isPasswordValid = currentPassword === user.password;
+        }
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: 'La contraseña actual es incorrecta.' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const { error: updateError } = await supabase
+            .from('Usuarios')
+            .update({ password: hashedPassword, updated_at: new Date().toISOString() })
+            .eq('id', userId);
+
+        if (updateError) {
+            console.error('Error actualizando contraseña:', updateError);
+            return res.status(500).json({ error: 'No se pudo actualizar la contraseña.' });
+        }
+
+        res.json({ message: 'Contraseña actualizada correctamente.' });
+    } catch (error) {
+        console.error('Server error en /perfil/password PUT:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+});
+
 // Endpoint para listar usuarios en comunidad
 app.get('/usuarios', async (req, res) => {
     try {

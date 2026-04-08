@@ -6,8 +6,8 @@
     <title>Tropical Travel - IA Chat</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../Css/ClienteStyle.css">
-    <link rel="stylesheet" href="../Css/IAChat.css">
+    <link rel="stylesheet" href="../Css/ClienteStyle.css?v=20260407-3">
+    <link rel="stylesheet" href="../Css/IAChat.css?v=20260407-3">
 
     <!-- ICONO -->
     <link rel="icon" href="../Imagenes/Icon_tropicals_T.png">
@@ -23,24 +23,44 @@
             <div class="logo-icon" style="background-image: url('../Imagenes/Icon_tropicals_T.png');"></div>
             <span class="logo-text">Tropical Travel</span>
         </div>
-
         <nav class="top-nav">
-            <button class="nav-btn image-button-only" onclick="window.location.href='Explorar.html'" aria-label="Explorar" title="Explorar"><img class="nav-btn-icon" src="../Imagenes/Botones_Iconos/Explorar.png" alt="" aria-hidden="true"></button>
-            <button class="nav-btn image-button-only" onclick="window.location.href='MisViajes.html'" aria-label="Mis Viajes" title="Mis Viajes"><img class="nav-btn-icon" src="../Imagenes/Botones_Iconos/MisViajes.png" alt="" aria-hidden="true"></button>
-            <button class="nav-btn image-button-only" onclick="window.location.href='Comunidad.html'" aria-label="Comunidad" title="Comunidad"><img class="nav-btn-icon" src="../Imagenes/Botones_Iconos/Comunidad.png" alt="" aria-hidden="true"></button>
-            <button class="btn-iachat image-button-only active" aria-label="IA Chat" title="IA Chat"><img class="nav-btn-icon" src="../Imagenes/Botones_Iconos/ChatBot.png" alt="" aria-hidden="true"></button>
+            <button class="nav-btn" onclick="location.href='Explorar.html'" title="Explorar"><span class="nav-btn-glyph">🧭</span><span class="nav-btn-label">Explorar</span></button>
+            <button class="nav-btn" onclick="location.href='MisViajes.html'" title="Mis Viajes"><span class="nav-btn-glyph">🧳</span><span class="nav-btn-label">Mis Viajes</span></button>
+            <button class="nav-btn" onclick="location.href='Comunidad.html'" title="Comunidad"><span class="nav-btn-glyph">👥</span><span class="nav-btn-label">Comunidad</span></button>
+            <button class="btn-iachat active" title="IA Chat"><span class="nav-btn-glyph">💬</span><span class="nav-btn-label">IA Chat</span></button>
         </nav>
-
         <div class="header-actions">
-            <div class="notification-wrapper">
-                <button class="notification-btn" id="notificationBtn">🔔</button>
-                <div class="notification-badge" id="notificationBadge">3</div>
-            </div>
-            <div class="user-avatar" id="userInitials" onclick="window.location.href='Perfil.html'" title="Mi perfil">US</div>
+            <button class="nav-btn" onclick="location.href='Perfil.html'" title="Perfil"><span class="nav-btn-glyph">👤</span><span class="nav-btn-label">Perfil</span></button>
+            <button class="header-logout-btn" id="headerLogout" title="Cerrar sesión">⇥</button>
         </div>
+
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
+            <span></span><span></span><span></span>
+        </button>
 
     </div>
 </header>
+
+<!-- OVERLAY + DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<nav class="sidebar-drawer" id="sidebarDrawer" aria-hidden="true">
+    <div class="drawer-header">
+        <div class="drawer-logo">
+            <div class="logo-icon" style="background-image: url('../Imagenes/Icon_tropicals_T.png');"></div>
+            <span class="logo-text">Tropical Travel</span>
+        </div>
+        <button class="drawer-close" id="drawerClose" aria-label="Cerrar menú">✕</button>
+    </div>
+    <div class="drawer-body">
+        <button class="drawer-nav-item" onclick="location.href='Explorar.html'"><span class="drawer-nav-icon">🧭</span> Explorar</button>
+        <button class="drawer-nav-item" onclick="location.href='MisViajes.html'"><span class="drawer-nav-icon">🧳</span> Mis Viajes</button>
+        <button class="drawer-nav-item" onclick="location.href='Comunidad.html'"><span class="drawer-nav-icon">👥</span> Comunidad</button>
+        <button class="drawer-nav-item active" onclick="location.href='IAChat.html'"><span class="drawer-nav-icon">✦</span> IA Chat</button>
+        <div class="drawer-divider"></div>
+        <button class="drawer-nav-item" onclick="location.href='Perfil.html'"><span class="drawer-nav-icon">👤</span> Mi Perfil</button>
+        <button class="drawer-nav-item drawer-logout" id="drawerLogout"><span class="drawer-nav-icon">⇥</span> Cerrar Sesión</button>
+    </div>
+</nav>
 
 <!-- CHAT -->
 <section class="chat-section">
@@ -80,8 +100,16 @@
 </section>
 
 <!-- SCRIPTS -->
-<script src="../Scripts/ScriptsIAChat.js"></script>
-<script src="../Scripts/ScriptsNotificacion.js"></script>
+<script src="../Scripts/ScriptsIAChat.js?v=20260407-3"></script>
+
+<nav class="bottom-nav-bar" aria-label="Navegación principal">
+    <button class="bottom-nav-item" onclick="location.href='Explorar.html'" title="Explorar"><span class="bnav-icon">🧭</span><span>Explorar</span></button>
+    <button class="bottom-nav-item" onclick="location.href='MisViajes.html'" title="Mis Viajes"><span class="bnav-icon">🧳</span><span>Mis Viajes</span></button>
+    <button class="bottom-nav-item" onclick="location.href='Comunidad.html'" title="Comunidad"><span class="bnav-icon">👥</span><span>Comunidad</span></button>
+    <button class="bottom-nav-item active" onclick="location.href='IAChat.html'" title="IA Chat"><span class="bnav-icon">✦</span><span>IA Chat</span></button>
+    <button class="bottom-nav-item" onclick="location.href='Perfil.html'" title="Perfil"><span class="bnav-icon">👤</span><span>Perfil</span></button>
+</nav>
+<script>(function(){var btn=document.getElementById('hamburgerBtn'),ov=document.getElementById('drawerOverlay'),dr=document.getElementById('sidebarDrawer'),cl=document.getElementById('drawerClose');function o(){dr.classList.add('open');ov.classList.add('active');dr.setAttribute('aria-hidden','false');}function c(){dr.classList.remove('open');ov.classList.remove('active');dr.setAttribute('aria-hidden','true');}btn.addEventListener('click',o);ov.addEventListener('click',c);cl.addEventListener('click',c);document.addEventListener('keydown',function(e){if(e.key==='Escape')c();});var lo=document.getElementById('drawerLogout');if(lo)lo.addEventListener('click',function(){localStorage.clear();sessionStorage.clear();location.href='../index.html';});var hl=document.getElementById('headerLogout');if(hl)hl.addEventListener('click',function(){localStorage.clear();sessionStorage.clear();location.href='../index.html';});}());</script>
 
 </body>
 </html>

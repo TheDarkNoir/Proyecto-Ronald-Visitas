@@ -17,10 +17,10 @@ class PerfilService {
   }) async {
     final data = await ApiService.put('/perfil/$userId', {
       'nombre': nombre,
-      if (telefono != null) 'telefono': telefono,
-      if (pais != null) 'pais': pais,
-      if (ciudad != null) 'ciudad': ciudad,
-      if (fechaNacimiento != null) 'fecha_nacimiento': fechaNacimiento,
+      'telefono': ?telefono,
+      'pais': ?pais,
+      'ciudad': ?ciudad,
+      'fecha_nacimiento': ?fechaNacimiento,
     });
     return User.fromJson(data['user'] ?? data);
   }

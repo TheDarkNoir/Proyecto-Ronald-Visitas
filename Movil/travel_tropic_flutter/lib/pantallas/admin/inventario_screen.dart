@@ -59,7 +59,8 @@ class _InventarioScreenState extends State<InventarioScreen> {
     final ciudadC = TextEditingController(text: existing?['ciudad'] ?? '');
     final descC = TextEditingController(text: existing?['descripcion'] ?? '');
     final precioC = TextEditingController(
-        text: existing?['precio']?.toString() ?? '');
+      text: existing?['precio']?.toString() ?? '',
+    );
     bool activo = existing?['activo'] ?? true;
 
     showModalBottomSheet(
@@ -84,7 +85,9 @@ class _InventarioScreenState extends State<InventarioScreen> {
                 Text(
                   isEdit ? 'Editar Destino' : 'Nuevo Destino',
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -117,7 +120,7 @@ class _InventarioScreenState extends State<InventarioScreen> {
                 SwitchListTile(
                   title: const Text('Activo'),
                   value: activo,
-                  activeColor: AppTheme.primaryColor,
+                  activeThumbColor: AppTheme.primaryColor,
                   onChanged: (v) => setLocal(() => activo = v),
                 ),
                 const SizedBox(height: 16),
@@ -138,15 +141,16 @@ class _InventarioScreenState extends State<InventarioScreen> {
                             'pais': paisC.text.trim(),
                             'ciudad': ciudadC.text.trim(),
                             'descripcion': descC.text.trim(),
-                            'precio':
-                                double.tryParse(precioC.text) ?? 0,
+                            'precio': double.tryParse(precioC.text) ?? 0,
                             'activo': activo,
                           };
                           Navigator.pop(ctx);
                           try {
                             if (isEdit) {
                               await AdminService.actualizarDestino(
-                                  existing['id'].toString(), data);
+                                existing['id'].toString(),
+                                data,
+                              );
                             } else {
                               await AdminService.crearDestino(data);
                             }
@@ -180,11 +184,14 @@ class _InventarioScreenState extends State<InventarioScreen> {
         content: Text('¿Eliminar "${destino['nombre']}"?'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('No')),
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('No'),
+          ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.dangerColor),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.dangerColor,
+            ),
             child: const Text('Eliminar'),
           ),
         ],
@@ -197,8 +204,9 @@ class _InventarioScreenState extends State<InventarioScreen> {
       _load();
     } on ApiException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
@@ -252,54 +260,52 @@ class _InventarioScreenState extends State<InventarioScreen> {
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _filtrados.isEmpty
-                    ? const Center(child: Text('No hay destinos'))
-                    : RefreshIndicator(
-                        onRefresh: _load,
-                        child: ListView.separated(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: _filtrados.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 8),
-                          itemBuilder: (_, i) {
-                            final d = _filtrados[i];
-                            final activo = d['activo'] == true;
-                            return Card(
-                              child: ListTile(
-                                leading: Icon(
-                                  activo
-                                      ? Icons.check_circle
-                                      : Icons.cancel,
-                                  color: activo
-                                      ? AppTheme.successColor
-                                      : AppTheme.dangerColor,
+                ? const Center(child: Text('No hay destinos'))
+                : RefreshIndicator(
+                    onRefresh: _load,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _filtrados.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      itemBuilder: (_, i) {
+                        final d = _filtrados[i];
+                        final activo = d['activo'] == true;
+                        return Card(
+                          child: ListTile(
+                            leading: Icon(
+                              activo ? Icons.check_circle : Icons.cancel,
+                              color: activo
+                                  ? AppTheme.successColor
+                                  : AppTheme.dangerColor,
+                            ),
+                            title: Text(d['nombre'] ?? ''),
+                            subtitle: Text(
+                              '${d['ciudad'] ?? ''}, ${d['pais'] ?? ''} • \$${d['precio'] ?? 0}',
+                            ),
+                            trailing: PopupMenuButton(
+                              itemBuilder: (_) => [
+                                const PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Editar'),
                                 ),
-                                title: Text(d['nombre'] ?? ''),
-                                subtitle: Text(
-                                  '${d['ciudad'] ?? ''}, ${d['pais'] ?? ''} • \$${d['precio'] ?? 0}',
+                                const PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text(
+                                    'Eliminar',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
                                 ),
-                                trailing: PopupMenuButton(
-                                  itemBuilder: (_) => [
-                                    const PopupMenuItem(
-                                      value: 'edit',
-                                      child: Text('Editar'),
-                                    ),
-                                    const PopupMenuItem(
-                                      value: 'delete',
-                                      child: Text('Eliminar',
-                                          style:
-                                              TextStyle(color: Colors.red)),
-                                    ),
-                                  ],
-                                  onSelected: (v) {
-                                    if (v == 'edit') _showForm(d);
-                                    if (v == 'delete') _delete(d);
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                              ],
+                              onSelected: (v) {
+                                if (v == 'edit') _showForm(d);
+                                if (v == 'delete') _delete(d);
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),

@@ -38,9 +38,11 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     var list = List<dynamic>.from(_usuarios);
     if (_filtroRol != 'Todos') {
       list = list
-          .where((u) =>
-              (u['rol'] ?? '').toString().toLowerCase() ==
-              _filtroRol.toLowerCase())
+          .where(
+            (u) =>
+                (u['rol'] ?? '').toString().toLowerCase() ==
+                _filtroRol.toLowerCase(),
+          )
           .toList();
     }
     if (_search.isNotEmpty) {
@@ -82,7 +84,9 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                 Text(
                   isEdit ? 'Editar Usuario' : 'Nuevo Usuario',
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -106,7 +110,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                   const SizedBox(height: 10),
                 ],
                 DropdownButtonFormField<String>(
-                  value: rol,
+                  initialValue: rol,
                   decoration: const InputDecoration(labelText: 'Rol'),
                   items: const [
                     DropdownMenuItem(value: 'cliente', child: Text('Cliente')),
@@ -139,7 +143,9 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                           try {
                             if (isEdit) {
                               await AdminService.actualizarUsuario(
-                                  existing['id'].toString(), data);
+                                existing['id'].toString(),
+                                data,
+                              );
                             } else {
                               await AdminService.crearUsuario(data);
                             }
@@ -173,11 +179,14 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
         content: Text('¿Eliminar "${user['nombre']}"?'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('No')),
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('No'),
+          ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.dangerColor),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.dangerColor,
+            ),
             child: const Text('Eliminar'),
           ),
         ],
@@ -190,8 +199,9 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
       _load();
     } on ApiException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
@@ -242,61 +252,62 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _filtrados.isEmpty
-                    ? const Center(child: Text('No hay usuarios'))
-                    : RefreshIndicator(
-                        onRefresh: _load,
-                        child: ListView.separated(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: _filtrados.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 8),
-                          itemBuilder: (_, i) {
-                            final u = _filtrados[i];
-                            final isAdmin =
-                                (u['rol'] ?? '').toString().toLowerCase() ==
-                                    'admin';
-                            return Card(
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: isAdmin
-                                      ? AppTheme.accentColor
-                                      : AppTheme.primaryColor,
-                                  child: Text(
-                                    _initials(u['nombre'] ?? ''),
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 14),
-                                  ),
-                                ),
-                                title: Text(u['nombre'] ?? ''),
-                                subtitle: Text(
-                                  '${u['email'] ?? ''} • ${(u['rol'] ?? '').toString().toUpperCase()}',
-                                ),
-                                trailing: PopupMenuButton(
-                                  itemBuilder: (_) => [
-                                    const PopupMenuItem(
-                                      value: 'edit',
-                                      child: Text('Editar'),
-                                    ),
-                                    const PopupMenuItem(
-                                      value: 'delete',
-                                      child: Text('Eliminar',
-                                          style:
-                                              TextStyle(color: Colors.red)),
-                                    ),
-                                  ],
-                                  onSelected: (v) {
-                                    if (v == 'edit') {
-                                      _showForm(
-                                          Map<String, dynamic>.from(u));
-                                    }
-                                    if (v == 'delete') _delete(u);
-                                  },
+                ? const Center(child: Text('No hay usuarios'))
+                : RefreshIndicator(
+                    onRefresh: _load,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _filtrados.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      itemBuilder: (_, i) {
+                        final u = _filtrados[i];
+                        final isAdmin =
+                            (u['rol'] ?? '').toString().toLowerCase() ==
+                            'admin';
+                        return Card(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: isAdmin
+                                  ? AppTheme.accentColor
+                                  : AppTheme.primaryColor,
+                              child: Text(
+                                _initials(u['nombre'] ?? ''),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                            ),
+                            title: Text(u['nombre'] ?? ''),
+                            subtitle: Text(
+                              '${u['email'] ?? ''} • ${(u['rol'] ?? '').toString().toUpperCase()}',
+                            ),
+                            trailing: PopupMenuButton(
+                              itemBuilder: (_) => [
+                                const PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Editar'),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text(
+                                    'Eliminar',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                              onSelected: (v) {
+                                if (v == 'edit') {
+                                  _showForm(Map<String, dynamic>.from(u));
+                                }
+                                if (v == 'delete') _delete(u);
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),
