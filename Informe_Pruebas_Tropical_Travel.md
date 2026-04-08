@@ -302,7 +302,7 @@ PORT=5501
 | **ID** | CP-01-02 |
 | **Modulo** | Modulo 1: Autenticacion |
 | **Estrategia** | EP-5 (Flujo negativo) |
-| **Datos de entrada** | `email: "cliente.test@tropical.com"`, `password: "ContrasennaIncorrecta"` |
+| **Datos de entrada** | `email: "cliente.test@tropical.com"`, `password: "ContraseñaIncorrecta"` |
 | **Pasos** | 1. Ingresar email correcto y contrasena incorrecta. 2. Clic "Iniciar sesion". |
 | **Resultado esperado** | HTTP 401. Alert con "Credenciales invalidas." No se guarda nada en `localStorage`. |
 | **Evidencia – Codigo servidor** | `servidor.js:382-391` — `isPasswordValid = await bcrypt.compare(password, usuarioData.password)`. Si `!isPasswordValid` → `return res.status(401).json({ error: 'Credenciales invalidas.' })`. |
@@ -376,21 +376,21 @@ PORT=5501
 
 ---
 
-#### CP-01-07 | Registro – Contrasennas no coinciden
+#### CP-01-07 | Registro – Contraseñas no coinciden
 
 | Campo | Detalle |
 |-------|---------|
 | **ID** | CP-01-07 |
 | **Modulo** | Modulo 1: Autenticacion |
 | **Datos de entrada** | `password: "Abc123"`, `confirmar: "Xyz789"` |
-| **Resultado esperado** | Alert "Las contrasennas no coinciden." Sin `fetch`. |
-| **Evidencia – Codigo cliente** | `Scripts/ScriptsReg.js:25-28` — `if (pass !== pass2) { alert('Las contrasennas no coinciden.'); return; }` |
+| **Resultado esperado** | Alert "Las contraseñas no coinciden." Sin `fetch`. |
+| **Evidencia – Codigo cliente** | `Scripts/ScriptsReg.js:25-28` — `if (pass !== pass2) { alert('Las contraseñas no coinciden.'); return; }` |
 | **Resultado obtenido** | Validacion frontend. No hace llamada al servidor. |
 | **Estado** | **APROBADO** |
 
 ---
 
-#### CP-01-08 | Registro – Contrasenna menor a 6 caracteres
+#### CP-01-08 | Registro – Contraseña menor a 6 caracteres
 
 | Campo | Detalle |
 |-------|---------|
@@ -398,14 +398,14 @@ PORT=5501
 | **Modulo** | Modulo 1: Autenticacion |
 | **Estrategia** | EP-3 (Boundary) |
 | **Datos de entrada** | `password: "Ab1"` (3 chars) |
-| **Resultado esperado** | Alert "La contrasenna debe tener al menos 6 caracteres." |
-| **Evidencia – Codigo cliente** | `Scripts/ScriptsReg.js:29-32` — `if (pass.length < 6) { alert('La contrasenna debe tener al menos 6 caracteres.'); return; }` |
+| **Resultado esperado** | Alert "La contraseña debe tener al menos 6 caracteres." |
+| **Evidencia – Codigo cliente** | `Scripts/ScriptsReg.js:29-32` — `if (pass.length < 6) { alert('La contraseña debe tener al menos 6 caracteres.'); return; }` |
 | **Resultado obtenido** | Validado en frontend. |
 | **Estado** | **APROBADO** |
 
 ---
 
-#### CP-01-09 | Registro – Contrasenna de exactamente 6 caracteres (limite)
+#### CP-01-09 | Registro – Contraseña de exactamente 6 caracteres (limite)
 
 | Campo | Detalle |
 |-------|---------|
@@ -413,11 +413,11 @@ PORT=5501
 | **Modulo** | Modulo 1: Autenticacion |
 | **Estrategia** | EP-3 (Boundary) |
 | **Datos de entrada** | `password: "Ab1234"` (6 chars), `confirmar: "Ab1234"` |
-| **Resultado esperado** | Registro exitoso. La contrasenna de 6 chars es aceptada. |
+| **Resultado esperado** | Registro exitoso. La contraseña de 6 chars es aceptada. |
 | **Evidencia** | `Scripts/ScriptsReg.js:29` — condicion `< 6`, por lo que 6 caracteres pasa la validacion. |
 | **Resultado obtenido** | 6 caracteres pasa la validacion del registro. |
 | **Estado** | **OBSERVACIONES** |
-| **Nota** | Esta regla difiere del modulo de cambio de contrasenna que exige minimo 8 caracteres. Ver DEF-01. |
+| **Nota** | Esta regla difiere del modulo de cambio de contraseña que exige minimo 8 caracteres. Ver DEF-01. |
 
 ---
 
@@ -690,7 +690,7 @@ PORT=5501
 | **Resultado esperado** | Solo tarjetas con `status === 'confirmed'` visibles. |
 | **Evidencia – Codigo cliente** | `Scripts/ScriptsFichasViaje.js:83-85` — `const filtered = tripsData.filter(t => filter === 'all' \|\| t.status === filter)`. |
 | **Evidencia – Normalizacion** | `Scripts/ScriptsFichasViaje.js:34-41` — `normalizeStatus(status)`: `['confirmado','confirmed']` → `'confirmed'`; `['cancelado','cancelled']` → `'cancelled'`; default → `'pending'`. |
-| **Resultado obtenido** | Filtrado local con normalizacion de valores en espannol e ingles. |
+| **Resultado obtenido** | Filtrado local con normalizacion de valores en español e ingles. |
 | **Estado** | **APROBADO** |
 
 ---
@@ -772,22 +772,22 @@ PORT=5501
 
 ---
 
-#### CP-04-04 | Cambio de contrasenna exitoso
+#### CP-04-04 | Cambio de contraseña exitoso
 
 | Campo | Detalle |
 |-------|---------|
 | **ID** | CP-04-04 |
 | **Modulo** | Modulo 4: Perfil |
 | **Datos de entrada** | `PUT /perfil/UUID-CLIENTE/password` — `{ "currentPassword": "Clave123", "newPassword": "NuevaClave456", "confirmPassword": "NuevaClave456" }` |
-| **Resultado esperado** | HTTP 200. "Contrasenna actualizada correctamente." Campos de contrasenna limpiados en el formulario. |
+| **Resultado esperado** | HTTP 200. "Contraseña actualizada correctamente." Campos de contraseña limpiados en el formulario. |
 | **Evidencia – Codigo servidor** | `servidor.js:833-854` — `bcrypt.compare(currentPassword, user.password)` → si valida → `bcrypt.hash(newPassword, 10)` → UPDATE en Supabase. |
 | **Evidencia – Codigo cliente** | `Scripts/ScriptsCliente.js:64-103` — `changePassword()`: valida que los 3 campos esten llenos, que `newPassword.length >= 8`, que `newPassword === confirmPassword`. Tras exito limpia los 3 campos. |
-| **Resultado obtenido** | Verificacion bcrypt de contrasenna actual + rehash de nueva contrasenna. |
+| **Resultado obtenido** | Verificacion bcrypt de contraseña actual + rehash de nueva contraseña. |
 | **Estado** | **APROBADO** |
 
 ---
 
-#### CP-04-05 | Cambio contrasenna – Nueva menor a 8 caracteres
+#### CP-04-05 | Cambio contraseña – Nueva menor a 8 caracteres
 
 | Campo | Detalle |
 |-------|---------|
@@ -795,38 +795,38 @@ PORT=5501
 | **Modulo** | Modulo 4: Perfil |
 | **Estrategia** | EP-3 (Boundary) |
 | **Datos de entrada** | `newPassword: "Ab1234"` (6 chars), `newPassword: "Ab12345"` (7 chars) |
-| **Resultado esperado** | Alert "La nueva contrasenna debe tener al menos 8 caracteres." Sin `fetch`. |
-| **Evidencia – Codigo cliente** | `Scripts/ScriptsCliente.js:74-77` — `if (newPassword.length < 8) { alert('La nueva contrasenna debe tener al menos 8 caracteres.'); return; }` |
-| **Evidencia – Codigo servidor** | `servidor.js:814-816` — `if (newPassword.length < 8) { return res.status(400).json({ error: 'La nueva contrasenna debe tener al menos 8 caracteres.' }); }` |
+| **Resultado esperado** | Alert "La nueva contraseña debe tener al menos 8 caracteres." Sin `fetch`. |
+| **Evidencia – Codigo cliente** | `Scripts/ScriptsCliente.js:74-77` — `if (newPassword.length < 8) { alert('La nueva contraseña debe tener al menos 8 caracteres.'); return; }` |
+| **Evidencia – Codigo servidor** | `servidor.js:814-816` — `if (newPassword.length < 8) { return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 8 caracteres.' }); }` |
 | **Resultado obtenido** | Validacion doble. 7 chars rechazado, 8 chars aceptado. |
 | **Estado** | **OBSERVACIONES** |
-| **Nota** | El registro acepta contrasennas de 6 chars pero el cambio exige 8 chars minimo. Ver DEF-01. |
+| **Nota** | El registro acepta contraseñas de 6 chars pero el cambio exige 8 chars minimo. Ver DEF-01. |
 
 ---
 
-#### CP-04-06 | Cambio contrasenna – Contrasennas nuevas no coinciden
+#### CP-04-06 | Cambio contraseña – Contraseñas nuevas no coinciden
 
 | Campo | Detalle |
 |-------|---------|
 | **ID** | CP-04-06 |
 | **Modulo** | Modulo 4: Perfil |
 | **Datos de entrada** | `newPassword: "NuevaClave456"`, `confirmPassword: "OtraClave789"` |
-| **Resultado esperado** | Alert "La confirmacion de la contrasenna no coincide." |
-| **Evidencia – Codigo cliente** | `Scripts/ScriptsCliente.js:79-82` — `if (newPassword !== confirmPassword) { alert('La confirmacion de la contrasenna no coincide.'); return; }` |
+| **Resultado esperado** | Alert "La confirmacion de la contraseña no coincide." |
+| **Evidencia – Codigo cliente** | `Scripts/ScriptsCliente.js:79-82` — `if (newPassword !== confirmPassword) { alert('La confirmacion de la contraseña no coincide.'); return; }` |
 | **Resultado obtenido** | Validado en cliente antes de enviar. |
 | **Estado** | **APROBADO** |
 
 ---
 
-#### CP-04-07 | Cambio contrasenna – Contrasenna actual incorrecta
+#### CP-04-07 | Cambio contraseña – Contraseña actual incorrecta
 
 | Campo | Detalle |
 |-------|---------|
 | **ID** | CP-04-07 |
 | **Modulo** | Modulo 4: Perfil |
-| **Datos de entrada** | `currentPassword: "ContrasennaEquivocada"`, `newPassword: "NuevaClave456"` |
-| **Resultado esperado** | HTTP 401. "La contrasenna actual es incorrecta." |
-| **Evidencia – Codigo servidor** | `servidor.js:839-842` — `if (!isPasswordValid) { return res.status(401).json({ error: 'La contrasenna actual es incorrecta.' }); }` |
+| **Datos de entrada** | `currentPassword: "ContraseñaEquivocada"`, `newPassword: "NuevaClave456"` |
+| **Resultado esperado** | HTTP 401. "La contraseña actual es incorrecta." |
+| **Evidencia – Codigo servidor** | `servidor.js:839-842` — `if (!isPasswordValid) { return res.status(401).json({ error: 'La contraseña actual es incorrecta.' }); }` |
 | **Resultado obtenido** | bcrypt.compare bloquea correctamente. |
 | **Estado** | **APROBADO** |
 
@@ -900,7 +900,7 @@ PORT=5501
 | **Modulo** | Modulo 5: Comunidad |
 | **Datos de entrada** | `groupNameInput.value = "Viajeros Colombia"`. Seleccionar al menos 1 miembro. Clic "Crear Grupo". |
 | **Resultado esperado** | Nuevo grupo creado y visible en la lista de chats. Guardado en `localStorage`. |
-| **Evidencia – Codigo cliente** | `Scripts/ScriptsComunidad.js` — `confirmCreateGroup` crea objeto `{id, type:'group', name, members:[...], messages:[]}` y lo annnade al array `chats`. Llama `saveChats()`. |
+| **Evidencia – Codigo cliente** | `Scripts/ScriptsComunidad.js` — `confirmCreateGroup` crea objeto `{id, type:'group', name, members:[...], messages:[]}` y lo añade al array `chats`. Llama `saveChats()`. |
 | **Resultado obtenido** | Grupos creados y persistidos localmente. |
 | **Estado** | **APROBADO** |
 
@@ -1118,12 +1118,12 @@ PORT=5501
 | **ID** | CP-07-10 |
 | **Modulo** | Modulo 7: Panel de Administracion |
 | **Datos de entrada** | `POST /admin/usuarios` — `{ "adminId": "UUID-ADMIN", "nombre": "Carlos Lopez", "email": "carlos@empresa.com", "password": "DefaultPass8", "rol": "cliente", "pais": "Colombia", "ciudad": "Cali" }` |
-| **Resultado esperado** | HTTP 201. Usuario creado con contrasenna hasheada. |
-| **Evidencia – Codigo servidor** | `servidor.js:1366-1380` — `bcrypt.hash(password, 10)`. INSERT con todos los campos. Retorna usuario creado sin contrasenna. |
-| **Nota de seguridad** | `servidor.js:1341` — La contrasenna por defecto si no se provee es `"12345678"`. Esto es un riesgo de seguridad. |
-| **Resultado obtenido** | Creacion funcional. Contrasenna default debil si no se especifica. |
+| **Resultado esperado** | HTTP 201. Usuario creado con contraseña hasheada. |
+| **Evidencia – Codigo servidor** | `servidor.js:1366-1380` — `bcrypt.hash(password, 10)`. INSERT con todos los campos. Retorna usuario creado sin contraseña. |
+| **Nota de seguridad** | `servidor.js:1341` — La contraseña por defecto si no se provee es `"12345678"`. Esto es un riesgo de seguridad. |
+| **Resultado obtenido** | Creacion funcional. Contraseña default debil si no se especifica. |
 | **Estado** | **OBSERVACIONES** |
-| **Nota** | Ver OBS-02 sobre contrasenna por defecto debil. |
+| **Nota** | Ver OBS-02 sobre contraseña por defecto debil. |
 
 ---
 
@@ -1308,17 +1308,17 @@ PORT=5501
 
 ## 9. Defectos Registrados
 
-### DEF-01 | Inconsistencia en longitud minima de contrasenna
+### DEF-01 | Inconsistencia en longitud minima de contraseña
 
 | Campo | Detalle |
 |-------|---------|
 | **ID** | DEF-01 |
 | **Severidad** | Baja |
 | **Modulo afectado** | Modulo 1: Autenticacion / Modulo 4: Perfil |
-| **Descripcion** | La validacion de contrasenna minima es inconsistente entre modulos: el registro acepta 6 caracteres, pero el cambio de contrasenna exige 8. |
-| **Pasos para reproducir** | 1. En `Registro.html`, crear cuenta con contrasenna `"Ab1234"` (6 chars) — registro exitoso. 2. En `Perfil.html`, cambiar contrasenna a `"Ab1234"` (6 chars) — rechazado. |
+| **Descripcion** | La validacion de contraseña minima es inconsistente entre modulos: el registro acepta 6 caracteres, pero el cambio de contraseña exige 8. |
+| **Pasos para reproducir** | 1. En `Registro.html`, crear cuenta con contraseña `"Ab1234"` (6 chars) — registro exitoso. 2. En `Perfil.html`, cambiar contraseña a `"Ab1234"` (6 chars) — rechazado. |
 | **Evidencia** | `Scripts/ScriptsReg.js:29` — `if (pass.length < 6)` | `Scripts/ScriptsCliente.js:74` — `if (newPassword.length < 8)` | `servidor.js:814` — `if (newPassword.length < 8)` |
-| **Impacto** | Confusion del usuario. Una contrasenna valida al registrarse no puede usarse al cambiarla. |
+| **Impacto** | Confusion del usuario. Una contraseña valida al registrarse no puede usarse al cambiarla. |
 | **Recomendacion** | Unificar en 8 caracteres. Actualizar el placeholder de `Registro.html:32` de "minimo 6 caracteres" a "minimo 8 caracteres". |
 
 ---
@@ -1381,16 +1381,16 @@ PORT=5501
 
 ---
 
-### OBS-02 | Contrasenna por defecto debil al crear usuario desde admin
+### OBS-02 | Contraseña por defecto debil al crear usuario desde admin
 
 | Campo | Detalle |
 |-------|---------|
 | **ID** | OBS-02 |
 | **Severidad** | Baja (Seguridad) |
 | **Modulo afectado** | Modulo 7: Panel de Administracion |
-| **Descripcion** | Al crear un usuario desde el panel admin, si no se especifica contrasenna, se usa `"12345678"` como contrasenna por defecto. |
+| **Descripcion** | Al crear un usuario desde el panel admin, si no se especifica contraseña, se usa `"12345678"` como contraseña por defecto. |
 | **Evidencia** | `servidor.js:1341` — `const password = String(req.body?.password \|\| '12345678')` |
-| **Recomendacion** | Forzar al admin a especificar una contrasenna. O generar una contrasenna temporal aleatoria segura y mostrarla una sola vez. |
+| **Recomendacion** | Forzar al admin a especificar una contraseña. O generar una contraseña temporal aleatoria segura y mostrarla una sola vez. |
 
 ---
 
@@ -1435,7 +1435,7 @@ PORT=5501
 | Tipo de Criterio | Resultado | Cumplido |
 |------------------|-----------|----------|
 | **Cero defectos bloqueantes (Criticos)**: Ningun flujo principal de negocio debe fallar | No hay defectos en autenticacion, registro, reservas ni CRUD admin | SI |
-| **Seguridad basica**: Contrasennas hasheadas, mensajes de error genericos | Contrasennas con bcrypt. Mensajes 401 genericos. Token no firmado (DEF-04) | PARCIAL |
+| **Seguridad basica**: Contraseñas hasheadas, mensajes de error genericos | Contraseñas con bcrypt. Mensajes 401 genericos. Token no firmado (DEF-04) | PARCIAL |
 | **Validaciones de formulario**: Todos los campos obligatorios validados en cliente y servidor | 100% de formularios validados en ambas capas | SI |
 | **Control de acceso por roles**: Clientes no acceden a admin, admins no pueden crear reservas | Verificado en frontend y backend | SI |
 | **Manejo de errores**: Todos los flujos de error retornan mensajes descriptivos | HTTP status codes correctos. Mensajes descriptivos. Fallbacks implementados | SI |
@@ -1468,7 +1468,7 @@ El sistema **Tropical Travel** fue evaluado mediante analisis estatico exhaustiv
 
 | Fortaleza | Evidencia en codigo |
 |-----------|---------------------|
-| **Seguridad de contrasennas**: bcrypt con 10 salt rounds | `servidor.js:327, 844, 1366` |
+| **Seguridad de contraseñas**: bcrypt con 10 salt rounds | `servidor.js:327, 844, 1366` |
 | **Mensajes de error no reveladores**: 401 generico en login | `servidor.js:378-390` |
 | **Validacion doble**: Frontend + Backend en formularios clave | `ScriptsReg.js + servidor.js:303` |
 | **Control de roles**: Verificacion en frontend y backend | `ScriptsAdmin.js:18 + servidor.js:480` |
@@ -1485,8 +1485,8 @@ El sistema **Tropical Travel** fue evaluado mediante analisis estatico exhaustiv
 | 1 (Alta) | DEF-03 | Cambiar `'http://localhost:5501/chat'` → `'/chat'` | `Scripts/ScriptsIAChat.js:109` |
 | 2 (Alta) | DEF-04 | Implementar JWT firmado con middleware de verificacion | `servidor.js` — nuevo middleware + todos los endpoints |
 | 3 (Media) | DEF-02 | Implementar `PUT /perfil/:userId/deactivate` | `servidor.js` + `Scripts/ScriptsCliente.js` |
-| 4 (Baja) | DEF-01 | Unificar longitud minima de contrasenna a 8 chars | `Scripts/ScriptsReg.js:29` + `Registro.html:32` |
-| 5 (Baja) | OBS-02 | Requerir contrasenna al crear usuario desde admin | `servidor.js:1341` |
+| 4 (Baja) | DEF-01 | Unificar longitud minima de contraseña a 8 chars | `Scripts/ScriptsReg.js:29` + `Registro.html:32` |
+| 5 (Baja) | OBS-02 | Requerir contraseña al crear usuario desde admin | `servidor.js:1341` |
 | 6 (Baja) | OBS-03 | Eliminar redeclaraciones de `isUuid` | `servidor.js:739, 765` |
 | 7 (Baja) | OBS-04 | Estandarizar logica de logout | `Scripts/ScriptsCliente.js:170` |
 
