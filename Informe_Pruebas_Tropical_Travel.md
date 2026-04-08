@@ -1010,4 +1010,112 @@ Los siguientes requisitos funcionales de prioridad **Alta** o **Media** no está
 
 ---
 
+## 11. Conclusiones y Recomendaciones
+
+### 11.1 Resumen Ejecutivo
+
+El sistema **Tropical Travel v1.0** fue sometido a un proceso de pruebas funcionales, de seguridad y de integración móvil que abarcó **11 módulos** y **55 casos de prueba**. Los resultados globales indican un nivel de madurez suficiente para un despliegue controlado en ambientes de pre-producción, con restricciones específicas antes de pasar a producción.
+
+| Indicador | Valor |
+|---|---|
+| Total de casos de prueba ejecutados | 55 |
+| Casos aprobados (sin observaciones) | 33 (60%) |
+| Casos aprobados con observación | 11 (20%) |
+| Casos fallidos | 11 (20%) |
+| Tasa de aprobación efectiva (✅ + ⚠️) | **80%** |
+| Defectos registrados | 8 |
+| Defectos de severidad Alta | 2 (DEF-05, DEF-08) |
+| Defectos de severidad Media | 4 (DEF-01, DEF-03, DEF-04, DEF-07) |
+| Defectos de severidad Baja | 2 (DEF-02, DEF-06) |
+| Nivel de aceptación del sistema | **APROBADO CONDICIONALMENTE** |
+
+El sistema cumple el umbral mínimo de aceptación del 75% y satisface el 100% de los criterios en los módulos críticos de negocio (autenticación, reservaciones, panel de administración). No obstante, dos defectos de severidad Alta —la ausencia de backend en el módulo de Itinerarios y la implementación incorrecta del token de sesión— constituyen impedimentos para el despliegue en producción.
+
+---
+
+### 11.2 Fortalezas Identificadas
+
+Las siguientes características del sistema demostraron un funcionamiento correcto y robusto durante las pruebas, y representan una base sólida para el crecimiento del producto:
+
+#### ✅ Autenticación y Control de Acceso
+- El flujo completo de registro → login → sesión activa → logout funciona sin errores críticos.
+- La separación de roles `cliente` / `admin` se aplica correctamente en la interfaz web y en la aplicación móvil.
+- Las contraseñas se almacenan con **bcryptjs (factor 10)**, eliminando el riesgo de exposición de credenciales en texto plano.
+- La validación de campos en el formulario de registro es consistente entre frontend y backend.
+
+#### ✅ Módulo de Reservaciones
+- El ciclo de vida completo de una reserva (crear → listar → cancelar → cambio de estado por admin) funciona sin fallos.
+- La restricción de reserva duplicada está implementada a nivel de base de datos y validada por el servidor.
+
+#### ✅ Panel de Administración
+- Los 7 flujos de administración evaluados (acceso, gestión de destinos, gestión de usuarios, analytics) aprobaron sin observaciones.
+- El control de acceso al panel rechaza correctamente a usuarios con rol `cliente`.
+
+#### ✅ Aplicación Móvil Flutter
+- La app replica correctamente los flujos de autenticación, exploración de destinos, reservas, chat IA y administración.
+- La integración con la API REST es estable; todos los flujos críticos funcionan en dispositivo físico/emulador.
+
+#### ✅ Asistente IA (LawMoon)
+- La integración con la API de Anthropic Claude mediante **Server-Sent Events** funciona en streaming sin bloquear la interfaz.
+- El sistema maneja correctamente la indisponibilidad del servicio IA mostrando un mensaje de error controlado.
+
+#### ✅ Exploración de Destinos
+- El listado y la ficha de detalle de destinos cargan correctamente con todos los campos requeridos.
+- El filtro por categoría funciona tanto en web como en la app móvil.
+
+---
+
+### 11.3 Plan de Corrección de Defectos (Priorizado)
+
+Los defectos identificados se organizan en tres sprints de corrección según su severidad e impacto en la operación del sistema.
+
+---
+
+#### Sprint 1 — Correcciones Bloqueantes (Previo a Producción)
+
+Estos defectos son **obligatorios** antes de cualquier despliegue en producción. Afectan la seguridad o la disponibilidad de funcionalidades nucleares.
+
+| Defecto | Descripción | Responsable sugerido | Esfuerzo estimado |
+|---|---|---|---|
+| **DEF-08** | Implementar JWT firmado con `jsonwebtoken`: generar token con `jwt.sign()`, configurar expiración (`expiresIn`), y crear middleware `verifyToken` que valide firma y expiración en todos los endpoints protegidos. Eliminar el token Base64 simple. | Backend Lead | 2–3 días |
+| **DEF-05** | Desarrollar el backend completo del módulo de Itinerarios: endpoints `POST /itinerarios`, `GET /itinerarios/:userId`, `PUT /itinerarios/:id`, `DELETE /itinerarios/:id`, `POST /itinerarios/:id/actividades`, `POST /itinerarios/:id/colaboradores`. Validar contra tablas `Itinerarios`, `Itinerario_Actividades`, `Itinerario_Colaboradores`. | Backend + Frontend | 5–7 días |
+
+---
+
+#### Sprint 2 — Correcciones de Funcionalidad Media (Semana 1 post-lanzamiento)
+
+Afectan funcionalidades prometidas al usuario final que están incompletas. No bloquean la operación principal pero degradan la experiencia.
+
+| Defecto | Descripción | Responsable sugerido | Esfuerzo estimado |
+|---|---|---|---|
+| **DEF-01** | Implementar endpoint `PUT /perfil/:userId/preferencias` que persista los campos `intereses`, `presupuesto` e `idiomas_preferidos` en la tabla `Referencias_Usuarios`. Conectar el formulario de preferencias en `EditarPerfil.html` a este endpoint. | Backend + Frontend | 1–2 días |
+| **DEF-03** | Agregar filtro por dificultad en `GET /destinos?dificultad=` en el servidor y el selector correspondiente en la interfaz de Exploración. | Backend + Frontend | 1 día |
+| **DEF-04** | Agregar filtro por rango de precio en `GET /destinos?precioMin=&precioMax=` en el servidor e inputs numéricos en la interfaz de Exploración. | Backend + Frontend | 1 día |
+| **DEF-07** | Implementar notificación al cliente cuando el administrador cambia el estado de su reserva. Opciones: websocket, polling periódico o correo electrónico mediante `nodemailer`. Registrar notificación en tabla `Notificaciones`. | Backend | 2–3 días |
+
+---
+
+#### Sprint 3 — Mejoras Menores (Semana 2–3 post-lanzamiento)
+
+Defectos de baja severidad o mejoras de calidad que no afectan flujos críticos.
+
+| Defecto | Descripción | Responsable sugerido | Esfuerzo estimado |
+|---|---|---|---|
+| **DEF-02** | Implementar endpoint `PUT /perfil/:userId/foto` con `multer` para subir imagen de perfil al servidor o a un bucket S3/Supabase Storage. Mostrar la imagen en el perfil y en la barra de navegación. | Backend + Frontend | 2 días |
+| **DEF-06** | Implementar endpoint `POST /comunidad/reportes` que almacene el reporte en la tabla `Reportes` con `id_reportador`, `id_reportado`, `motivo` y `fecha`. Conectar el formulario de reporte en la interfaz de Comunidad. | Backend + Frontend | 1 día |
+| *(Mejora)* | Reemplazar la URL hardcodeada `http://localhost:3000` en `ScriptsIAChat.js` por una variable de entorno o constante de configuración para evitar errores en despliegues que no sean localhost. | Frontend | < 1 día |
+| *(Mejora)* | Migrar el almacenamiento del token en Flutter de `SharedPreferences` a `flutter_secure_storage` para cumplir con buenas prácticas de seguridad en dispositivos móviles. | Mobile | 1 día |
+
+---
+
+#### Resumen del Plan de Corrección
+
+| Sprint | Defectos | Esfuerzo total estimado | Condición |
+|---|---|---|---|
+| Sprint 1 | DEF-08, DEF-05 | 7–10 días | **Obligatorio antes de producción** |
+| Sprint 2 | DEF-01, DEF-03, DEF-04, DEF-07 | 5–7 días | Recomendado en semana 1 post-lanzamiento |
+| Sprint 3 | DEF-02, DEF-06 + 2 mejoras | 4–5 días | Deseable en semana 2–3 post-lanzamiento |
+
+---
+
 *Informe elaborado por el Equipo QA — Tropical Travel v1.0 — 08 de abril de 2026*
