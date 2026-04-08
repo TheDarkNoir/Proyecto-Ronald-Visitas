@@ -883,7 +883,64 @@ El sistema cumple los criterios mínimos en los módulos críticos (autenticaci�
 
 ---
 
-## 8. Conclusión
+## 8. Pruebas de Integración de API
+
+A continuación se detallan las pruebas directas sobre los endpoints del servidor Express.js, ejecutables con herramientas como Postman o Thunder Client.
+
+| ID | Punto Final | Método | Cuerpo de Prueba | Resultado Esperado |
+|---|---|---|---|---|
+| API-01 | `/registrar` | POST | `{ nombre, email, password, rol }` | 201 Creado — usuario creado |
+| API-02 | `/login` | POST | `{ email, password }` | 200 OK — Retornado JWT |
+| API-03 | `/login` | POST | Contraseña incorrecta | 401 No autorizado |
+| API-04 | `/perfil/:userId` | GET | UUID válido + JWT | 200 OK — datos del perfil |
+| API-05 | `/perfil/:userId` | PUT | Campos a actualizar + JWT | 200 OK — perfil actualizado |
+| API-06 | `/destinos` | GET | (sin cuerpo) + JWT | 200 OK — lista de destinos activos |
+| API-07 | `/reservas` | POST | `{ user_id, destination_id, fecha }` + JWT | 201 Creado — reserva creada |
+| API-08 | `/reservas/:userId` | GET | UUID de usuario + JWT | 200 OK — lista de reservas |
+| API-09 | `/reservas/:id/cancel` | PUT | JWT del propietario | 200 OK — estado = "Cancelada" |
+| API-10 | `/admin/destinos` | POST | Datos de destino + JWT admin | 201 Creado — destino creado |
+| API-11 | `/admin/destinos/:id` | PUT | Datos + JWT admin | 200 OK — destino actualizado |
+| API-12 | `/admin/destinos/:id` | DELETE | JWT admin | 200 OK — destino eliminado |
+| API-13 | `/admin/usuarios/:id` | DELETE | JWT admin | 200 OK — usuario eliminado |
+| API-14 | `/admin/panel` | GET | JWT admin | 200 OK — datos del tablero |
+| API-15 | `/chat` | POST | `{ messages: [...] }` + JWT | 200 OK — respuesta del asistente |
+| API-16 | `/chat/stream` | POST | `{ messages: [...] }` + JWT | 200 OK — respuesta en streaming SSE |
+| API-17 | `/admin/destinos` | POST | JWT de cliente (rol incorrecto) | 401/403 Prohibido |
+| API-18 | `/perfil/no-es-uuid` | GET | UUID inválido + JWT | 400 Solicitud incorrecta |
+
+---
+
+## 9. Pruebas de Rendimiento
+
+Las pruebas de rendimiento tienen como objetivo evaluar el comportamiento del sistema Tropical Travel bajo condiciones de carga, midiendo tiempos de respuesta, estabilidad y capacidad de procesamiento.
+
+| ID | Escenario | Métrica Objetivo |
+|---|---|---|
+| PERF-01 | Carga del listado de destinos (`GET /destinos`) | Tiempo de respuesta < 2 segundos |
+| PERF-02 | Login de usuario (`POST /login`) | Tiempo de respuesta < 1 segundo |
+| PERF-03 | Carga del panel del administrador (`GET /admin/panel`) | Tiempo de respuesta < 3 segundos |
+| PERF-04 | Primera respuesta del asistente IA (`POST /chat`) | Primer token recibido en < 3 segundos |
+| PERF-05 | Carga inicial de la aplicación Flutter | Pantalla principal visible en < 4 segundos |
+| PERF-06 | Concurrencia: 10 usuarios simultáneos realizando login | Sin errores; tiempo de respuesta promedio < 2 segundos |
+
+---
+
+## 10. Pruebas de Usabilidad
+
+Las pruebas de usabilidad buscan evaluar la facilidad de uso, accesibilidad y experiencia del usuario al interactuar con el sistema Tropical Travel.
+
+| ID | Criterio Evaluado | Resultado Esperado |
+|---|---|---|
+| US-01 | Navegación entre secciones de la aplicación web | El usuario puede moverse entre todas las secciones en ≤ 2 clics desde el menú principal |
+| US-02 | Mensajes de error comprensibles | Los errores muestran texto legible en español, sin códigos técnicos expuestos al usuario |
+| US-03 | Diseño responsivo — vista móvil (web) | El sitio web es usable en pantallas de 375 px a 1920 px de ancho |
+| US-04 | Indicadores de carga | Durante las solicitudes al servidor, se muestra un indicador visual de carga |
+| US-05 | Confirmaciones de acciones destructivas | Al cancelar una reserva o eliminar datos, se solicita confirmación previa |
+| US-06 | Accesibilidad del chat IA | El campo de texto y el botón de envío son claramente identificables y funcionales |
+
+---
+
+## 11. Conclusión
 
 El sistema **Tropical Travel v1.0** fue evaluado en sus **11 módulos** mediante **55 casos de prueba** definidos en el plan. Los módulos de autenticación, reservaciones y panel de administración funcionan correctamente. Se identificaron módulos con implementación pendiente (Itinerarios, sistema de notificaciones, preferencias de perfil) y deficiencias de seguridad (token no firmado, ausencia de middleware de autorización por cabecera).
 
@@ -899,7 +956,7 @@ El sistema **Tropical Travel v1.0** fue evaluado en sus **11 módulos** mediante
 
 ---
 
-## 9. Matriz de Trazabilidad
+## 12. Matriz de Trazabilidad
 
 La matriz relaciona cada **Requisito Funcional (RF)** del sistema con los **Casos de Prueba (CP)** que lo verifican y el estado de cobertura resultante.
 
@@ -913,7 +970,7 @@ La matriz relaciona cada **Requisito Funcional (RF)** del sistema con los **Caso
 
 ---
 
-### 9.1 Tabla de Trazabilidad Requisito → Caso de Prueba
+### 12.1 Tabla de Trazabilidad Requisito → Caso de Prueba
 
 | ID Requisito | Descripción del Requisito | Casos de Prueba | Estado |
 |---|---|---|---|
@@ -975,7 +1032,7 @@ La matriz relaciona cada **Requisito Funcional (RF)** del sistema con los **Caso
 
 ---
 
-### 9.2 Cobertura por Módulo
+### 12.2 Cobertura por Módulo
 
 | Módulo | Requisitos Cubiertos (✅) | Cobertura Parcial (⚠️) | Sin Cobertura (❌) | Total RF | % Cubierto |
 |---|---|---|---|---|---|
@@ -994,7 +1051,7 @@ La matriz relaciona cada **Requisito Funcional (RF)** del sistema con los **Caso
 
 ---
 
-### 9.3 Requisitos Críticos Sin Cobertura
+### 12.3 Requisitos Críticos Sin Cobertura
 
 Los siguientes requisitos funcionales de prioridad **Alta** o **Media** no están cubiertos y representan riesgo para el despliegue:
 
@@ -1010,9 +1067,9 @@ Los siguientes requisitos funcionales de prioridad **Alta** o **Media** no está
 
 ---
 
-## 11. Conclusiones y Recomendaciones
+## 13. Conclusiones y Recomendaciones
 
-### 11.1 Resumen Ejecutivo
+### 13.1 Resumen Ejecutivo
 
 El sistema **Tropical Travel v1.0** fue sometido a un proceso de pruebas funcionales, de seguridad y de integración móvil que abarcó **11 módulos** y **55 casos de prueba**. Los resultados globales indican un nivel de madurez suficiente para un despliegue controlado en ambientes de pre-producción, con restricciones específicas antes de pasar a producción.
 
@@ -1033,7 +1090,7 @@ El sistema cumple el umbral mínimo de aceptación del 75% y satisface el 100% d
 
 ---
 
-### 11.2 Fortalezas Identificadas
+### 13.2 Fortalezas Identificadas
 
 Las siguientes características del sistema demostraron un funcionamiento correcto y robusto durante las pruebas, y representan una base sólida para el crecimiento del producto:
 
@@ -1065,7 +1122,7 @@ Las siguientes características del sistema demostraron un funcionamiento correc
 
 ---
 
-### 11.3 Plan de Corrección de Defectos (Priorizado)
+### 13.3 Plan de Corrección de Defectos (Priorizado)
 
 Los defectos identificados se organizan en tres sprints de corrección según su severidad e impacto en la operación del sistema.
 
