@@ -1,0 +1,17 @@
+# Informe de Pruebas
+
+## Introducción
+Este informe detalla las pruebas realizadas para el proyecto Tropical Travel.
+
+| Fecha       | Actividad         | Resultado         |
+|-------------|-------------------|-------------------|
+| 2026-04-01  | Prueba de Login    | Exitosa           |
+| 2026-04-02  | Prueba de Reservas | Fallida           |
+
+```python
+def test_login():
+    assert login("user", "pass") == True
+```
+
+## Conclusiones
+Se recomienda revisar los problemas encontrados durante las pruebas.
