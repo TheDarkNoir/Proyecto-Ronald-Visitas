@@ -897,4 +897,117 @@ El sistema **Tropical Travel v1.0** fue evaluado en sus **11 módulos** mediante
 
 ---
 
+---
+
+## 9. Matriz de Trazabilidad
+
+La matriz relaciona cada **Requisito Funcional (RF)** del sistema con los **Casos de Prueba (CP)** que lo verifican y el estado de cobertura resultante.
+
+### Leyenda de estado
+
+| Símbolo | Significado |
+|---|---|
+| ✅ | Caso aprobado — requisito cubierto |
+| ⚠️ | Caso aprobado con observación — cobertura parcial |
+| ❌ | Caso fallido — requisito no cubierto |
+
+---
+
+### 9.1 Tabla de Trazabilidad Requisito → Caso de Prueba
+
+| ID Requisito | Descripción del Requisito | Casos de Prueba | Estado |
+|---|---|---|---|
+| RF-01 | El sistema debe permitir registrar un nuevo usuario con todos sus datos obligatorios y almacenar la contraseña hasheada con bcryptjs | CP-01-01 | ✅ |
+| RF-02 | El sistema debe impedir el registro con un correo electrónico ya existente | CP-01-02 | ✅ |
+| RF-03 | El sistema debe validar campos obligatorios en el formulario de registro antes de enviar la petición al servidor | CP-01-03 | ✅ |
+| RF-04 | El sistema debe autenticar usuarios con rol "cliente", generar un token, almacenarlo en localStorage y redirigir a Inicio.html | CP-01-04 | ⚠️ |
+| RF-05 | El sistema debe autenticar usuarios con rol "admin" y redirigir a InicioAdmin.html | CP-01-05 | ✅ |
+| RF-06 | El sistema debe rechazar el inicio de sesión con contraseña incorrecta | CP-01-06 | ✅ |
+| RF-07 | El sistema debe rechazar el inicio de sesión con correo no registrado | CP-01-07 | ✅ |
+| RF-08 | El sistema debe proteger las páginas privadas redirigiendo al login si no hay sesión activa | CP-01-08 | ✅ |
+| RF-09 | El sistema debe mostrar los datos completos del perfil del usuario autenticado | CP-02-01 | ⚠️ |
+| RF-10 | El sistema debe permitir editar y guardar los datos del perfil del usuario | CP-02-02 | ✅ |
+| RF-11 | El sistema debe persistir las preferencias del usuario en la tabla Referencias_Usuarios | CP-02-03 | ❌ |
+| RF-12 | El sistema debe permitir subir y actualizar la foto de perfil del usuario | CP-02-04 | ❌ |
+| RF-13 | El sistema debe listar todos los destinos activos con nombre, imagen, precio, dificultad, duración y categoría | CP-03-01 | ✅ |
+| RF-14 | El sistema debe filtrar destinos por categoría | CP-03-02 | ✅ |
+| RF-15 | El sistema debe filtrar destinos por dificultad | CP-03-03 | ❌ |
+| RF-16 | El sistema debe filtrar destinos por rango de precio (mínimo/máximo) | CP-03-04 | ❌ |
+| RF-17 | El sistema debe mostrar la ficha completa de un destino con descripción, actividades, restaurantes, precio y alertas | CP-03-05 | ✅ |
+| RF-18 | El sistema debe mostrar un mensaje cuando no hay destinos activos disponibles | CP-03-06 | ✅ |
+| RF-19 | El sistema debe permitir a un cliente crear una reserva con estado "Pendiente" | CP-04-01 | ✅ |
+| RF-20 | El sistema debe listar todas las reservas del usuario con nombre del destino, fecha, estado y opciones | CP-04-02 | ✅ |
+| RF-21 | El sistema debe permitir al usuario cancelar una reserva activa | CP-04-03 | ✅ |
+| RF-22 | El sistema debe impedir reservas duplicadas para el mismo destino | CP-04-04 | ✅ |
+| RF-23 | El sistema debe permitir al administrador cambiar el estado de una reserva | CP-04-05 | ✅ |
+| RF-24 | El sistema debe permitir crear un itinerario con nombre, descripción, fecha de inicio y fin | CP-05-01 | ❌ |
+| RF-25 | El sistema debe permitir agregar actividades a un itinerario organizadas por día | CP-05-02 | ❌ |
+| RF-26 | El sistema debe permitir configurar un itinerario como público | CP-05-03 | ❌ |
+| RF-27 | El sistema debe permitir agregar colaboradores a un itinerario con permisos específicos | CP-05-04 | ❌ |
+| RF-28 | El sistema debe permitir buscar otros usuarios por nombre excluyendo al usuario autenticado | CP-06-01 | ✅ |
+| RF-29 | El sistema debe permitir el envío de mensajes directos entre usuarios | CP-06-02 | ⚠️ |
+| RF-30 | El sistema debe permitir crear grupos de viajeros y agregar miembros | CP-06-03 | ⚠️ |
+| RF-31 | El sistema debe almacenar reportes/quejas en la tabla Reportes | CP-06-04 | ❌ |
+| RF-32 | El asistente IA (LawMoon) debe responder consultas de viaje con información relevante sobre Colombia | CP-07-01 | ⚠️ |
+| RF-33 | El asistente IA debe responder en streaming (Server-Sent Events) sin bloquear la interfaz | CP-07-02 | ✅ |
+| RF-34 | El sistema debe manejar la indisponibilidad del servicio de IA mostrando un error controlado | CP-07-03 | ✅ |
+| RF-35 | El historial de mensajes del chat debe mantenerse visible durante la sesión activa | CP-07-04 | ⚠️ |
+| RF-36 | El sistema debe redirigir al administrador a InicioAdmin.html con todos los datos del panel cargados | CP-08-01 | ✅ |
+| RF-37 | El sistema debe denegar el acceso al panel de administración a usuarios con rol "cliente" | CP-08-02 | ✅ |
+| RF-38 | El sistema debe permitir al administrador crear nuevos destinos | CP-08-03 | ✅ |
+| RF-39 | El sistema debe permitir al administrador editar destinos existentes | CP-08-04 | ✅ |
+| RF-40 | El sistema debe permitir al administrador eliminar o desactivar destinos | CP-08-05 | ✅ |
+| RF-41 | El sistema debe permitir al administrador editar o eliminar usuarios | CP-08-06 | ✅ |
+| RF-42 | El sistema debe mostrar estadísticas de usuarios, destinos, reservas e ingresos en el panel de analytics | CP-08-07 | ✅ |
+| RF-43 | El sistema debe mostrar alertas activas de la tabla Alertas al usuario correspondiente | CP-09-01 | ⚠️ |
+| RF-44 | El sistema debe notificar al usuario cuando el estado de su reserva cambia | CP-09-02 | ❌ |
+| RF-45 | La aplicación móvil debe permitir registro e inicio de sesión con almacenamiento seguro del token | CP-10-01 | ⚠️ |
+| RF-46 | La aplicación móvil debe cargar y mostrar los destinos desde la API correctamente | CP-10-02 | ✅ |
+| RF-47 | La aplicación móvil debe permitir crear reservas con estado "Pendiente" | CP-10-03 | ✅ |
+| RF-48 | La aplicación móvil debe integrar el chat con el asistente IA | CP-10-04 | ✅ |
+| RF-49 | La aplicación móvil debe dar acceso completo al panel de administración para usuarios admin | CP-10-05 | ✅ |
+| RF-50 | La aplicación móvil debe mantener la sesión activa al cerrar y reabrir la app | CP-10-06 | ✅ |
+| RF-51 | Los endpoints de administración deben rechazar peticiones de usuarios con rol "cliente" (403) | CP-11-01 | ⚠️ |
+| RF-52 | El servidor debe rechazar tokens JWT caducados con error 401 | CP-11-02 | ❌ |
+| RF-53 | El servidor debe rechazar peticiones sin cabecera Authorization con error 401 | CP-11-03 | ⚠️ |
+| RF-54 | El servidor debe validar el formato UUID en parámetros de ruta y retornar 400 si es inválido | CP-11-04 | ✅ |
+| RF-55 | Las contraseñas deben almacenarse hasheadas con bcryptjs, nunca en texto plano | CP-11-05 | ✅ |
+
+---
+
+### 9.2 Cobertura por Módulo
+
+| Módulo | Requisitos Cubiertos (✅) | Cobertura Parcial (⚠️) | Sin Cobertura (❌) | Total RF | % Cubierto |
+|---|---|---|---|---|---|
+| MOD-01: Autenticación | 6 | 2 | 0 | 8 | 100% |
+| MOD-02: Gestión de Perfil | 1 | 1 | 2 | 4 | 50% |
+| MOD-03: Exploración de Destinos | 4 | 0 | 2 | 6 | 67% |
+| MOD-04: Reservaciones | 5 | 0 | 0 | 5 | 100% |
+| MOD-05: Itinerarios | 0 | 0 | 4 | 4 | 0% |
+| MOD-06: Comunidad | 1 | 2 | 1 | 4 | 75% |
+| MOD-07: Asistente IA (LawMoon) | 2 | 2 | 0 | 4 | 100% |
+| MOD-08: Panel de Administración | 7 | 0 | 0 | 7 | 100% |
+| MOD-09: Notificaciones | 0 | 1 | 1 | 2 | 50% |
+| MOD-10: Aplicación Móvil Flutter | 5 | 1 | 0 | 6 | 100% |
+| MOD-11: Seguridad | 2 | 2 | 1 | 5 | 80% |
+| **TOTAL** | **33** | **11** | **11** | **55** | **80%** |
+
+---
+
+### 9.3 Requisitos Críticos Sin Cobertura
+
+Los siguientes requisitos funcionales de prioridad **Alta** o **Media** no están cubiertos y representan riesgo para el despliegue:
+
+| RF | Descripción | Prioridad | Defecto Asociado |
+|---|---|---|---|
+| RF-11 | Persistencia de preferencias en `Referencias_Usuarios` | Media | DEF-01 |
+| RF-15 | Filtrado de destinos por dificultad | Media | DEF-03 |
+| RF-16 | Filtrado de destinos por rango de precio | Media | DEF-04 |
+| RF-24 | Creación de itinerarios con persistencia en BD | Media | DEF-05 |
+| RF-25 | Agregar actividades a itinerarios | Media | DEF-05 |
+| RF-44 | Notificación de cambio de estado de reserva | Media | DEF-07 |
+| RF-52 | Rechazo de tokens JWT caducados (expiración) | **Alta** | DEF-08 |
+
+---
+
 *Informe elaborado por el Equipo QA — Tropical Travel v1.0 — 08 de abril de 2026*
