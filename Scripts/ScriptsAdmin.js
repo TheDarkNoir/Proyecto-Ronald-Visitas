@@ -133,10 +133,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchApi(path, options = {}) {
         let lastError = null;
+        const token = localStorage.getItem('authToken') || '';
+        const authHeader = token ? { 'Authorization': `Bearer ${token}` } : {};
 
         for (const base of getApiBaseCandidates()) {
             try {
-                const response = await fetch(`${base}${path}`, options);
+                const mergedOptions = {
+                    ...options,
+                    headers: {
+                        ...authHeader,
+                        ...(options.headers || {})
+                    }
+                };
+                const response = await fetch(`${base}${path}`, mergedOptions);
+                if (response.status === 401) {
+                    localStorage.removeItem('loggedUser');
+                    localStorage.removeItem('authToken');
+                    window.location.href = '../index.html';
+                    return response;
+                }
                 if (response.status === 404) {
                     continue;
                 }

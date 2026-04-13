@@ -10,6 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    function getAuthHeaders() {
+        const token = localStorage.getItem('authToken') || '';
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    }
+
     // =========================
     // ELEMENTOS
     // =========================
@@ -108,9 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('http://localhost:5501/chat', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ message: text })
             });
 

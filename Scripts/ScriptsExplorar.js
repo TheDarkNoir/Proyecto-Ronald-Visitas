@@ -5,6 +5,24 @@ document.addEventListener('DOMContentLoaded', () => {
 		return;
 	}
 
+	function getAuthHeaders() {
+		const token = localStorage.getItem('authToken') || '';
+		return {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		};
+	}
+
+	function handleAuthError(response) {
+		if (response.status === 401) {
+			localStorage.removeItem('loggedUser');
+			localStorage.removeItem('authToken');
+			window.location.href = '../index.html';
+			return true;
+		}
+		return false;
+	}
+
 	const initials = (loggedUser.username || loggedUser.email || 'U')
 		.split(' ')
 		.map((n) => n[0])
@@ -67,13 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	async function addToMyTrips(destination) {
 		const response = await fetch('/reservas', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: getAuthHeaders(),
 			body: JSON.stringify({
 				userId: getUserId(),
 				destinationId: destination.id
 			})
 		});
 
+		if (handleAuthError(response)) return;
 		const result = await response.json();
 		if (!response.ok) {
 			throw new Error(result.error || 'No se pudo agregar el destino.');

@@ -8,6 +8,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	const userId = loggedUser.userId || loggedUser.id;
 
+	function getAuthHeaders() {
+		const token = localStorage.getItem('authToken') || '';
+		return {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		};
+	}
+
+	function handleAuthError(response) {
+		if (response.status === 401) {
+			localStorage.removeItem('loggedUser');
+			localStorage.removeItem('authToken');
+			window.location.href = '../index.html';
+			return true;
+		}
+		return false;
+	}
+
 	function setInitials(name) {
 		const initials = (name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 		const ui = document.getElementById('userInitials');
@@ -41,7 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 	}
 
 	try {
-		const resp = await fetch(`/perfil/${userId}`);
+		const resp = await fetch(`/perfil/${userId}`, { headers: getAuthHeaders() });
+		if (handleAuthError(resp)) return;
 		if (resp.ok) {
 			populateForm(await resp.json());
 		} else {
@@ -84,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		try {
 			const resp = await fetch(`/perfil/${userId}/password`, {
 				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
+				headers: getAuthHeaders(),
 				body: JSON.stringify({ currentPassword, newPassword })
 			});
 
@@ -117,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		try {
 			const resp = await fetch(`/perfil/${userId}`, {
 				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
+				headers: getAuthHeaders(),
 				body: JSON.stringify({ nombre, telefono, pais, ciudad, fecha_nacimiento })
 			});
 

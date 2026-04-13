@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 
@@ -20,6 +21,28 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+    throw new Error('Falta JWT_SECRET en el entorno.');
+}
+
+function verifyToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Token de autenticación requerido.' });
+    }
+    const token = authHeader.slice(7);
+    try {
+        req.user = jwt.verify(token, JWT_SECRET);
+        next();
+    } catch (err) {
+        if (err.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: 'Token expirado. Por favor inicia sesión nuevamente.' });
+        }
+        return res.status(401).json({ error: 'Token inválido.' });
+    }
+}
 
 const imageMap = {
     'Cartagena de Indias': '/Imagenes/cartagenaimg.jpg',
@@ -390,7 +413,11 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
 
-        const token = Buffer.from(`${usuarioData.id}:${Date.now()}`).toString('base64');
+        const token = jwt.sign(
+            { userId: usuarioData.id, rol: usuarioData.rol || 'cliente' },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
         res.status(200).json({
             message: 'Inicio de sesión exitoso!',
             token,
@@ -450,7 +477,7 @@ app.get('/destinos', async (req, res) => {
     }
 });
 
-app.post('/reservas', async (req, res) => {
+app.post('/reservas', verifyToken, async (req, res) => {
     try {
         const userId = String(req.body?.userId || '').trim();
         const destinationId = String(req.body?.destinationId || '').trim();
@@ -564,7 +591,7 @@ function normalizeReservationStatus(status) {
 // ===============================
 // GET RESERVAS DEL USUARIO
 // ===============================
-app.get('/reservas/:userId', async (req, res) => {
+app.get('/reservas/:userId', verifyToken, async (req, res) => {
     try {
         const userId = String(req.params.userId || '').trim();
 
@@ -628,7 +655,7 @@ app.get('/reservas/:userId', async (req, res) => {
     }
 });
 
-app.put('/reservas/:reservationId/status', async (req, res) => {
+app.put('/reservas/:reservationId/status', verifyToken, async (req, res) => {
     try {
         const reservationId = String(req.params.reservationId || '').trim();
         const userId = String(req.body?.userId || '').trim();
@@ -682,7 +709,7 @@ app.put('/reservas/:reservationId/status', async (req, res) => {
 // ===============================
 // CANCELAR RESERVA
 // ===============================
-app.put('/reservas/:reservationId/cancel', async (req, res) => {
+app.put('/reservas/:reservationId/cancel', verifyToken, async (req, res) => {
     try {
         const reservationId = String(req.params.reservationId || '').trim();
         const userId = String(req.body.userId || '').trim();
@@ -733,7 +760,7 @@ app.put('/reservas/:reservationId/cancel', async (req, res) => {
 });
 
 // Endpoint para obtener el perfil del usuario
-app.get('/perfil/:userId', async (req, res) => {
+app.get('/perfil/:userId', verifyToken, async (req, res) => {
     try {
         const userId = String(req.params?.userId || '').trim();
         const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
@@ -759,7 +786,7 @@ app.get('/perfil/:userId', async (req, res) => {
 });
 
 // Endpoint para actualizar el perfil del usuario
-app.put('/perfil/:userId', async (req, res) => {
+app.put('/perfil/:userId', verifyToken, async (req, res) => {
     try {
         const userId = String(req.params?.userId || '').trim();
         const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
@@ -797,7 +824,7 @@ app.put('/perfil/:userId', async (req, res) => {
     }
 });
 
-app.put('/perfil/:userId/password', async (req, res) => {
+app.put('/perfil/:userId/password', verifyToken, async (req, res) => {
     try {
         const userId = String(req.params?.userId || '').trim();
         if (!isUuid(userId)) {
@@ -860,7 +887,7 @@ app.put('/perfil/:userId/password', async (req, res) => {
 });
 
 // Endpoint para listar usuarios en comunidad
-app.get('/usuarios', async (req, res) => {
+app.get('/usuarios', verifyToken, async (req, res) => {
     try {
         const search = String(req.query?.search || '').trim();
         const excludeUserId = String(req.query?.excludeUserId || '').trim();
@@ -898,7 +925,7 @@ app.get('/usuarios', async (req, res) => {
     }
 });
 
-app.get('/admin/panel', async (req, res) => {
+app.get('/admin/panel', verifyToken, async (req, res) => {
     try {
         const adminValidation = await validateAdminRequest(req.query?.adminId);
         if (!adminValidation.ok) {
@@ -1191,7 +1218,7 @@ app.get('/admin/panel', async (req, res) => {
     }
 });
 
-app.post('/admin/destinos', async (req, res) => {
+app.post('/admin/destinos', verifyToken, async (req, res) => {
     try {
         const adminValidation = await validateAdminRequest(req.body?.adminId);
         if (!adminValidation.ok) {
@@ -1238,7 +1265,7 @@ app.post('/admin/destinos', async (req, res) => {
     }
 });
 
-app.put('/admin/destinos/:destinationId', async (req, res) => {
+app.put('/admin/destinos/:destinationId', verifyToken, async (req, res) => {
     try {
         const adminValidation = await validateAdminRequest(req.body?.adminId);
         if (!adminValidation.ok) {
@@ -1300,7 +1327,7 @@ app.put('/admin/destinos/:destinationId', async (req, res) => {
     }
 });
 
-app.delete('/admin/destinos/:destinationId', async (req, res) => {
+app.delete('/admin/destinos/:destinationId', verifyToken, async (req, res) => {
     try {
         const adminValidation = await validateAdminRequest(req.query?.adminId);
         if (!adminValidation.ok) {
@@ -1329,7 +1356,7 @@ app.delete('/admin/destinos/:destinationId', async (req, res) => {
     }
 });
 
-app.post('/admin/usuarios', async (req, res) => {
+app.post('/admin/usuarios', verifyToken, async (req, res) => {
     try {
         const adminValidation = await validateAdminRequest(req.body?.adminId);
         if (!adminValidation.ok) {
@@ -1384,7 +1411,7 @@ app.post('/admin/usuarios', async (req, res) => {
     }
 });
 
-app.put('/admin/usuarios/:userId', async (req, res) => {
+app.put('/admin/usuarios/:userId', verifyToken, async (req, res) => {
     try {
         const adminValidation = await validateAdminRequest(req.body?.adminId);
         if (!adminValidation.ok) {
@@ -1429,7 +1456,7 @@ app.put('/admin/usuarios/:userId', async (req, res) => {
     }
 });
 
-app.delete('/admin/usuarios/:userId', async (req, res) => {
+app.delete('/admin/usuarios/:userId', verifyToken, async (req, res) => {
     try {
         const adminValidation = await validateAdminRequest(req.query?.adminId);
         if (!adminValidation.ok) {
@@ -1462,7 +1489,7 @@ app.delete('/admin/usuarios/:userId', async (req, res) => {
     }
 });
 
-app.put('/admin/reservas/:reservationId/status', async (req, res) => {
+app.put('/admin/reservas/:reservationId/status', verifyToken, async (req, res) => {
     try {
         const adminValidation = await validateAdminRequest(req.body?.adminId);
         if (!adminValidation.ok) {
@@ -1499,7 +1526,7 @@ app.put('/admin/reservas/:reservationId/status', async (req, res) => {
 });
 
 // ─── IA CHAT ─────────────────────────────────────────────────────────────────
-app.post('/chat', async (req, res) => {
+app.post('/chat', verifyToken, async (req, res) => {
     const raw = String(req.body?.message || '').trim();
 
     if (!raw) {
@@ -1540,7 +1567,7 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-app.post('/chat/stream', async (req, res) => {
+app.post('/chat/stream', verifyToken, async (req, res) => {
     const raw = String(req.body?.message || '').trim();
     if (!raw) {
         return res.status(400).json({ reply: 'Por favor escribe un mensaje.' });

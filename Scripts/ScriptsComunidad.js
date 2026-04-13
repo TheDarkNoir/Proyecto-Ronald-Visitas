@@ -34,6 +34,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    function getAuthHeaders() {
+        const token = localStorage.getItem('authToken') || '';
+        return { 'Authorization': `Bearer ${token}` };
+    }
+
+    function handleAuthError(response) {
+        if (response.status === 401) {
+            localStorage.removeItem('loggedUser');
+            localStorage.removeItem('authToken');
+            window.location.href = '../index.html';
+            return true;
+        }
+        return false;
+    }
+
     const loggedUserId = loggedUser.userId || loggedUser.id;
     const loggedName = loggedUser.username || 'Usuario';
     const currentInitials = loggedName.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
@@ -97,7 +112,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const params = new URLSearchParams({ excludeUserId: loggedUserId || '' });
             if (search.trim()) params.set('search', search.trim());
-            const response = await fetch(`/usuarios?${params.toString()}`);
+            const response = await fetch(`/usuarios?${params.toString()}`, {
+                headers: getAuthHeaders()
+            });
+            if (handleAuthError(response)) return;
             if (!response.ok) throw new Error('No se pudieron obtener usuarios');
             const data = await response.json();
             allUsers = Array.isArray(data) ? data : [];

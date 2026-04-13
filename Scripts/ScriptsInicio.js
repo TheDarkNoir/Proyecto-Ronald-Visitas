@@ -5,6 +5,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    function getAuthHeaders() {
+        const token = localStorage.getItem('authToken') || '';
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    }
+
+    function handleAuthError(response) {
+        if (response.status === 401) {
+            localStorage.removeItem('loggedUser');
+            localStorage.removeItem('authToken');
+            window.location.href = '../index.html';
+            return true;
+        }
+        return false;
+    }
+
     let tripsData = [];
 
     const modal = document.getElementById('destinationModal');
@@ -141,13 +159,14 @@ document.addEventListener('DOMContentLoaded', () => {
     async function createReservation(trip) {
         const response = await fetch('/reservas', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 userId: getUserId(),
                 destinationId: trip.id
             })
         });
 
+        if (handleAuthError(response)) throw new Error('Sesión expirada.');
         const result = await response.json();
         if (!response.ok) {
             throw new Error(result.error || 'No se pudo crear la reserva.');

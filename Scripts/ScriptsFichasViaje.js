@@ -15,6 +15,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    function getAuthHeaders() {
+        const token = localStorage.getItem('authToken') || '';
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    }
+
+    function handleAuthError(response) {
+        if (response.status === 401) {
+            localStorage.removeItem('loggedUser');
+            localStorage.removeItem('authToken');
+            window.location.href = '../index.html';
+            return true;
+        }
+        return false;
+    }
+
     // Iniciales usuario
     const initials = (loggedUser.username || loggedUser.email || 'U')
         .split(' ')
@@ -47,8 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // CARGAR RESERVAS
     async function loadReservations() {
         try {
-            const response = await fetch(`${API_URL}/reservas/${userId}`);
+            const response = await fetch(`${API_URL}/reservas/${userId}`, {
+                headers: getAuthHeaders()
+            });
 
+            if (handleAuthError(response)) return;
             if (!response.ok) throw new Error('Error al obtener reservas');
 
             const data = await response.json();
@@ -175,14 +196,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const response = await fetch(`${API_URL}/reservas/${id}/status`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     userId,
                     status
                 })
             });
+
+            if (handleAuthError(response)) return;
 
             const data = await response.json();
 
